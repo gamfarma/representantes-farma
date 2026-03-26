@@ -876,9 +876,8 @@ function applyManualOverrides(rows, groups, stateMap) {
   };
   groups.push(mtGroup);
 
-  // 5. Adicionar ao stateMap de MT (sem duplicata)
-  if (!stateMap['MT']) stateMap['MT'] = [];
-  if (!stateMap['MT'].includes(mtGroup)) stateMap['MT'].push(mtGroup);
+  // 5. stateMap de MT recebe SOMENTE o grupo do Lucas (sem outros cards)
+  stateMap['MT'] = [mtGroup];
 }
 
 async function fetchData() {
@@ -1073,7 +1072,7 @@ function renderCoordinators(uf) {
     });
   }
   // ── Seção de representantes sem coordenador cadastrado
-  if (orphanMembers.length > 0) {
+  if (orphanMembers.length > 0 && uf !== 'MT') {
     html += `<div class="section-title" style="color:${color};margin-top:24px;font-size:1rem">
       Representantes sem coordenador cadastrado
       <span class="count-badge" style="background:${color}">${orphanMembers.length}</span>
