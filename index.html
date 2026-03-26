@@ -829,6 +829,49 @@ function processData(rows) {
 // ============================================================
 // FETCH DATA
 // ============================================================
+
+// ============================================================
+// MANUAL OVERRIDES — ajustes fixos independente da planilha
+// ============================================================
+function applyManualOverrides(rows, groups, stateMap) {
+  // ── Override: Lucas Acyole = Coordenador de MT (+ Glaucia como membro)
+  const lucasRow   = rows.find(r => (r['NOME']||'').toLowerCase().includes('lucas') &&
+                                    (r['NOME']||'').toLowerCase().includes('acyole'));
+  const glauciaRow = rows.find(r => (r['NOME']||'').toLowerCase().includes('gl') &&
+                                    (r['NOME']||'').toLowerCase().replace(/[áàãâä]/g,'a').includes('glaucia'));
+
+  if (!lucasRow) return; // nada a fazer se Lucas não está na planilha
+
+  // Remover Lucas e Glaucia de qualquer grupo existente
+  groups.forEach(g => {
+    if (g.leader && (g.leader === lucasRow)) g.leader = null;
+    g.members = g.members.filter(m => m !== lucasRow && m !== glauciaRow);
+  });
+  // Remover do stateMap
+  Object.values(stateMap).forEach(arr => {
+    for (let i = arr.length - 1; i >= 0; i--) {
+      const g = arr[i];
+      if (g.leader === lucasRow) { g.leader = null; }
+      g.members = g.members.filter(m => m !== lucasRow && m !== glauciaRow);
+    }
+  });
+
+  // Criar novo grupo MT com Lucas como líder
+  const mtGroup = {
+    leader  : lucasRow,
+    members : glauciaRow ? [glauciaRow] : [],
+    distKey : 'MT',
+    states  : ['MT']
+  };
+  groups.push(mtGroup);
+
+  // Garantir entrada no stateMap de MT
+  if (!stateMap['MT']) stateMap['MT'] = [];
+  // Remover grupos sem líder e sem membros válidos em MT antes de adicionar
+  stateMap['MT'] = stateMap['MT'].filter(g => g !== mtGroup);
+  stateMap['MT'].push(mtGroup);
+}
+
 async function fetchData() {
   showLoading();
   try {
@@ -839,6 +882,7 @@ async function fetchData() {
     const { rows, updateDate } = parseCSV(text);
     if (rows.length === 0) throw new Error('Nenhum dado encontrado na planilha.');
     const { groups, stateMap } = processData(rows);
+    applyManualOverrides(rows, groups, stateMap);
     appData = { rows, groups, stateMap, updateDate };
     populateFilters();
     const now = new Date();
