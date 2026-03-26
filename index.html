@@ -777,6 +777,24 @@ function processData(rows) {
       }
     }
     if (!assigned) {
+      // Fallback: se o membro não encontrou grupo por distrito,
+      // verificar se existe um líder cujas UFs se sobrepõem às UFs do membro
+      const memberUFs = getUFs(row);
+      if (memberUFs.length > 0) {
+        for (const key of Object.keys(groupMap)) {
+          const grp = groupMap[key];
+          if (grp.leader) {
+            const leaderUFs = getUFs(grp.leader);
+            if (leaderUFs.some(uf => memberUFs.includes(uf))) {
+              grp.members.push(row);
+              assigned = true;
+              break;
+            }
+          }
+        }
+      }
+    }
+    if (!assigned) {
       if (!groupMap[dist]) groupMap[dist] = { leader:null, members:[], distKey:dist, states:[] };
       groupMap[dist].members.push(row);
     }
