@@ -945,7 +945,15 @@ function renderCoordinators(uf) {
     <p class="section-sub">Coordenadores e líderes com atuação neste estado.</p>
     <div id="coordinators-grid">`;
 
-  if (groups.length === 0) {
+  // Coletar representantes "órfãos" (grupo sem líder) que atuam neste UF
+  const orphanMembers = [];
+  groups.forEach(group => {
+    if (!group.leader) {
+      group.members.filter(m => getUFs(m).includes(uf)).forEach(m => orphanMembers.push(m));
+    }
+  });
+
+  if (groups.filter(g => g.leader).length === 0 && orphanMembers.length === 0) {
     html += `<div class="empty-state"><div class="empty-icon">🔍</div><div class="empty-text">Nenhum coordenador encontrado.</div></div>`;
   } else {
     groups.forEach(group => {
@@ -993,6 +1001,44 @@ function renderCoordinators(uf) {
         </div>`;
     });
   }
+  // ── Seção de representantes sem coordenador cadastrado
+  if (orphanMembers.length > 0) {
+    html += `<div class="section-title" style="color:${color};margin-top:24px;font-size:1rem">
+      Representantes sem coordenador cadastrado
+      <span class="count-badge" style="background:${color}">${orphanMembers.length}</span>
+    </div>`;
+    orphanMembers.forEach(member => {
+      const mFunc   = getFunc(member);
+      const mPhone  = member['CONTATO CORPORATIVO'] || member['CONTATO COORPORATIVO'] || '';
+      const mEmail  = member['EMAIL'] || '';
+      const mRegion = member['REGIAO'] || member['REGIÃO'] || '';
+      const mCities = member['PRINCIPAIS CIDADES'] || '';
+      const mClient = isClientRole(mFunc);
+      html += `
+        <div class="coord-card" style="border:2px dashed ${color}55">
+          <div class="coord-header" style="background:${color}CC">
+            <div class="coord-func">${mFunc}</div>
+            <div class="coord-name">${member['NOME']}</div>
+            ${mRegion ? `<div class="coord-region">📍 ${mRegion}</div>` : ''}
+          </div>
+          <div class="coord-body">
+            ${mPhone
+              ? `<div class="coord-contact"><span class="contact-icon">📱</span><a href="tel:${mPhone.replace(/\D/g,'')}">${mPhone}</a></div>`
+              : `<div class="coord-contact"><span class="contact-icon">📱</span><span class="no-data">Sem contato</span></div>`}
+            ${mEmail
+              ? `<div class="coord-contact"><span class="contact-icon">✉️</span><a href="mailto:${mEmail}">${mEmail}</a></div>`
+              : `<div class="coord-contact"><span class="contact-icon">✉️</span><span class="no-data">Sem e-mail</span></div>`}
+          </div>
+          <div class="coord-footer">
+            ${mClient
+              ? `<span class="members-count">🏪 Portfólio de clientes</span>
+                 <button class="btn-clients" onclick="openClientsModal('${escapeAttr(member['NOME'])}','${escapeAttr(mRegion)}','${escapeAttr(mCities)}')">📋 Ver Clientes</button>`
+              : `<span class="members-count" style="font-size:.85rem">${mCities || 'Cidades não informadas'}</span>`}
+          </div>
+        </div>`;
+    });
+  }
+
   html += '</div>';
   container.innerHTML = html;
 }
