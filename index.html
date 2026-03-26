@@ -834,29 +834,40 @@ function processData(rows) {
 // MANUAL OVERRIDES — ajustes fixos independente da planilha
 // ============================================================
 function applyManualOverrides(rows, groups, stateMap) {
-  // ── Override: Lucas Acyole = Coordenador de MT (+ Glaucia como membro)
+  // ── Override: Lucas Acyole = Coordenador de MT (Glaucia apenas na equipe dele)
   const lucasRow   = rows.find(r => (r['NOME']||'').toLowerCase().includes('lucas') &&
                                     (r['NOME']||'').toLowerCase().includes('acyole'));
   const glauciaRow = rows.find(r => (r['NOME']||'').toLowerCase().includes('gl') &&
                                     (r['NOME']||'').toLowerCase().replace(/[áàãâä]/g,'a').includes('glaucia'));
 
-  if (!lucasRow) return; // nada a fazer se Lucas não está na planilha
+  if (!lucasRow) return;
 
-  // Remover Lucas e Glaucia de qualquer grupo existente
+  // 1. Remover Lucas de qualquer grupo onde aparece como líder ou membro
   groups.forEach(g => {
-    if (g.leader && (g.leader === lucasRow)) g.leader = null;
-    g.members = g.members.filter(m => m !== lucasRow && m !== glauciaRow);
-  });
-  // Remover do stateMap
-  Object.values(stateMap).forEach(arr => {
-    for (let i = arr.length - 1; i >= 0; i--) {
-      const g = arr[i];
-      if (g.leader === lucasRow) { g.leader = null; }
-      g.members = g.members.filter(m => m !== lucasRow && m !== glauciaRow);
-    }
+    if (g.leader === lucasRow) g.leader = null;
+    g.members = g.members.filter(m => m !== lucasRow);
   });
 
-  // Criar novo grupo MT com Lucas como líder
+  // 2. Remover Gláucia de TODOS os stateMaps (líder e membro) — ela só aparece na equipe do Lucas
+  if (glauciaRow) {
+    // Remove como líder de qualquer grupo em qualquer estado
+    Object.keys(stateMap).forEach(uf => {
+      stateMap[uf] = stateMap[uf].filter(g => g.leader !== glauciaRow);
+    });
+    // Remove como membro de todos os grupos
+    groups.forEach(g => {
+      g.members = g.members.filter(m => m !== glauciaRow);
+    });
+  }
+
+  // 3. Sincronizar grupos restantes no stateMap com leader=null para Lucas
+  Object.values(stateMap).forEach(arr => {
+    arr.forEach(g => {
+      if (g.leader === lucasRow) g.leader = null;
+    });
+  });
+
+  // 4. Criar grupo MT com Lucas como líder e Gláucia como único membro
   const mtGroup = {
     leader  : lucasRow,
     members : glauciaRow ? [glauciaRow] : [],
@@ -865,11 +876,9 @@ function applyManualOverrides(rows, groups, stateMap) {
   };
   groups.push(mtGroup);
 
-  // Garantir entrada no stateMap de MT
+  // 5. Adicionar ao stateMap de MT (sem duplicata)
   if (!stateMap['MT']) stateMap['MT'] = [];
-  // Remover grupos sem líder e sem membros válidos em MT antes de adicionar
-  stateMap['MT'] = stateMap['MT'].filter(g => g !== mtGroup);
-  stateMap['MT'].push(mtGroup);
+  if (!stateMap['MT'].includes(mtGroup)) stateMap['MT'].push(mtGroup);
 }
 
 async function fetchData() {
