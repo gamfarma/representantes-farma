@@ -564,6 +564,7 @@ tbody tr:hover { background: #f5f8ff; }
     <select class="filter-select" id="filter-func">
       <option value="">Todas as funções</option>
       <option value="coordenador de equipe">Coordenadores de Equipe</option>
+      <option value="representante comercial">Representante Comercial</option>
       <option value="representante externo">Representante Externo</option>
       <option value="televendas">Televendas (TLV)</option>
       <option value="gerente de contas">Gerente de Contas</option>
@@ -617,7 +618,7 @@ tbody tr:hover { background: #f5f8ff; }
 // CONSTANTS & CONFIG
 // ============================================================
 const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQJRPejEYUGjqFiruPTGJuS2Itk6qjvyk6moB4_ChCe5_z4_CW0jYcYXJFimYYw4kGcbP2fpdRccLkq/pub?output=csv';
-const REFRESH_INTERVAL = 5 * 60 * 1000; // 5 minutes
+const REFRESH_INTERVAL = 3 * 60 * 1000; // 3 minutes
 
 const STATE_COLORS = {
   SC:'#1565c0', RS:'#c62828', PR:'#2e7d32', MS:'#e65100',
@@ -699,6 +700,7 @@ function parseLine(line) {
 function normalizeHeader(h) {
   let s = h.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toUpperCase().trim();
   s = s.replace('COORPORATIVO','CORPORATIVO').replace('COODENADOR','COORDENADOR');
+  if (s === 'NOME REPRESENTANTE') s = 'NOME';
   return s;
 }
 
@@ -883,7 +885,7 @@ function applyManualOverrides(rows, groups, stateMap) {
 async function fetchData() {
   showLoading();
   try {
-    const url = `${CSV_URL}&cb=${Date.now()}`;
+    const url = `${CSV_URL}&cb=${Date.now()}_${Math.random().toString(36).slice(2)}`;
     const resp = await fetch(url, { cache:'no-store', headers:{'Cache-Control':'no-store'} });
     if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
     const text = await resp.text();
@@ -1227,6 +1229,7 @@ function renderTeam(group, fromUF) {
             <tr>
               <td>
                 <div style="font-weight:700;margin-bottom:4px">${nome}</div>
+                ${(m['RAZAO SOCIAL']&&m['RAZAO SOCIAL']!=='-'&&m['RAZAO SOCIAL']!=='') ? `<div style="font-size:0.78em;color:#5a6a8a;font-style:italic;margin-bottom:3px">🏢 ${m['RAZAO SOCIAL']}</div>` : ''}
                 <span class="func-badge ${badge.cls}">${badge.label}</span>
               </td>
               <td>${phone ? `<a class="contact-link" href="tel:${phone.replace(/\D/g,'')}">${phone}</a>` : '<span class="no-data">—</span>'}</td>
@@ -1242,6 +1245,7 @@ function renderTeam(group, fromUF) {
 
 function getFuncBadge(func) {
   const f = func.toLowerCase();
+  if (f.includes('representante comercial')) return { cls:'badge-rep', label:func||'Rep. Comercial' };
   if (f.includes('representante externo')) return { cls:'badge-rep', label:func||'Rep. Externo' };
   if (f.includes('televendas')||f.includes('tlv')||f.includes('interno')) return { cls:'badge-tlv', label:func||'Televendas' };
   if (f.includes('gerente de contas')) return { cls:'badge-ger', label:func||'Ger. de Contas' };
@@ -1311,7 +1315,10 @@ function renderSearchResults(query, filterUF, filterFunc, filterRegion) {
 
       html += `
             <tr>
-              <td><strong>${nome}</strong></td>
+              <td>
+                <strong>${nome}</strong>
+                ${(r['RAZAO SOCIAL']&&r['RAZAO SOCIAL']!=='-'&&r['RAZAO SOCIAL']!=='') ? `<div style="font-size:0.78em;color:#5a6a8a;font-style:italic;margin-top:2px">🏢 ${r['RAZAO SOCIAL']}</div>` : ''}
+              </td>
               <td><span class="func-badge ${badge.cls}">${badge.label}</span></td>
               <td>${uf}</td>
               <td>${region||'<span class="no-data">—</span>'}</td>
