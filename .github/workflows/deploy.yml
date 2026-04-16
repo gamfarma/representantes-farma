@@ -11,12 +11,16 @@ permissions:
   id-token: write
 
 concurrency:
-  group: pages
-  cancel-in-progress: false
+  group: "pages"
+  cancel-in-progress: true
 
 jobs:
-  build:
+  build-and-deploy:
     runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -27,23 +31,16 @@ jobs:
           python-version: '3.11'
 
       - name: Apply HTML fixes
-        run: python script.py --input index-efb0fbf5.html --output index.html
+        run: python script.py
 
-      - name: Configure Pages
-        uses: actions/configure-pages@v4
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
 
-      - name: Upload artifact
+      - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
           path: '.'
 
-  deploy:
-    needs: build
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
-    steps:
       - name: Deploy to GitHub Pages
-        uses: actions/deploy-pages@v4
         id: deployment
+        uses: actions/deploy-pages@v4
