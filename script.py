@@ -2,99 +2,123 @@
 """
 script.py — Editor do arquivo index HTML (GAM Farma)
 ======================================================
-Este script aplica correções cirúrgicas no HTML do mapa de equipes,
-substituindo trechos específicos de JavaScript sem alterar o restante do arquivo.
+Aplica correções cirúrgicas no HTML do diretório de representantes,
+substituindo trechos específicos de JavaScript sem alterar o restante.
 
 Uso:
-    python script.py --input index_v4.html --output index_v5.html
+    python script.py --input index-efb0fbf5.html --output index.html
 
 Fixes aplicados:
-    Fix 1 — MT stateMap: garante que o estado MT exiba somente o card do Lucas
-    Fix 2 — Seção orphan: oculta "Representantes sem coordenador" para MT
+    Fix 1 — normalizeHeader: NOME REPRESENTANTE → NOME (causa raiz do bug)
+    Fix 2 — Badge: reconhece "representante comercial"
+    Fix 3 — Filtro dropdown: adiciona opção Representante Comercial
+    Fix 4 — Razão Social inline na tabela renderTeam
+    Fix 5 — Razão Social inline nos resultados de busca
+    Fix 6 — Cache-busting agressivo (timestamp + Math.random)
+    Fix 7 — Refresh interval 5 min → 3 min
 """
 
 import argparse
 import sys
 
 
-# ─────────────────────────────────────────────
-# FIXES
-# Cada fix é um dicionário com:
-#   description : descrição legível do que faz
-#   old         : trecho original a ser substituído
-#   new         : trecho novo que substituirá o original
-#   count       : quantas substituições esperar (1 = apenas a 1ª ocorrência)
-# ─────────────────────────────────────────────
-
 FIXES = [
     {
-        "description": "Fix 1 — stateMap['MT'] recebe somente o grupo do Lucas",
-        "old": """  // 5. Adicionar ao stateMap de MT (sem duplicata)
-  if (!stateMap['MT']) stateMap['MT'] = [];
-  if (!stateMap['MT'].includes(mtGroup)) stateMap['MT'].push(mtGroup);
+        "description": "Fix 1 — normalizeHeader: NOME REPRESENTANTE → NOME",
+        "old": """function normalizeHeader(h) {
+  let s = h.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toUpperCase().trim();
+  s = s.replace('COORPORATIVO','CORPORATIVO').replace('COODENADOR','COORDENADOR');
+  return s;
 }""",
-        "new": """  // 5. stateMap de MT recebe SOMENTE o grupo do Lucas (sem outros cards)
-  stateMap['MT'] = [mtGroup];
+        "new": """function normalizeHeader(h) {
+  let s = h.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toUpperCase().trim();
+  s = s.replace('COORPORATIVO','CORPORATIVO').replace('COODENADOR','COORDENADOR');
+  if (s === 'NOME REPRESENTANTE') s = 'NOME';
+  return s;
 }""",
         "count": 1,
     },
     {
-        "description": "Fix 2 — Ocultar seção orphan para o estado MT",
-        "old": "  if (orphanMembers.length > 0) {",
-        "new": "  if (orphanMembers.length > 0 && uf !== 'MT') {",
+        "description": "Fix 2 — Badge Representante Comercial",
+        "old": "  if (f.includes('representante externo')) return { cls:'badge-rep', label:func||'Rep. Externo' };",
+        "new": "  if (f.includes('representante comercial')) return { cls:'badge-rep', label:func||'Rep. Comercial' };\n  if (f.includes('representante externo')) return { cls:'badge-rep', label:func||'Rep. Externo' };",
+        "count": 1,
+    },
+    {
+        "description": "Fix 3 — Filtro dropdown: adicionar Representante Comercial",
+        "old": '<option value="representante externo">Representante Externo</option>',
+        "new": '<option value="representante comercial">Representante Comercial</option>\n      <option value="representante externo">Representante Externo</option>',
+        "count": 1,
+    },
+    {
+        "description": "Fix 4 — Razão Social inline na tabela renderTeam",
+        "old": """              <td>
+                <div style=\"font-weight:700;margin-bottom:4px\">${nome}</div>
+                <span class=\"func-badge ${badge.cls}\">${badge.label}</span>
+              </td>""",
+        "new": """              <td>
+                <div style=\"font-weight:700;margin-bottom:4px\">${nome}</div>
+                ${(m['RAZAO SOCIAL']&&m['RAZAO SOCIAL']!=='-'&&m['RAZAO SOCIAL']!=='') ? `<div style=\"font-size:0.78em;color:#5a6a8a;font-style:italic;margin-bottom:3px\">🏢 ${m['RAZAO SOCIAL']}</div>` : ''}
+                <span class=\"func-badge ${badge.cls}\">${badge.label}</span>
+              </td>""",
+        "count": 1,
+    },
+    {
+        "description": "Fix 5 — Razão Social inline nos resultados de busca",
+        "old": "              <td><strong>${nome}</strong></td>",
+        "new": """              <td>
+                <strong>${nome}</strong>
+                ${(r['RAZAO SOCIAL']&&r['RAZAO SOCIAL']!=='-'&&r['RAZAO SOCIAL']!=='') ? `<div style=\"font-size:0.78em;color:#5a6a8a;font-style:italic;margin-top:2px\">🏢 ${r['RAZAO SOCIAL']}</div>` : ''}
+              </td>""",
+        "count": 1,
+    },
+    {
+        "description": "Fix 6 — Cache-busting agressivo (timestamp + random)",
+        "old": "const url = `${CSV_URL}&cb=${Date.now()}`;",
+        "new": "const url = `${CSV_URL}&cb=${Date.now()}_${Math.random().toString(36).slice(2)}`;",
+        "count": 1,
+    },
+    {
+        "description": "Fix 7 — Refresh interval 5 min → 3 min",
+        "old": "const REFRESH_INTERVAL = 5 * 60 * 1000; // 5 minutes",
+        "new": "const REFRESH_INTERVAL = 3 * 60 * 1000; // 3 minutes",
         "count": 1,
     },
 ]
 
 
-# ─────────────────────────────────────────────
-# FUNÇÕES
-# ─────────────────────────────────────────────
-
-def load_file(path: str) -> str:
-    """Lê o arquivo HTML e retorna seu conteúdo como string."""
+def load_file(path):
     with open(path, "r", encoding="utf-8") as f:
         return f.read()
 
 
-def save_file(path: str, content: str) -> None:
-    """Salva o conteúdo modificado em um novo arquivo."""
+def save_file(path, content):
     with open(path, "w", encoding="utf-8") as f:
         f.write(content)
 
 
-def apply_fixes(content: str) -> str:
-    """Aplica todos os fixes definidos em FIXES e retorna o conteúdo modificado."""
+def apply_fixes(content):
+    all_ok = True
     for fix in FIXES:
         desc  = fix["description"]
         old   = fix["old"]
         new   = fix["new"]
         count = fix.get("count", 1)
-
         if old not in content:
             print(f"  ⚠️  Trecho não encontrado — '{desc}' não foi aplicado.")
+            all_ok = False
             continue
-
         content = content.replace(old, new, count)
         print(f"  ✅ {desc}")
-
-    return content
+    return content, all_ok
 
 
 def main():
     parser = argparse.ArgumentParser(
-        description="Aplica correções no HTML do mapa de equipes GAM Farma."
+        description="Aplica correções no HTML do diretório de representantes GAM Farma."
     )
-    parser.add_argument(
-        "--input",
-        default="index_v4.html",
-        help="Arquivo HTML de entrada (padrão: index_v4.html)"
-    )
-    parser.add_argument(
-        "--output",
-        default="index_v5.html",
-        help="Arquivo HTML de saída (padrão: index_v5.html)"
-    )
+    parser.add_argument("--input",  default="index-efb0fbf5.html")
+    parser.add_argument("--output", default="index.html")
     args = parser.parse_args()
 
     print(f"\n📂 Lendo: {args.input}")
@@ -105,12 +129,15 @@ def main():
         sys.exit(1)
 
     print(f"\n🔧 Aplicando fixes...")
-    content = apply_fixes(content)
+    content, all_ok = apply_fixes(content)
 
     print(f"\n💾 Salvando: {args.output}")
     save_file(args.output, content)
 
-    print(f"\n✅ Concluído! ({len(content):,} caracteres)")
+    status = "✅" if all_ok else "⚠️ "
+    print(f"\n{status} Concluído! ({len(content):,} caracteres)")
+    if not all_ok:
+        sys.exit(1)
 
 
 if __name__ == "__main__":
