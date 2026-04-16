@@ -6,7 +6,9 @@ Aplica correções cirúrgicas no HTML do diretório de representantes,
 substituindo trechos específicos de JavaScript sem alterar o restante.
 
 Uso:
-    python script.py --input index-efb0fbf5.html --output index.html
+    python script.py                        # lê e sobrescreve index.html
+    python script.py --input x.html         # arquivo de entrada customizado
+    python script.py --output resultado.html
 
 Fixes aplicados:
     Fix 1 — normalizeHeader: NOME REPRESENTANTE → NOME (causa raiz do bug)
@@ -117,7 +119,7 @@ def main():
     parser = argparse.ArgumentParser(
         description="Aplica correções no HTML do diretório de representantes GAM Farma."
     )
-    parser.add_argument("--input",  default="index-efb0fbf5.html")
+    parser.add_argument("--input",  default="index.html")
     parser.add_argument("--output", default="index.html")
     args = parser.parse_args()
 
