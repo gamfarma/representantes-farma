@@ -864,6 +864,11 @@ function processData(rows) {
       });
     } else {
       group.states.forEach(uf => {
+        // For multi-state groups with members, only show in UFs that have team members
+        if (group.states.length > 1 && group.members.length > 0) {
+          const hasMembers = group.members.some(m => getUF(m) === uf);
+          if (!hasMembers) return; // Skip UFs with no members
+        }
         if (!stateMap[uf]) stateMap[uf] = [];
         stateMap[uf].push(group);
       });
