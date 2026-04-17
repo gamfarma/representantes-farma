@@ -524,11 +524,11 @@ tbody tr:hover { background: #f5f8ff; }
       <option value="coordenador de equipe">Coordenadores de Equipe</option>
       <option value="representante comercial">Representante Comercial</option>
       <option value="consultor de vendas">Consultor de Vendas</option>
-      <option value="televendas">Televendas (TLV)</option>
+      <option value="televendas">Televendas</option>
       <option value="gerente de contas">Gerente de Contas</option>
-      <option value="médias redes">Coord. Médias Redes</option>
+      <option value="médias redes">Coordenador de Médias Redes</option>
       <option value="dedicados">Dedicados</option>
-      <option value="projetos especiais">Ger. Projetos Especiais</option>
+      <option value="projetos especiais">Gerente de Projetos Especiais</option>
     </select>
     <select class="filter-select" id="filter-region"><option value="">Todas as regiões</option></select>
     <button class="btn-clear" id="btn-clear">&#10005; Limpar</button>
@@ -581,7 +581,7 @@ const STATE_COLORS = {
   MG:'#4e342e', RJ:'#00695c', BA:'#f57f17', DEFAULT:'#607d8b'
 };
 const DIVISION_COLORS = {
-  TLV:'#1565c0', 'EXPANSÃO':'#00838f', 'PROJ. ESPECIAIS':'#2e7d32'
+  'Televendas':'#1565c0', 'EXPANSÃO':'#00838f', 'PROJ. ESPECIAIS':'#2e7d32'
 };
 const STATE_NAMES = {
   AC:'Acre', AL:'Alagoas', AP:'Amapá', AM:'Amazonas', BA:'Bahia',
@@ -782,9 +782,11 @@ function processData(rows) {
     // Determine display category
     let division = null;
     if (leaderUF === '-' || leaderRegion.toUpperCase().includes('TLV')) {
-      division = 'TLV';
+      division = 'Televendas';
     } else if (leaderUF.toUpperCase().includes('EXPANS') || leaderRegion.toUpperCase().includes('EXPANS')) {
       division = 'EXPANSÃO';
+      // Garantir que estados de atuação incluem MS, SP, GO, DF, MT
+      ['MS','SP','GO','DF','MT'].forEach(u => allUFs.add(u));
     }
 
     const group = {
@@ -853,10 +855,12 @@ function processData(rows) {
     if (group.division) {
       if (!divisionMap[group.division]) divisionMap[group.division] = [];
       divisionMap[group.division].push(group);
-      // Also add to state map for filtering
+      // ALSO add division groups to their respective state tiles
       group.states.forEach(uf => {
-        if (!stateMap[uf]) stateMap[uf] = [];
-        // Don't add division groups to state tiles directly (they get their own tile)
+        if (uf && uf !== '-' && uf !== 'EXPANSÃO') {
+          if (!stateMap[uf]) stateMap[uf] = [];
+          stateMap[uf].push(group);
+        }
       });
     } else {
       group.states.forEach(uf => {
@@ -991,8 +995,8 @@ function renderStates() {
     const color = DIVISION_COLORS[div] || '#8B5CF6';
     html += `
       <div class="state-card division-card" style="--state-color:${color}" onclick="navigateToDivision('${escapeAttr(div)}')" title="${div}">
-        <div class="state-sigla" style="font-size:18px;color:${color}">${div}</div>
-        <div class="state-name">${div === 'TLV' ? 'Televendas' : div === 'PROJ. ESPECIAIS' ? 'Projetos Especiais SUL' : div}</div>
+        <div class="state-sigla" style="font-size:16px;color:${color}">${div === 'PROJ. ESPECIAIS' ? 'Proj. Especiais' : div === 'EXPANSÃO' ? 'Expansão' : div}</div>
+        <div class="state-name">${div === 'PROJ. ESPECIAIS' ? 'Projetos Especiais — SUL' : div === 'EXPANSÃO' ? 'Centro Oeste e Sudeste' : 'Divisão Televendas'}</div>
         <div class="state-count">${total} grupo${total!==1?'s':''}</div>
       </div>`;
   });
@@ -1063,7 +1067,7 @@ function renderDivisionCoordinators(div) {
   let html = `
     <button class="btn-back" onclick="goHome()">&#8592; Voltar</button>
     <div class="section-title" style="color:${color}">
-      ${div === 'TLV' ? 'Televendas (TLV)' : div === 'PROJ. ESPECIAIS' ? 'Projetos Especiais — SUL' : div}
+      ${div === 'PROJ. ESPECIAIS' ? 'Projetos Especiais — SUL' : div === 'EXPANSÃO' ? 'Expansão — Centro Oeste e Sudeste' : div}
       <span class="count-badge" style="background:${color}">${groups.length}</span>
     </div>
     <p class="section-sub">Equipes e representantes desta divisão.</p>
@@ -1083,7 +1087,9 @@ function renderCoordCard(group, uf) {
   const func = getFunc(leader);
   const phone = getPhone(leader);
   const email = getEmail(leader);
-  const region = getRegion(leader);
+  let region = getRegion(leader);
+  // Override region display for EXPANSÃO
+  if (group.division === 'EXPANSÃO') region = 'Centro Oeste e Sudeste';
   const headerColor = getHeaderColor(func, uf);
   const isClient = isClientRole(leader);
   const memberCount = group.members.length;
@@ -1172,7 +1178,8 @@ function renderTeam(group, fromState) {
     const lFunc = getFunc(ldr);
     const lPhone = getPhone(ldr);
     const lEmail = getEmail(ldr);
-    const lRegion = getRegion(ldr);
+    let lRegion = getRegion(ldr);
+    if (group.division === 'EXPANSÃO') lRegion = 'Centro Oeste e Sudeste';
     const initials = getName(ldr).split(' ').filter(w=>w.length>0).slice(0,2).map(w=>w[0]).join('').toUpperCase();
     html += `
       <div class="team-leader-header" style="background:linear-gradient(135deg,${color} 0%,${color}cc 100%)">
@@ -1260,10 +1267,10 @@ function renderTeam(group, fromState) {
 
 function getFuncBadge(func) {
   const f = func.toLowerCase();
-  if (f.includes('representante comercial')) return { cls:'badge-rep', label:'Rep. Comercial' };
+  if (f.includes('representante comercial')) return { cls:'badge-rep', label:'Representante Comercial' };
   if (f.includes('consultor de vendas')) return { cls:'badge-cv', label:'Consultor de Vendas' };
   if (f.includes('gerente de contas')) return { cls:'badge-ger', label:'Gerente de Contas' };
-  if (f.includes('medias redes') || f.includes('médias redes')) return { cls:'badge-coord-med', label:'Coord. Médias Redes' };
+  if (f.includes('medias redes') || f.includes('médias redes')) return { cls:'badge-coord-med', label:'Coordenador de Médias Redes' };
   if (f.includes('dedicado')) return { cls:'badge-ded', label:'Dedicado' };
   if (f.includes('coordenador')) return { cls:'badge-coord', label:'Coordenador' };
   return { cls:'badge-default', label:func||'—' };
