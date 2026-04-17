@@ -12,6 +12,8 @@
 :root {
   --primary: #0a2d6e;
   --primary-light: #1a4a9e;
+  --accent: #FFB800;
+  --purple: #8B5CF6;
   --bg: #f0f4f8;
   --surface: #fff;
   --border: #dde3ee;
@@ -28,7 +30,6 @@ body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background
 #app-header {
   background: linear-gradient(135deg, #0a2d6e 0%, #1a4a9e 60%, #0d3b8e 100%);
   color: #fff;
-  padding: 0;
   position: sticky;
   top: 0;
   z-index: 100;
@@ -97,10 +98,6 @@ body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background
   background: var(--surface);
   border-bottom: 1px solid var(--border);
   padding: 10px 20px;
-  position: sticky;
-  top: 74px;
-  z-index: 99;
-  box-shadow: 0 1px 6px rgba(10,45,110,0.06);
 }
 .filter-inner {
   max-width: 1400px;
@@ -110,147 +107,98 @@ body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background
   gap: 10px;
   flex-wrap: wrap;
 }
-.filter-label { font-size: 12px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; white-space: nowrap; }
+.filter-label { font-size: 13px; font-weight: 700; color: var(--text-muted); }
 .filter-select {
   padding: 7px 12px;
   border: 1px solid var(--border);
   border-radius: 8px;
   font-size: 13px;
+  background: var(--surface);
   color: var(--text);
-  background: var(--bg);
   cursor: pointer;
-  outline: none;
-  transition: border-color 0.2s;
-  min-width: 160px;
+  min-width: 130px;
 }
-.filter-select:focus { border-color: var(--primary); }
 .btn-clear {
-  padding: 7px 14px;
-  border: 1px solid #e0e0e0;
-  border-radius: 8px;
-  background: #fff;
+  background: #fee;
   color: #c62828;
-  font-size: 13px;
-  font-weight: 600;
+  border: 1px solid #fcc;
+  border-radius: 8px;
+  padding: 7px 14px;
+  font-size: 12px;
+  font-weight: 700;
   cursor: pointer;
   transition: background 0.2s;
 }
-.btn-clear:hover { background: #fce4ec; }
+.btn-clear:hover { background: #fdd; }
 
 /* BREADCRUMB */
 #breadcrumb {
   max-width: 1400px;
   margin: 0 auto;
-  padding: 10px 20px 0;
+  padding: 12px 20px 0;
   font-size: 13px;
-  color: var(--text-muted);
   display: flex;
   align-items: center;
   gap: 6px;
   flex-wrap: wrap;
 }
-.bc-item { cursor: pointer; color: var(--primary); font-weight: 600; transition: opacity 0.2s; }
-.bc-item:hover { opacity: 0.7; text-decoration: underline; }
-.bc-sep { opacity: 0.4; }
-.bc-current { color: var(--text-muted); font-weight: 400; cursor: default; }
+.bc-item { color: var(--primary); cursor: pointer; font-weight: 600; }
+.bc-item:hover { text-decoration: underline; }
+.bc-sep { color: #bbb; }
+.bc-current { color: var(--text-muted); font-weight: 500; }
 
-/* MAIN */
+/* MAIN CONTENT */
 #main-content {
   max-width: 1400px;
   margin: 0 auto;
-  padding: 20px;
+  padding: 16px 20px 60px;
 }
+.section-title { font-size: 1.15rem; font-weight: 800; margin-bottom: 6px; display: flex; align-items: center; gap: 10px; }
+.section-sub { font-size: 13px; color: var(--text-muted); margin-bottom: 18px; }
+.count-badge { background: var(--primary); color: #fff; font-size: 11px; padding: 3px 10px; border-radius: 20px; font-weight: 700; }
 
-/* LOADING */
-#loading-state {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 80px 20px;
-  gap: 16px;
-}
-.big-spinner { width: 48px; height: 48px; border: 4px solid var(--border); border-top-color: var(--primary); border-radius: 50%; animation: spin 0.8s linear infinite; }
-.loading-text { color: var(--text-muted); font-size: 15px; }
-
-/* ERROR */
-#error-state {
-  background: #fff5f5;
-  border: 1px solid #ffcdd2;
-  border-radius: var(--radius);
-  padding: 32px;
-  text-align: center;
-  max-width: 480px;
-  margin: 60px auto;
-}
-.error-icon { font-size: 40px; margin-bottom: 12px; }
-.error-title { font-size: 18px; font-weight: 700; color: #c62828; margin-bottom: 8px; }
-.error-msg { color: var(--text-muted); font-size: 14px; margin-bottom: 20px; }
-.btn-retry { background: var(--primary); color: #fff; border: none; border-radius: 8px; padding: 10px 24px; font-size: 14px; font-weight: 600; cursor: pointer; transition: background 0.2s; }
-.btn-retry:hover { background: var(--primary-light); }
-
-/* SECTION TITLE */
-.section-title {
-  font-size: 20px;
-  font-weight: 800;
-  color: var(--primary);
-  margin-bottom: 6px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-.section-sub { font-size: 13px; color: var(--text-muted); margin-bottom: 20px; }
-.count-badge {
-  background: var(--primary);
-  color: #fff;
-  border-radius: 20px;
-  padding: 2px 10px;
-  font-size: 12px;
-  font-weight: 700;
-}
-
-/* STATES GRID */
+/* STATE GRID */
 #states-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
   gap: 14px;
 }
 .state-card {
   background: var(--surface);
   border-radius: var(--radius);
-  box-shadow: var(--shadow);
   padding: 20px 16px;
+  text-align: center;
   cursor: pointer;
   transition: transform 0.18s, box-shadow 0.18s;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 8px;
-  border: 2px solid transparent;
+  box-shadow: var(--shadow);
+  border-top: 4px solid var(--state-color);
   position: relative;
   overflow: hidden;
 }
-.state-card::before {
+.state-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-hover); }
+.state-card::after {
   content: '';
   position: absolute;
-  top: 0; left: 0; right: 0;
-  height: 4px;
-  background: var(--state-color, #607d8b);
+  right: -20px; top: -20px;
+  width: 80px; height: 80px;
+  background: var(--state-color);
+  opacity: 0.06;
+  border-radius: 50%;
 }
-.state-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-hover); border-color: var(--state-color, #607d8b); }
-.state-sigla {
-  font-size: 36px;
-  font-weight: 900;
-  color: var(--state-color, #607d8b);
-  line-height: 1;
+.state-sigla { font-size: 28px; font-weight: 900; color: var(--state-color); line-height: 1; }
+.state-name { font-size: 12px; color: var(--text-muted); margin-top: 4px; font-weight: 600; }
+.state-count { font-size: 11px; color: var(--text-muted); margin-top: 6px; opacity: 0.7; }
+/* Division card variant */
+.state-card.division-card {
+  border-top: 4px solid var(--purple);
+  background: linear-gradient(135deg, #faf5ff 0%, #fff 100%);
 }
-.state-name { font-size: 12px; color: var(--text-muted); font-weight: 600; text-align: center; }
-.state-count { font-size: 11px; background: var(--state-color, #607d8b); color: #fff; border-radius: 12px; padding: 2px 10px; font-weight: 700; }
+.state-card.division-card .state-sigla { color: var(--purple); font-size: 20px; }
 
 /* COORDINATORS GRID */
 #coordinators-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
   gap: 16px;
 }
 .coord-card {
@@ -258,20 +206,33 @@ body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background
   border-radius: var(--radius);
   box-shadow: var(--shadow);
   overflow: hidden;
-  transition: transform 0.18s, box-shadow 0.18s;
-  display: flex;
-  flex-direction: column;
+  transition: box-shadow 0.2s;
 }
-.coord-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-hover); }
+.coord-card:hover { box-shadow: var(--shadow-hover); }
 .coord-header {
-  padding: 14px 16px 12px;
+  padding: 16px;
   color: #fff;
   position: relative;
+  overflow: hidden;
 }
-.coord-func { font-size: 10px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; opacity: 0.85; margin-bottom: 4px; }
-.coord-name { font-size: 17px; font-weight: 800; line-height: 1.2; }
-.coord-region { font-size: 12px; opacity: 0.9; margin-top: 5px; }
-.coord-body { padding: 14px 16px; flex: 1; display: flex; flex-direction: column; gap: 8px; }
+.coord-header::after {
+  content: '';
+  position: absolute;
+  right: -20px; top: -20px;
+  width: 100px; height: 100px;
+  background: rgba(255,255,255,0.08);
+  border-radius: 50%;
+}
+.coord-region-highlight {
+  font-size: 16px;
+  font-weight: 900;
+  margin-bottom: 4px;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.15);
+  letter-spacing: 0.3px;
+}
+.coord-func { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.2px; opacity: 0.85; margin-bottom: 2px; }
+.coord-name { font-size: 15px; font-weight: 700; line-height: 1.3; }
+.coord-body { padding: 12px 16px; display: flex; flex-direction: column; gap: 6px; }
 .coord-contact { display: flex; align-items: center; gap: 8px; font-size: 13px; }
 .coord-contact a { color: var(--primary); text-decoration: none; font-weight: 500; transition: opacity 0.2s; }
 .coord-contact a:hover { opacity: 0.7; text-decoration: underline; }
@@ -344,6 +305,7 @@ body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background
   border: 2px solid rgba(255,255,255,0.4);
 }
 .tlh-info-block { flex: 1; min-width: 200px; }
+.tlh-region-highlight { font-size: 18px; font-weight: 900; margin-bottom: 2px; text-shadow: 0 1px 3px rgba(0,0,0,0.15); }
 .tlh-func { font-size: 10px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; opacity: 0.8; margin-bottom: 4px; }
 .tlh-name { font-size: 22px; font-weight: 900; line-height: 1.2; margin-bottom: 4px; }
 .tlh-region { font-size: 13px; opacity: 0.9; margin-bottom: 10px; }
@@ -369,6 +331,7 @@ tbody tr:hover { background: #f5f8ff; }
   white-space: nowrap;
 }
 .badge-rep { background: #e8f5e9; color: #1b5e20; }
+.badge-cv { background: #e3f2fd; color: #0d47a1; }
 .badge-tlv { background: #e3f2fd; color: #0d47a1; }
 .badge-ger { background: #fce4ec; color: #880e4f; }
 .badge-coord-med { background: #fff3e0; color: #bf360c; }
@@ -492,16 +455,14 @@ tbody tr:hover { background: #f5f8ff; }
   width: 100%;
 }
 
-/* EMPTY STATE */
-.empty-state {
-  text-align: center;
-  padding: 60px 20px;
-  color: var(--text-muted);
-}
+/* EMPTY & LOADING */
+.empty-state { text-align: center; padding: 60px 20px; color: var(--text-muted); }
 .empty-icon { font-size: 48px; margin-bottom: 12px; }
 .empty-text { font-size: 16px; font-weight: 600; }
+#loading-state { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 80px 20px; gap: 14px; }
+#loading-state .spinner { width: 36px; height: 36px; border-width: 3px; border-color: #ccc; border-top-color: var(--primary); }
+#error-state { display: none; text-align: center; padding: 60px 20px; }
 
-/* DISTRICT LABEL */
 .district-label {
   font-size: 10px;
   background: rgba(255,255,255,0.22);
@@ -512,9 +473,8 @@ tbody tr:hover { background: #f5f8ff; }
   font-weight: 600;
   letter-spacing: 0.5px;
 }
-
-/* NO CONTACT */
 .no-data { color: #bbb; font-style: italic; font-size: 12px; }
+.razao-social { font-size: 0.78em; color: #5a6a8a; font-style: italic; margin-top: 2px; }
 
 /* RESPONSIVE */
 @media (max-width: 600px) {
@@ -541,13 +501,13 @@ tbody tr:hover { background: #f5f8ff; }
       <p>Diretório comercial interativo</p>
     </div>
     <div class="header-search">
-      <span class="search-icon">🔍</span>
+      <span class="search-icon">&#128269;</span>
       <input type="text" id="search-input" placeholder="Buscar por nome, cidade, região…" autocomplete="off">
     </div>
     <div class="header-actions">
-      <button class="btn-refresh" id="btn-refresh" title="Atualizar dados">
-        <span id="refresh-icon">🔄</span>
-        <span>Atualizar</span>
+      <button class="btn-refresh" id="btn-refresh">
+        <span id="refresh-icon">&#128260;</span>
+        Atualizar
       </button>
       <span class="timestamp" id="timestamp"></span>
     </div>
@@ -558,24 +518,20 @@ tbody tr:hover { background: #f5f8ff; }
 <div id="filter-bar">
   <div class="filter-inner">
     <span class="filter-label">Filtrar:</span>
-    <select class="filter-select" id="filter-uf">
-      <option value="">Todos os estados</option>
-    </select>
+    <select class="filter-select" id="filter-uf"><option value="">Todos os estados</option></select>
     <select class="filter-select" id="filter-func">
       <option value="">Todas as funções</option>
       <option value="coordenador de equipe">Coordenadores de Equipe</option>
       <option value="representante comercial">Representante Comercial</option>
-      <option value="representante externo">Representante Externo</option>
+      <option value="consultor de vendas">Consultor de Vendas</option>
       <option value="televendas">Televendas (TLV)</option>
       <option value="gerente de contas">Gerente de Contas</option>
-      <option value="coordenador de medias redes">Coordenador de Médias Redes</option>
-      <option value="dedicado">Dedicados</option>
-      <option value="gerente de projetos especiais">Ger. de Projetos Especiais</option>
+      <option value="médias redes">Coord. Médias Redes</option>
+      <option value="dedicados">Dedicados</option>
+      <option value="projetos especiais">Ger. Projetos Especiais</option>
     </select>
-    <select class="filter-select" id="filter-region">
-      <option value="">Todas as regiões</option>
-    </select>
-    <button class="btn-clear" id="btn-clear">✕ Limpar</button>
+    <select class="filter-select" id="filter-region"><option value="">Todas as regiões</option></select>
+    <button class="btn-clear" id="btn-clear">&#10005; Limpar</button>
   </div>
 </div>
 
@@ -585,14 +541,13 @@ tbody tr:hover { background: #f5f8ff; }
 <!-- MAIN CONTENT -->
 <div id="main-content">
   <div id="loading-state">
-    <div class="big-spinner"></div>
-    <p class="loading-text">Carregando dados da planilha…</p>
+    <span class="spinner"></span>
+    <span style="color:var(--text-muted);font-size:14px">Carregando dados da planilha…</span>
   </div>
-  <div id="error-state" style="display:none">
-    <div class="error-icon">⚠️</div>
-    <div class="error-title">Erro ao carregar dados</div>
-    <div class="error-msg" id="error-msg">Não foi possível conectar à planilha.</div>
-    <button class="btn-retry" id="btn-retry">Tentar novamente</button>
+  <div id="error-state">
+    <div class="empty-icon">&#9888;&#65039;</div>
+    <div class="empty-text" id="error-msg">Erro ao carregar dados</div>
+    <button class="btn-team" id="btn-retry" style="margin-top:16px">Tentar novamente</button>
   </div>
   <div id="view-states" style="display:none"></div>
   <div id="view-coordinators" style="display:none"></div>
@@ -601,9 +556,9 @@ tbody tr:hover { background: #f5f8ff; }
 </div>
 
 <!-- MODAL -->
-<div id="modal-overlay" role="dialog" aria-modal="true">
+<div id="modal-overlay">
   <div class="modal-box">
-    <button class="modal-close" id="modal-close" aria-label="Fechar">✕</button>
+    <button class="modal-close" id="modal-close">&#10005;</button>
     <div class="modal-title" id="modal-title"></div>
     <div class="modal-subtitle" id="modal-subtitle"></div>
     <div class="cities-container" id="modal-cities"></div>
@@ -618,18 +573,16 @@ tbody tr:hover { background: #f5f8ff; }
 // CONSTANTS & CONFIG
 // ============================================================
 const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQJRPejEYUGjqFiruPTGJuS2Itk6qjvyk6moB4_ChCe5_z4_CW0jYcYXJFimYYw4kGcbP2fpdRccLkq/pub?output=csv';
-const REFRESH_INTERVAL = 3 * 60 * 1000; // 3 minutes
+const REFRESH_INTERVAL = 5 * 60 * 1000; // 5 minutes
 
 const STATE_COLORS = {
   SC:'#1565c0', RS:'#c62828', PR:'#2e7d32', MS:'#e65100',
   SP:'#6a1b9a', GO:'#00838f', DF:'#4527a0', MT:'#827717',
-  MG:'#4e342e', RJ:'#00695c', BA:'#f57f17', PE:'#ad1457',
-  CE:'#0277bd', AM:'#558b2f', PA:'#6a1b9a', MA:'#37474f',
-  PI:'#4527a0', RN:'#00838f', PB:'#c62828', AL:'#e65100',
-  SE:'#1565c0', ES:'#2e7d32', TO:'#827717', RO:'#4e342e',
-  AC:'#00695c', RR:'#f57f17', AP:'#ad1457', DEFAULT:'#607d8b'
+  MG:'#4e342e', RJ:'#00695c', BA:'#f57f17', DEFAULT:'#607d8b'
 };
-
+const DIVISION_COLORS = {
+  TLV:'#1565c0', 'EXPANSÃO':'#00838f', 'PROJ. ESPECIAIS':'#2e7d32'
+};
 const STATE_NAMES = {
   AC:'Acre', AL:'Alagoas', AP:'Amapá', AM:'Amazonas', BA:'Bahia',
   CE:'Ceará', DF:'Distrito Federal', ES:'Espírito Santo', GO:'Goiás',
@@ -641,9 +594,9 @@ const STATE_NAMES = {
 };
 
 // ============================================================
-// STATE
+// APP STATE
 // ============================================================
-let appData = { rows:[], groups:[], stateMap:{}, updateDate:'' };
+let appData = { rows:[], groups:[], stateMap:{}, divisionMap:{}, updateDate:'' };
 let currentView = 'states';
 let currentState = null;
 let currentGroup = null;
@@ -660,7 +613,7 @@ function parseCSV(text) {
   let updateDate = '';
   for (let i = 0; i < lines.length; i++) {
     const upper = lines[i].toUpperCase();
-    if (upper.includes('DISTRITO') && upper.includes('NOME')) { headerIdx = i; break; }
+    if (upper.includes('DISTRITO') && (upper.includes('NOME') || upper.includes('REPRESENTANTE'))) { headerIdx = i; break; }
     const dateMatch = lines[i].match(/\d{2}\/\d{2}\/\d{4}/);
     if (dateMatch) updateDate = dateMatch[0];
   }
@@ -701,199 +654,235 @@ function normalizeHeader(h) {
   let s = h.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toUpperCase().trim();
   s = s.replace('COORPORATIVO','CORPORATIVO').replace('COODENADOR','COORDENADOR');
   if (s === 'NOME REPRESENTANTE') s = 'NOME';
+  if (s === 'RAZAO SOCIAL') s = 'RAZAO SOCIAL';
   return s;
 }
 
 // ============================================================
-// HELPERS
+// FIELD HELPERS
 // ============================================================
-function isLeader(row) {
-  const func = getFunc(row).toLowerCase();
-  return func.includes('coordenador') || func.includes('gerente');
-}
-
-// Roles that attend clients (not cities), have no subordinate team
-function isClientRole(func) {
-  const f = func.toLowerCase();
-  return f.includes('gerente de contas') || f.includes('medias redes') || f.includes('médias redes');
-}
-
 function getFunc(row) {
-  return row['FUNCAO'] || row['FUNÇÃO'] || row['FUNCÃO'] || '';
+  return row['FUNCAO'] || row['FUNÇÃO'] || row['FUNCAO'] || '';
+}
+function getRegion(row) {
+  return row['REGIAO'] || row['REGIÃO'] || '';
+}
+function getPhone(row) {
+  return row['CONTATO CORPORATIVO'] || row['CONTATO COORPORATIVO'] || '';
+}
+function getEmail(row) { return row['EMAIL'] || ''; }
+function getCities(row) { return row['PRINCIPAIS CIDADES'] || ''; }
+function getRazaoSocial(row) { return row['RAZAO SOCIAL'] || ''; }
+function getName(row) { return row['NOME'] || ''; }
+function getUF(row) { return (row['UF'] || '').trim(); }
+function getDistrito(row) { return (row['DISTRITO'] || '').trim(); }
+function getSetor(row) { return (row['SETOR'] || '').trim(); }
+
+function isCoordEquipe(row) {
+  return getFunc(row).toUpperCase().includes('COORDENADOR EQUIPE') || getFunc(row).toUpperCase().includes('COORDENADOR DE EQUIPE');
+}
+function isGerenteProjetosEspeciais(row) {
+  return getFunc(row).toUpperCase().includes('GERENTE DE PROJETOS ESPECIAIS');
+}
+function isDedicado(row) {
+  return getFunc(row).toUpperCase().includes('DEDICADO');
+}
+function isGerenteContas(row) {
+  const f = getFunc(row).toLowerCase();
+  return f.includes('gerente de contas');
+}
+function isCoordContas(row) {
+  const f = getFunc(row).toLowerCase();
+  return f.includes('coordenador de contas') || f.includes('medias redes') || f.includes('médias redes');
+}
+function isClientRole(row) {
+  return isGerenteContas(row) || isCoordContas(row);
+}
+function isRepComercial(row) {
+  return getFunc(row).toLowerCase().includes('representante comercial');
+}
+function isConsultorVendas(row) {
+  return getFunc(row).toLowerCase().includes('consultor de vendas');
 }
 
-function getUFs(row) {
-  const uf = row['UF'] || '';
-  if (!uf || uf === '-' || uf.toUpperCase().includes('EXPANS')) return [];
-  return uf.split(/[\/\-,\s]+/).map(s => s.trim().toUpperCase()).filter(s => s.length === 2 && /^[A-Z]{2}$/.test(s));
-}
-
-function getDistrictBase(distStr) {
-  const n = parseInt(distStr);
-  if (isNaN(n)) return null;
-  return Math.floor(n / 100) * 100;
+function getUFs(ufStr) {
+  if (!ufStr || ufStr === '-' || ufStr.toUpperCase().includes('EXPANS')) return [];
+  return ufStr.split(/[\/\-,\s]+/).map(s => s.trim().toUpperCase()).filter(s => s.length === 2 && /^[A-Z]{2}$/.test(s));
 }
 
 // ============================================================
 // PROCESS DATA
 // ============================================================
 function processData(rows) {
-  rows = rows.map(r => {
-    const nr = {};
-    Object.keys(r).forEach(k => { nr[k] = r[k]; });
-    if (!nr['FUNCAO']) nr['FUNCAO'] = nr['FUNÇÃO'] || nr['FUNCÃO'] || '';
-    return nr;
-  });
-
-  const specialRows = rows.filter(r => (r['DISTRITO'] || '').trim() === '-');
-  const normalRows  = rows.filter(r => (r['DISTRITO'] || '').trim() !== '-');
-
-  const groupMap = {};
-
-  normalRows.forEach(row => {
-    const dist = (row['DISTRITO'] || '').trim();
-    if (!dist) return;
-    if (isLeader(row)) {
-      if (!groupMap[dist]) groupMap[dist] = { leader:row, members:[], distKey:dist, states:[] };
-      else if (!groupMap[dist].leader) groupMap[dist].leader = row;
-    }
-  });
-
-  normalRows.forEach(row => {
-    const dist = (row['DISTRITO'] || '').trim();
-    if (!dist) return;
-    if (isLeader(row)) return;
-    if (groupMap[dist]) { groupMap[dist].members.push(row); return; }
-    const memberBase = getDistrictBase(dist);
-    let assigned = false;
-    if (memberBase !== null) {
-      for (const key of Object.keys(groupMap)) {
-        if (key.includes('/')) {
-          const parts = key.split('/');
-          for (const p of parts) {
-            const b = getDistrictBase(p.trim());
-            if (b === memberBase) { groupMap[key].members.push(row); assigned = true; break; }
-          }
-          if (assigned) break;
-        }
-      }
-    }
-    if (!assigned) {
-      // Fallback: se o membro não encontrou grupo por distrito,
-      // verificar se existe um líder cujas UFs se sobrepõem às UFs do membro
-      const memberUFs = getUFs(row);
-      if (memberUFs.length > 0) {
-        for (const key of Object.keys(groupMap)) {
-          const grp = groupMap[key];
-          if (grp.leader) {
-            const leaderUFs = getUFs(grp.leader);
-            if (leaderUFs.some(uf => memberUFs.includes(uf))) {
-              grp.members.push(row);
-              assigned = true;
-              break;
-            }
-          }
-        }
-      }
-    }
-    if (!assigned) {
-      if (!groupMap[dist]) groupMap[dist] = { leader:null, members:[], distKey:dist, states:[] };
-      groupMap[dist].members.push(row);
-    }
-  });
-
-  let specialLeader = specialRows.find(r => getFunc(r).toLowerCase().includes('gerente'));
-  if (!specialLeader && specialRows.length > 0) specialLeader = specialRows[0];
-  const specialMembers = specialRows.filter(r => r !== specialLeader);
-  if (specialLeader || specialMembers.length > 0) {
-    groupMap['-'] = { leader:specialLeader||null, members:specialMembers, distKey:'-', states:[] };
-  }
-
+  const groups = [];
   const stateMap = {};
-  const groups = Object.values(groupMap);
+  const divisionMap = {};
 
-  groups.forEach(group => {
-    const allUFs = new Set();
-    if (group.leader) getUFs(group.leader).forEach(uf => allUFs.add(uf));
-    group.members.forEach(m => getUFs(m).forEach(uf => allUFs.add(uf)));
-    if (allUFs.size === 0 && group.members.length > 0)
-      group.members.forEach(m => getUFs(m).forEach(uf => allUFs.add(uf)));
-    group.states = Array.from(allUFs);
-    group.states.forEach(uf => {
-      if (!stateMap[uf]) stateMap[uf] = [];
-      stateMap[uf].push(group);
+  // --- 1) IDENTIFY COORDENADORES DE EQUIPE by DISTRITO ---
+  const coordsByDist = {};
+  rows.forEach(r => {
+    if (isCoordEquipe(r)) {
+      const dist = getDistrito(r);
+      coordsByDist[dist] = r;
+    }
+  });
+
+  // --- 2) BUILD GROUPS: Pass 1 - Match by district base ---
+  const assignedRows = new Set();
+  const groupMembers = {};
+  Object.keys(coordsByDist).forEach(dist => {
+    const leader = coordsByDist[dist];
+    assignedRows.add(leader);
+    groupMembers[dist] = [];
+
+    const distParts = dist.split('/').map(p => p.trim());
+    const distBases = distParts.map(p => { const n = parseInt(p); return isNaN(n) ? null : Math.floor(n/100)*100; }).filter(b => b !== null);
+    rows.forEach(r => {
+      if (r === leader || assignedRows.has(r)) return;
+      if (isCoordEquipe(r) || isGerenteProjetosEspeciais(r) || isDedicado(r) || isGerenteContas(r) || isCoordContas(r)) return;
+      const rDist = getDistrito(r);
+      if (rDist === '-' || rDist === '') return;
+      const rDistNum = parseInt(rDist);
+      if (isNaN(rDistNum)) return;
+      const rBase = Math.floor(rDistNum/100)*100;
+      if (distBases.includes(rBase)) {
+        groupMembers[dist].push(r); assignedRows.add(r);
+      }
     });
   });
 
-  return { groups, stateMap };
+  // --- Pass 2: Fallback - assign remaining by COORDENADOR column ---
+  Object.keys(coordsByDist).forEach(dist => {
+    const leader = coordsByDist[dist];
+    const leaderNameUp = getName(leader).toUpperCase().trim();
+    const leaderFirst = leaderNameUp.split(' ')[0];
+    rows.forEach(r => {
+      if (assignedRows.has(r)) return;
+      if (isCoordEquipe(r) || isGerenteProjetosEspeciais(r) || isDedicado(r) || isGerenteContas(r) || isCoordContas(r)) return;
+      const coordCol = (r['COORDENADOR'] || '').toUpperCase().trim();
+      if (coordCol && (coordCol === leaderNameUp || coordCol === leaderFirst)) {
+        groupMembers[dist].push(r); assignedRows.add(r);
+      }
+    });
+  });
+
+  // --- Build final group objects ---
+  Object.keys(coordsByDist).forEach(dist => {
+    const leader = coordsByDist[dist];
+    const members = groupMembers[dist];
+
+    const leaderUF = getUF(leader);
+    const leaderRegion = getRegion(leader);
+
+    // Determine which states this group covers
+    const allUFs = new Set();
+    getUFs(leaderUF).forEach(u => allUFs.add(u));
+    members.forEach(m => getUFs(getUF(m)).forEach(u => allUFs.add(u)));
+
+    // Determine display category
+    let division = null;
+    if (leaderUF === '-' || leaderRegion.toUpperCase().includes('TLV')) {
+      division = 'TLV';
+    } else if (leaderUF.toUpperCase().includes('EXPANS') || leaderRegion.toUpperCase().includes('EXPANS')) {
+      division = 'EXPANSÃO';
+    }
+
+    const group = {
+      leader: leader,
+      members: members,
+      distKey: dist,
+      states: Array.from(allUFs),
+      division: division,
+      type: 'coordEquipe'
+    };
+    groups.push(group);
+  });
+
+  // --- 3) GERENTE DE PROJETOS ESPECIAIS + DEDICADOS ---
+  const gpeRow = rows.find(r => isGerenteProjetosEspeciais(r));
+  if (gpeRow) {
+    assignedRows.add(gpeRow);
+    const dedicados = rows.filter(r => isDedicado(r));
+    dedicados.forEach(d => assignedRows.add(d));
+    const allUFs = new Set();
+    getUFs(getUF(gpeRow)).forEach(u => allUFs.add(u));
+    dedicados.forEach(m => getUFs(getUF(m)).forEach(u => allUFs.add(u)));
+    const group = {
+      leader: gpeRow,
+      members: dedicados,
+      distKey: 'PROJ_ESP',
+      states: Array.from(allUFs),
+      division: 'PROJ. ESPECIAIS',
+      type: 'projetosEspeciais'
+    };
+    groups.push(group);
+  }
+
+  // --- 4) GERENTES DE CONTAS (individual, no team) ---
+  rows.filter(r => isGerenteContas(r)).forEach(r => {
+    assignedRows.add(r);
+    const ufs = getUFs(getUF(r));
+    const group = {
+      leader: r,
+      members: [],
+      distKey: getDistrito(r),
+      states: ufs,
+      division: null,
+      type: 'gerenteContas'
+    };
+    groups.push(group);
+  });
+
+  // --- 5) COORDENADORES DE CONTAS MÉDIAS REDES (individual, no team) ---
+  rows.filter(r => isCoordContas(r)).forEach(r => {
+    assignedRows.add(r);
+    const ufs = getUFs(getUF(r));
+    const group = {
+      leader: r,
+      members: [],
+      distKey: getDistrito(r),
+      states: ufs,
+      division: null,
+      type: 'coordContas'
+    };
+    groups.push(group);
+  });
+
+  // --- 6) BUILD STATE MAP & DIVISION MAP ---
+  groups.forEach(group => {
+    if (group.division) {
+      if (!divisionMap[group.division]) divisionMap[group.division] = [];
+      divisionMap[group.division].push(group);
+      // Also add to state map for filtering
+      group.states.forEach(uf => {
+        if (!stateMap[uf]) stateMap[uf] = [];
+        // Don't add division groups to state tiles directly (they get their own tile)
+      });
+    } else {
+      group.states.forEach(uf => {
+        if (!stateMap[uf]) stateMap[uf] = [];
+        stateMap[uf].push(group);
+      });
+    }
+  });
+
+  return { groups, stateMap, divisionMap };
 }
 
 // ============================================================
 // FETCH DATA
 // ============================================================
-
-// ============================================================
-// MANUAL OVERRIDES — ajustes fixos independente da planilha
-// ============================================================
-function applyManualOverrides(rows, groups, stateMap) {
-  // ── Override: Lucas Acyole = Coordenador de MT (Glaucia apenas na equipe dele)
-  const lucasRow   = rows.find(r => (r['NOME']||'').toLowerCase().includes('lucas') &&
-                                    (r['NOME']||'').toLowerCase().includes('acyole'));
-  const glauciaRow = rows.find(r => (r['NOME']||'').toLowerCase().includes('gl') &&
-                                    (r['NOME']||'').toLowerCase().replace(/[áàãâä]/g,'a').includes('glaucia'));
-
-  if (!lucasRow) return;
-
-  // 1. Remover Lucas de qualquer grupo onde aparece como líder ou membro
-  groups.forEach(g => {
-    if (g.leader === lucasRow) g.leader = null;
-    g.members = g.members.filter(m => m !== lucasRow);
-  });
-
-  // 2. Remover Gláucia de TODOS os stateMaps (líder e membro) — ela só aparece na equipe do Lucas
-  if (glauciaRow) {
-    // Remove como líder de qualquer grupo em qualquer estado
-    Object.keys(stateMap).forEach(uf => {
-      stateMap[uf] = stateMap[uf].filter(g => g.leader !== glauciaRow);
-    });
-    // Remove como membro de todos os grupos
-    groups.forEach(g => {
-      g.members = g.members.filter(m => m !== glauciaRow);
-    });
-  }
-
-  // 3. Sincronizar grupos restantes no stateMap com leader=null para Lucas
-  Object.values(stateMap).forEach(arr => {
-    arr.forEach(g => {
-      if (g.leader === lucasRow) g.leader = null;
-    });
-  });
-
-  // 4. Criar grupo MT com Lucas como líder e Gláucia como único membro
-  const mtGroup = {
-    leader  : lucasRow,
-    members : glauciaRow ? [glauciaRow] : [],
-    distKey : 'MT',
-    states  : ['MT']
-  };
-  groups.push(mtGroup);
-
-  // 5. stateMap de MT recebe SOMENTE o grupo do Lucas (sem outros cards)
-  stateMap['MT'] = [mtGroup];
-}
-
 async function fetchData() {
   showLoading();
   try {
     const url = `${CSV_URL}&cb=${Date.now()}_${Math.random().toString(36).slice(2)}`;
-    const resp = await fetch(url, { cache:'no-store', headers:{'Cache-Control':'no-store'} });
+    const resp = await fetch(url, { cache:'no-store', headers:{'Cache-Control':'no-store','Pragma':'no-cache'} });
     if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
     const text = await resp.text();
     const { rows, updateDate } = parseCSV(text);
     if (rows.length === 0) throw new Error('Nenhum dado encontrado na planilha.');
-    const { groups, stateMap } = processData(rows);
-    applyManualOverrides(rows, groups, stateMap);
-    appData = { rows, groups, stateMap, updateDate };
+    const { groups, stateMap, divisionMap } = processData(rows);
+    appData = { rows, groups, stateMap, divisionMap, updateDate };
     populateFilters();
     const now = new Date();
     document.getElementById('timestamp').textContent =
@@ -903,14 +892,16 @@ async function fetchData() {
     startProgressBar();
     scheduleRefresh();
   } catch(e) {
-    showError(e.message);
+    showError(e.message || 'Erro ao carregar dados');
   }
 }
 
 function populateFilters() {
-  const ufSel     = document.getElementById('filter-uf');
+  const ufSel = document.getElementById('filter-uf');
   const regionSel = document.getElementById('filter-region');
-  const ufs = Object.keys(appData.stateMap).sort();
+  const allUFs = new Set();
+  appData.rows.forEach(r => getUFs(getUF(r)).forEach(u => allUFs.add(u)));
+  const ufs = Array.from(allUFs).sort();
   ufSel.innerHTML = '<option value="">Todos os estados</option>';
   ufs.forEach(uf => {
     const opt = document.createElement('option');
@@ -920,7 +911,7 @@ function populateFilters() {
   });
   const regions = new Set();
   appData.rows.forEach(r => {
-    const reg = (r['REGIAO']||r['REGIÃO']||'').trim();
+    const reg = getRegion(r).trim();
     if (reg && reg !== '-') regions.add(reg);
   });
   regionSel.innerHTML = '<option value="">Todas as regiões</option>';
@@ -933,7 +924,7 @@ function populateFilters() {
 }
 
 // ============================================================
-// VIEWS
+// VIEWS — LOADING, ERROR
 // ============================================================
 function showLoading() {
   document.getElementById('loading-state').style.display = 'flex';
@@ -948,11 +939,11 @@ function showError(msg) {
 }
 
 function renderCurrentView() {
-  const query       = document.getElementById('search-input').value.trim().toLowerCase();
-  const filterUF    = document.getElementById('filter-uf').value;
-  const filterFunc  = document.getElementById('filter-func').value.toLowerCase();
-  const filterRegion= document.getElementById('filter-region').value.toLowerCase();
-  const hasFilter   = query || filterFunc || filterRegion;
+  const query = document.getElementById('search-input').value.trim().toLowerCase();
+  const filterUF = document.getElementById('filter-uf').value;
+  const filterFunc = document.getElementById('filter-func').value.toLowerCase();
+  const filterRegion = document.getElementById('filter-region').value.toLowerCase();
+  const hasFilter = query || filterFunc || filterRegion;
 
   if (hasFilter || (query && filterUF)) { renderSearchResults(query, filterUF, filterFunc, filterRegion); return; }
   if (filterUF && !hasFilter) { navigateToState(filterUF); return; }
@@ -961,35 +952,58 @@ function renderCurrentView() {
   else if (currentView === 'team') renderTeam(currentGroup, currentState);
 }
 
-// VIEW 1 — States
+// ============================================================
+// VIEW 1 — HOME (States + Divisions)
+// ============================================================
 function renderStates() {
   currentView = 'states';
   hideAllViews();
   updateBreadcrumb([{ label:'Início' }]);
   const container = document.getElementById('view-states');
   container.style.display = 'block';
-  const ufs = Object.keys(appData.stateMap).sort();
+  const ufs = Object.keys(appData.stateMap).filter(uf => appData.stateMap[uf].length > 0).sort();
+  const divisions = Object.keys(appData.divisionMap).sort();
+  const totalTiles = ufs.length + divisions.length;
+
   let html = `
-    <div class="section-title">🗺️ Estados com cobertura <span class="count-badge">${ufs.length}</span></div>
-    <p class="section-sub">Selecione um estado para ver os coordenadores e equipes.</p>
+    <div class="section-title">&#128506;&#65039; Cobertura Comercial <span class="count-badge">${totalTiles}</span></div>
+    <p class="section-sub">Selecione um estado ou divisão para ver coordenadores e equipes.</p>
     <div id="states-grid">`;
+
+  // State tiles
   ufs.forEach(uf => {
     const groups = appData.stateMap[uf];
-    const leaderCount = groups.filter(g => g.leader).length;
+    const total = groups.length;
     const color = STATE_COLORS[uf] || STATE_COLORS.DEFAULT;
-    const name  = STATE_NAMES[uf] || uf;
+    const name = STATE_NAMES[uf] || uf;
     html += `
       <div class="state-card" style="--state-color:${color}" onclick="navigateToState('${uf}')" title="${name}">
         <div class="state-sigla">${uf}</div>
         <div class="state-name">${name}</div>
-        <div class="state-count">${leaderCount} lider${leaderCount!==1?'es':''}</div>
+        <div class="state-count">${total} grupo${total!==1?'s':''}</div>
       </div>`;
   });
+
+  // Division tiles
+  divisions.forEach(div => {
+    const groups = appData.divisionMap[div];
+    const total = groups.length;
+    const color = DIVISION_COLORS[div] || '#8B5CF6';
+    html += `
+      <div class="state-card division-card" style="--state-color:${color}" onclick="navigateToDivision('${escapeAttr(div)}')" title="${div}">
+        <div class="state-sigla" style="font-size:18px;color:${color}">${div}</div>
+        <div class="state-name">${div === 'TLV' ? 'Televendas' : div === 'PROJ. ESPECIAIS' ? 'Projetos Especiais SUL' : div}</div>
+        <div class="state-count">${total} grupo${total!==1?'s':''}</div>
+      </div>`;
+  });
+
   html += '</div>';
   container.innerHTML = html;
 }
 
-// VIEW 2 — Coordinators
+// ============================================================
+// VIEW 2 — COORDINATORS (State or Division)
+// ============================================================
 function navigateToState(uf) {
   currentView = 'coordinators';
   currentState = uf;
@@ -997,117 +1011,37 @@ function navigateToState(uf) {
   renderCoordinators(uf);
 }
 
+function navigateToDivision(div) {
+  currentView = 'coordinators';
+  currentState = div;
+  renderDivisionCoordinators(div);
+}
+
 function renderCoordinators(uf) {
   hideAllViews();
   updateBreadcrumb([
-    { label:'Início', action:() => goHome() },
+    { label:'Início', action:'goHome' },
     { label:`${uf} — ${STATE_NAMES[uf]||uf}` }
   ]);
   const container = document.getElementById('view-coordinators');
   container.style.display = 'block';
   const groups = appData.stateMap[uf] || [];
-  const color  = STATE_COLORS[uf] || STATE_COLORS.DEFAULT;
+  const color = STATE_COLORS[uf] || STATE_COLORS.DEFAULT;
 
   let html = `
-    <button class="btn-back" onclick="goHome()">← Voltar aos estados</button>
+    <button class="btn-back" onclick="goHome()">&#8592; Voltar</button>
     <div class="section-title" style="color:${color}">
       ${uf} — ${STATE_NAMES[uf]||uf}
       <span class="count-badge" style="background:${color}">${groups.length} grupo${groups.length!==1?'s':''}</span>
     </div>
-    <p class="section-sub">Coordenadores e líderes com atuação neste estado.</p>
+    <p class="section-sub">Coordenadores, gerentes e representantes com atuação neste estado.</p>
     <div id="coordinators-grid">`;
 
-  // Coletar representantes "órfãos" (grupo sem líder) que atuam neste UF
-  const orphanMembers = [];
-  groups.forEach(group => {
-    if (!group.leader) {
-      group.members.filter(m => getUFs(m).includes(uf)).forEach(m => orphanMembers.push(m));
-    }
-  });
-
-  if (groups.filter(g => g.leader).length === 0 && orphanMembers.length === 0) {
-    html += `<div class="empty-state"><div class="empty-icon">🔍</div><div class="empty-text">Nenhum coordenador encontrado.</div></div>`;
+  if (groups.length === 0) {
+    html += `<div class="empty-state"><div class="empty-icon">&#128269;</div><div class="empty-text">Nenhum grupo encontrado para este estado.</div></div>`;
   } else {
     groups.forEach(group => {
-      const leader = group.leader;
-      if (!leader) return;
-      const func         = getFunc(leader);
-      const headerColor  = getHeaderColor(func, uf);
-      const memberCount  = group.members.length;
-      const phone        = leader['CONTATO CORPORATIVO'] || leader['CONTATO COORPORATIVO'] || '';
-      const email        = leader['EMAIL'] || '';
-      const region       = leader['REGIAO'] || leader['REGIÃO'] || '';
-      const cities       = leader['PRINCIPAIS CIDADES'] || '';
-      const isClient     = isClientRole(func);
-
-      html += `
-        <div class="coord-card">
-          <div class="coord-header" style="background:${headerColor}">
-            <div class="coord-func">${func}</div>
-            <div class="coord-name">${leader['NOME']}</div>
-            ${region ? `<div class="coord-region">📍 ${region}</div>` : ''}
-            <span class="district-label">Distrito ${group.distKey}</span>
-          </div>
-          <div class="coord-body">
-            ${phone
-              ? `<div class="coord-contact"><span class="contact-icon">📱</span><a href="tel:${phone.replace(/\D/g,'')}">${phone}</a></div>`
-              : `<div class="coord-contact"><span class="contact-icon">📱</span><span class="no-data">Sem contato</span></div>`}
-            ${email
-              ? `<div class="coord-contact"><span class="contact-icon">✉️</span><a href="mailto:${email}">${email}</a></div>`
-              : `<div class="coord-contact"><span class="contact-icon">✉️</span><span class="no-data">Sem e-mail</span></div>`}
-          </div>
-          <div class="coord-footer">`;
-
-      if (isClient) {
-        html += `
-            <span class="members-count">🏪 Portfólio de clientes</span>
-            <button class="btn-clients" onclick="openClientsModal('${escapeAttr(leader['NOME'])}','${escapeAttr(region)}','${escapeAttr(cities)}')">📋 Ver Clientes</button>`;
-      } else {
-        html += `
-            <span class="members-count">👥 ${memberCount} liderado${memberCount!==1?'s':''}</span>
-            <button class="btn-team" onclick="navigateToTeam('${escapeAttr(group.distKey)}', '${uf}')">Ver equipe →</button>`;
-      }
-
-      html += `
-          </div>
-        </div>`;
-    });
-  }
-  // ── Seção de representantes sem coordenador cadastrado
-  if (orphanMembers.length > 0 && uf !== 'MT') {
-    html += `<div class="section-title" style="color:${color};margin-top:24px;font-size:1rem">
-      Representantes sem coordenador cadastrado
-      <span class="count-badge" style="background:${color}">${orphanMembers.length}</span>
-    </div>`;
-    orphanMembers.forEach(member => {
-      const mFunc   = getFunc(member);
-      const mPhone  = member['CONTATO CORPORATIVO'] || member['CONTATO COORPORATIVO'] || '';
-      const mEmail  = member['EMAIL'] || '';
-      const mRegion = member['REGIAO'] || member['REGIÃO'] || '';
-      const mCities = member['PRINCIPAIS CIDADES'] || '';
-      const mClient = isClientRole(mFunc);
-      html += `
-        <div class="coord-card" style="border:2px dashed ${color}55">
-          <div class="coord-header" style="background:${color}CC">
-            <div class="coord-func">${mFunc}</div>
-            <div class="coord-name">${member['NOME']}</div>
-            ${mRegion ? `<div class="coord-region">📍 ${mRegion}</div>` : ''}
-          </div>
-          <div class="coord-body">
-            ${mPhone
-              ? `<div class="coord-contact"><span class="contact-icon">📱</span><a href="tel:${mPhone.replace(/\D/g,'')}">${mPhone}</a></div>`
-              : `<div class="coord-contact"><span class="contact-icon">📱</span><span class="no-data">Sem contato</span></div>`}
-            ${mEmail
-              ? `<div class="coord-contact"><span class="contact-icon">✉️</span><a href="mailto:${mEmail}">${mEmail}</a></div>`
-              : `<div class="coord-contact"><span class="contact-icon">✉️</span><span class="no-data">Sem e-mail</span></div>`}
-          </div>
-          <div class="coord-footer">
-            ${mClient
-              ? `<span class="members-count">🏪 Portfólio de clientes</span>
-                 <button class="btn-clients" onclick="openClientsModal('${escapeAttr(member['NOME'])}','${escapeAttr(mRegion)}','${escapeAttr(mCities)}')">📋 Ver Clientes</button>`
-              : `<span class="members-count" style="font-size:.85rem">${mCities || 'Cidades não informadas'}</span>`}
-          </div>
-        </div>`;
+      html += renderCoordCard(group, uf);
     });
   }
 
@@ -1115,82 +1049,157 @@ function renderCoordinators(uf) {
   container.innerHTML = html;
 }
 
+function renderDivisionCoordinators(div) {
+  hideAllViews();
+  updateBreadcrumb([
+    { label:'Início', action:'goHome' },
+    { label:div }
+  ]);
+  const container = document.getElementById('view-coordinators');
+  container.style.display = 'block';
+  const groups = appData.divisionMap[div] || [];
+  const color = DIVISION_COLORS[div] || '#8B5CF6';
+
+  let html = `
+    <button class="btn-back" onclick="goHome()">&#8592; Voltar</button>
+    <div class="section-title" style="color:${color}">
+      ${div === 'TLV' ? 'Televendas (TLV)' : div === 'PROJ. ESPECIAIS' ? 'Projetos Especiais — SUL' : div}
+      <span class="count-badge" style="background:${color}">${groups.length}</span>
+    </div>
+    <p class="section-sub">Equipes e representantes desta divisão.</p>
+    <div id="coordinators-grid">`;
+
+  groups.forEach(group => {
+    html += renderCoordCard(group, null);
+  });
+
+  html += '</div>';
+  container.innerHTML = html;
+}
+
+function renderCoordCard(group, uf) {
+  const leader = group.leader;
+  if (!leader) return '';
+  const func = getFunc(leader);
+  const phone = getPhone(leader);
+  const email = getEmail(leader);
+  const region = getRegion(leader);
+  const headerColor = getHeaderColor(func, uf);
+  const isClient = isClientRole(leader);
+  const memberCount = group.members.length;
+  const cities = getCities(leader);
+
+  let html = `<div class="coord-card">
+    <div class="coord-header" style="background:${headerColor}">`;
+
+  // Region HIGHLIGHTED above name
+  if (region && region !== '-') {
+    html += `<div class="coord-region-highlight">&#128205; ${region}</div>`;
+  }
+  html += `<div class="coord-func">${func}</div>
+      <div class="coord-name">${getName(leader)}</div>
+      <span class="district-label">Distrito ${group.distKey}</span>
+    </div>
+    <div class="coord-body">
+      ${phone
+        ? `<div class="coord-contact"><span class="contact-icon">&#128241;</span><a href="tel:${phone.replace(/\D/g,'')}">${phone}</a></div>`
+        : `<div class="coord-contact"><span class="contact-icon">&#128241;</span><span class="no-data">Sem contato</span></div>`}
+      ${email
+        ? `<div class="coord-contact"><span class="contact-icon">&#9993;&#65039;</span><a href="mailto:${email}">${email}</a></div>`
+        : `<div class="coord-contact"><span class="contact-icon">&#9993;&#65039;</span><span class="no-data">Sem e-mail</span></div>`}
+    </div>
+    <div class="coord-footer">`;
+
+  if (isClient) {
+    // Gerente de Contas / Coord. Médias Redes: show clients button
+    html += `<span class="members-count">&#127978; Portfólio de clientes</span>
+      <button class="btn-clients" onclick="openClientsModal('${escapeAttr(getName(leader))}','${escapeAttr(region)}','${escapeAttr(cities)}')">&#128203; Ver Clientes</button>`;
+  } else if (memberCount > 0) {
+    html += `<span class="members-count">&#128101; ${memberCount} membro${memberCount!==1?'s':''}</span>
+      <button class="btn-team" onclick="navigateToTeam('${escapeAttr(group.distKey)}','${escapeAttr(uf||currentState||'')}')">Ver equipe &#8594;</button>`;
+  } else {
+    html += `<span class="members-count">&#128101; Equipe</span>
+      <button class="btn-team" onclick="navigateToTeam('${escapeAttr(group.distKey)}','${escapeAttr(uf||currentState||'')}')">Ver equipe &#8594;</button>`;
+  }
+
+  html += `</div></div>`;
+  return html;
+}
+
 function getHeaderColor(func, uf) {
   const f = func.toLowerCase();
   if (f.includes('projetos especiais')) return '#2e7d32';
-  if (f.includes('gerente de contas'))  return '#ad1457';
+  if (f.includes('gerente de contas')) return '#ad1457';
   if (f.includes('medias redes') || f.includes('médias redes')) return '#e65100';
-  if (f.includes('tlv') || f.includes('televendas')) return '#1565c0';
-  if (f.includes('expansao') || f.includes('expansão')) return '#00838f';
-  return STATE_COLORS[uf] || STATE_COLORS.DEFAULT;
+  if (uf && (STATE_COLORS[uf])) return STATE_COLORS[uf];
+  return STATE_COLORS.DEFAULT;
 }
 
-// VIEW 3 — Team
-function navigateToTeam(distKey, fromUF) {
+// ============================================================
+// VIEW 3 — TEAM DETAIL
+// ============================================================
+function navigateToTeam(distKey, fromState) {
   const group = appData.groups.find(g => g.distKey === distKey);
   if (!group) return;
-  currentView  = 'team';
+  currentView = 'team';
   currentGroup = group;
-  currentState = fromUF;
-  renderTeam(group, fromUF);
+  currentState = fromState;
+  renderTeam(group, fromState);
 }
 
-function renderTeam(group, fromUF) {
+function renderTeam(group, fromState) {
   if (!group) return;
   hideAllViews();
-  const leaderName = group.leader ? group.leader['NOME'] : 'Equipe';
-  const ufLabel    = fromUF ? `${fromUF} — ${STATE_NAMES[fromUF]||fromUF}` : '';
+  const leaderName = group.leader ? getName(group.leader) : 'Equipe';
+  const isDivision = !!group.division;
+
   updateBreadcrumb([
-    { label:'Início', action:() => goHome() },
-    { label:ufLabel||'Estado', action:() => navigateToState(fromUF||currentState) },
+    { label:'Início', action:'goHome' },
+    isDivision
+      ? { label:group.division, action:`navigateToDivision_bc_${group.division}` }
+      : { label:`${fromState} — ${STATE_NAMES[fromState]||fromState||''}`, action:`navigateToState_bc_${fromState}` },
     { label:leaderName }
   ]);
   const container = document.getElementById('view-team');
   container.style.display = 'block';
+  const color = isDivision ? (DIVISION_COLORS[group.division] || '#8B5CF6') : (STATE_COLORS[fromState] || STATE_COLORS.DEFAULT);
 
-  let members = group.members;
-  if (fromUF) {
-    const filtered = members.filter(m => getUFs(m).includes(fromUF));
-    if (filtered.length > 0) members = filtered;
-  }
-  const color = STATE_COLORS[fromUF] || STATE_COLORS.DEFAULT;
+  let html = `<button class="btn-back" onclick="${isDivision ? `navigateToDivision('${escapeAttr(group.division)}')` : `navigateToState('${escapeAttr(fromState||currentState||'')}')`}">&#8592; Voltar</button>`;
 
-  // ── Back button
-  let html = `<button class="btn-back" onclick="navigateToState('${fromUF||currentState}')">← Voltar aos coordenadores</button>`;
-
-  // ── LEADER HEADER CARD
+  // LEADER HEADER CARD
   if (group.leader) {
-    const ldr    = group.leader;
-    const lFunc  = getFunc(ldr);
-    const lPhone = ldr['CONTATO CORPORATIVO'] || ldr['CONTATO COORPORATIVO'] || '';
-    const lEmail = ldr['EMAIL'] || '';
-    const lRegion= ldr['REGIAO'] || ldr['REGIÃO'] || '';
-    const initials = ldr['NOME'].split(' ').slice(0,2).map(w=>w[0]).join('').toUpperCase();
+    const ldr = group.leader;
+    const lFunc = getFunc(ldr);
+    const lPhone = getPhone(ldr);
+    const lEmail = getEmail(ldr);
+    const lRegion = getRegion(ldr);
+    const initials = getName(ldr).split(' ').filter(w=>w.length>0).slice(0,2).map(w=>w[0]).join('').toUpperCase();
     html += `
       <div class="team-leader-header" style="background:linear-gradient(135deg,${color} 0%,${color}cc 100%)">
         <div class="tlh-avatar">${initials}</div>
         <div class="tlh-info-block">
+          ${lRegion ? `<div class="tlh-region-highlight">&#128205; ${lRegion}</div>` : ''}
           <div class="tlh-func">${lFunc}</div>
-          <div class="tlh-name">${ldr['NOME']}</div>
-          ${lRegion ? `<div class="tlh-region">📍 ${lRegion}</div>` : ''}
+          <div class="tlh-name">${getName(ldr)}</div>
           <div class="tlh-contacts">
-            ${lPhone ? `<div class="tlh-contact-item"><span>📱</span><a href="tel:${lPhone.replace(/\D/g,'')}">${lPhone}</a></div>` : ''}
-            ${lEmail ? `<div class="tlh-contact-item"><span>✉️</span><a href="mailto:${lEmail}">${lEmail}</a></div>` : ''}
+            ${lPhone ? `<div class="tlh-contact-item"><span>&#128241;</span><a href="tel:${lPhone.replace(/\D/g,'')}">${lPhone}</a></div>` : ''}
+            ${lEmail ? `<div class="tlh-contact-item"><span>&#9993;&#65039;</span><a href="mailto:${lEmail}">${lEmail}</a></div>` : ''}
           </div>
         </div>
       </div>`;
   }
 
-  // ── Section title
+  let members = group.members;
+
   html += `
     <div class="section-title" style="color:${color}">
-      👥 Equipe de ${leaderName}
+      &#128101; Equipe${group.leader ? ' de ' + getName(group.leader) : ''}
       <span class="count-badge" style="background:${color}">${members.length} membro${members.length!==1?'s':''}</span>
     </div>
-    <p class="section-sub">Distrito ${group.distKey}${ufLabel?' · '+ufLabel:''}</p>`;
+    <p class="section-sub">${group.distKey !== 'PROJ_ESP' ? 'Distrito ' + group.distKey : 'Projetos Especiais — SUL'}${group.states.length > 0 ? ' · ' + group.states.join(', ') : ''}</p>`;
 
   if (members.length === 0) {
-    html += `<div class="empty-state"><div class="empty-icon">👤</div><div class="empty-text">Nenhum membro encontrado.</div></div>`;
+    html += `<div class="empty-state"><div class="empty-icon">&#128100;</div><div class="empty-text">Nenhum membro na equipe.</div></div>`;
   } else {
     html += `
       <div class="table-wrapper">
@@ -1198,8 +1207,10 @@ function renderTeam(group, fromUF) {
           <thead>
             <tr>
               <th>Nome</th>
+              <th>Função</th>
               <th>Contato Corporativo</th>
               <th>E-mail</th>
+              <th>UF</th>
               <th>Região</th>
               <th>Cidades / Clientes</th>
             </tr>
@@ -1207,33 +1218,37 @@ function renderTeam(group, fromUF) {
           <tbody>`;
 
     members.forEach(m => {
-      const func   = getFunc(m);
-      const badge  = getFuncBadge(func);
-      const phone  = m['CONTATO CORPORATIVO'] || m['CONTATO COORPORATIVO'] || '';
-      const email  = m['EMAIL'] || '';
-      const region = m['REGIAO'] || m['REGIÃO'] || '';
-      const cities = m['PRINCIPAIS CIDADES'] || '';
-      const nome   = m['NOME'] || '';
-      const isClient = isClientRole(func);
+      const func = getFunc(m);
+      const badge = getFuncBadge(func);
+      const phone = getPhone(m);
+      const email = getEmail(m);
+      const region = getRegion(m);
+      const cities = getCities(m);
+      const nome = getName(m);
+      const uf = getUF(m);
+      const razao = getRazaoSocial(m);
+      const isRC = isRepComercial(m);
+      const isClient = isClientRole(m);
 
       let citiesBtn = '<span class="no-data">—</span>';
       if (cities) {
         if (isClient) {
-          citiesBtn = `<button class="btn-clients-sm" onclick="openClientsModal('${escapeAttr(nome)}','${escapeAttr(region)}','${escapeAttr(cities)}')">🏪 Clientes</button>`;
+          citiesBtn = `<button class="btn-clients-sm" onclick="openClientsModal('${escapeAttr(nome)}','${escapeAttr(region)}','${escapeAttr(cities)}')">&#127978; Clientes</button>`;
         } else {
-          citiesBtn = `<button class="btn-cities" onclick="openCitiesModal('${escapeAttr(nome)}','${escapeAttr(region)}','${escapeAttr(cities)}')">📍 Cidades</button>`;
+          citiesBtn = `<button class="btn-cities" onclick="openCitiesModal('${escapeAttr(nome)}','${escapeAttr(region)}','${escapeAttr(cities)}')">&#128205; Cidades</button>`;
         }
       }
 
       html += `
             <tr>
               <td>
-                <div style="font-weight:700;margin-bottom:4px">${nome}</div>
-                ${(m['RAZAO SOCIAL']&&m['RAZAO SOCIAL']!=='-'&&m['RAZAO SOCIAL']!=='') ? `<div style="font-size:0.78em;color:#5a6a8a;font-style:italic;margin-bottom:3px">🏢 ${m['RAZAO SOCIAL']}</div>` : ''}
-                <span class="func-badge ${badge.cls}">${badge.label}</span>
+                <div style="font-weight:700;margin-bottom:2px">${nome}</div>
+                ${isRC && razao && razao !== '-' && razao !== '' ? `<div class="razao-social">&#127970; ${razao}</div>` : ''}
               </td>
+              <td><span class="func-badge ${badge.cls}">${badge.label}</span></td>
               <td>${phone ? `<a class="contact-link" href="tel:${phone.replace(/\D/g,'')}">${phone}</a>` : '<span class="no-data">—</span>'}</td>
               <td>${email ? `<a class="contact-link" href="mailto:${email}">${email}</a>` : '<span class="no-data">—</span>'}</td>
+              <td>${uf || '—'}</td>
               <td>${region || '<span class="no-data">—</span>'}</td>
               <td>${citiesBtn}</td>
             </tr>`;
@@ -1245,79 +1260,79 @@ function renderTeam(group, fromUF) {
 
 function getFuncBadge(func) {
   const f = func.toLowerCase();
-  if (f.includes('representante comercial')) return { cls:'badge-rep', label:func||'Rep. Comercial' };
-  if (f.includes('representante externo')) return { cls:'badge-rep', label:func||'Rep. Externo' };
-  if (f.includes('televendas')||f.includes('tlv')||f.includes('interno')) return { cls:'badge-tlv', label:func||'Televendas' };
-  if (f.includes('gerente de contas')) return { cls:'badge-ger', label:func||'Ger. de Contas' };
-  if (f.includes('medias redes')||f.includes('médias redes')) return { cls:'badge-coord-med', label:func||'Coord. Médias Redes' };
-  if (f.includes('dedicado')) return { cls:'badge-ded', label:func||'Dedicado' };
-  if (f.includes('coordenador')) return { cls:'badge-coord', label:func||'Coordenador' };
+  if (f.includes('representante comercial')) return { cls:'badge-rep', label:'Rep. Comercial' };
+  if (f.includes('consultor de vendas')) return { cls:'badge-cv', label:'Consultor de Vendas' };
+  if (f.includes('gerente de contas')) return { cls:'badge-ger', label:'Gerente de Contas' };
+  if (f.includes('medias redes') || f.includes('médias redes')) return { cls:'badge-coord-med', label:'Coord. Médias Redes' };
+  if (f.includes('dedicado')) return { cls:'badge-ded', label:'Dedicado' };
+  if (f.includes('coordenador')) return { cls:'badge-coord', label:'Coordenador' };
   return { cls:'badge-default', label:func||'—' };
 }
 
+// ============================================================
 // SEARCH RESULTS
+// ============================================================
 function renderSearchResults(query, filterUF, filterFunc, filterRegion) {
   hideAllViews();
   updateBreadcrumb([
-    { label:'Início', action:() => goHome() },
+    { label:'Início', action:'goHome' },
     { label:'Resultados da busca' }
   ]);
   const container = document.getElementById('view-search');
   container.style.display = 'block';
 
   let results = appData.rows.filter(r => {
-    const nome   = (r['NOME']||'').toLowerCase();
-    const uf     = (r['UF']||'').toUpperCase();
-    const func   = getFunc(r).toLowerCase();
-    const region = (r['REGIAO']||r['REGIÃO']||'').toLowerCase();
-    const cities = (r['PRINCIPAIS CIDADES']||'').toLowerCase();
-    if (query && !nome.includes(query) && !cities.includes(query) && !region.includes(query)) return false;
-    if (filterUF && !uf.split(/[\/\-,\s]+/).map(s=>s.trim()).includes(filterUF)) return false;
+    const nome = getName(r).toLowerCase();
+    const uf = getUF(r).toUpperCase();
+    const func = getFunc(r).toLowerCase();
+    const region = getRegion(r).toLowerCase();
+    const cities = getCities(r).toLowerCase();
+    const razao = getRazaoSocial(r).toLowerCase();
+    if (query && !nome.includes(query) && !cities.includes(query) && !region.includes(query) && !razao.includes(query)) return false;
+    if (filterUF) {
+      const rowUFs = getUFs(uf);
+      if (!rowUFs.includes(filterUF) && !uf.includes(filterUF)) return false;
+    }
     if (filterFunc && !func.includes(filterFunc)) return false;
     if (filterRegion && !region.includes(filterRegion)) return false;
     return true;
   });
 
   let html = `
-    <div class="section-title">🔍 Resultados da busca <span class="count-badge">${results.length}</span></div>
-    <p class="section-sub">Mostrando ${results.length} resultado${results.length!==1?'s':''}.</p>`;
+    <div class="section-title">&#128269; Resultados <span class="count-badge">${results.length}</span></div>
+    <p class="section-sub">${results.length} resultado${results.length!==1?'s':''} encontrado${results.length!==1?'s':''}.</p>`;
 
   if (results.length === 0) {
-    html += `<div class="empty-state"><div class="empty-icon">🔍</div><div class="empty-text">Nenhum resultado encontrado.</div></div>`;
+    html += `<div class="empty-state"><div class="empty-icon">&#128269;</div><div class="empty-text">Nenhum resultado encontrado.</div></div>`;
   } else {
     html += `
       <div class="table-wrapper">
         <table>
-          <thead>
-            <tr>
-              <th>Nome</th><th>Função</th><th>UF</th><th>Região</th>
-              <th>Contato</th><th>E-mail</th><th>Cidades / Clientes</th>
-            </tr>
-          </thead>
+          <thead><tr><th>Nome</th><th>Função</th><th>UF</th><th>Região</th><th>Contato</th><th>E-mail</th><th>Cidades / Clientes</th></tr></thead>
           <tbody>`;
     results.forEach(r => {
-      const func   = getFunc(r);
-      const badge  = getFuncBadge(func);
-      const phone  = r['CONTATO CORPORATIVO']||r['CONTATO COORPORATIVO']||'';
-      const email  = r['EMAIL']||'';
-      const region = r['REGIAO']||r['REGIÃO']||'';
-      const cities = r['PRINCIPAIS CIDADES']||'';
-      const uf     = r['UF']||'';
-      const nome   = r['NOME']||'';
-      const isClient = isClientRole(func);
-
+      const func = getFunc(r);
+      const badge = getFuncBadge(func);
+      const phone = getPhone(r);
+      const email = getEmail(r);
+      const region = getRegion(r);
+      const cities = getCities(r);
+      const uf = getUF(r);
+      const nome = getName(r);
+      const razao = getRazaoSocial(r);
+      const isRC = isRepComercial(r);
+      const isClient = isClientRole(r);
       let citiesBtn = '<span class="no-data">—</span>';
       if (cities) {
         citiesBtn = isClient
-          ? `<button class="btn-clients-sm" onclick="openClientsModal('${escapeAttr(nome)}','${escapeAttr(region)}','${escapeAttr(cities)}')">🏪 Clientes</button>`
-          : `<button class="btn-cities" onclick="openCitiesModal('${escapeAttr(nome)}','${escapeAttr(region)}','${escapeAttr(cities)}')">📍 Cidades</button>`;
+          ? `<button class="btn-clients-sm" onclick="openClientsModal('${escapeAttr(nome)}','${escapeAttr(region)}','${escapeAttr(cities)}')">&#127978; Clientes</button>`
+          : `<button class="btn-cities" onclick="openCitiesModal('${escapeAttr(nome)}','${escapeAttr(region)}','${escapeAttr(cities)}')">&#128205; Cidades</button>`;
       }
-
       html += `
             <tr>
               <td>
                 <strong>${nome}</strong>
-                ${(r['RAZAO SOCIAL']&&r['RAZAO SOCIAL']!=='-'&&r['RAZAO SOCIAL']!=='') ? `<div style="font-size:0.78em;color:#5a6a8a;font-style:italic;margin-top:2px">🏢 ${r['RAZAO SOCIAL']}</div>` : ''}
+                ${isRC && razao && razao !== '-' && razao !== '' ? `<div class="razao-social">&#127970; ${razao}</div>` : ''}
               </td>
               <td><span class="func-badge ${badge.cls}">${badge.label}</span></td>
               <td>${uf}</td>
@@ -1333,7 +1348,7 @@ function renderSearchResults(query, filterUF, filterFunc, filterRegion) {
 }
 
 // ============================================================
-// NAVIGATION HELPERS
+// NAVIGATION
 // ============================================================
 function goHome() {
   currentView = 'states'; currentState = null; currentGroup = null;
@@ -1355,11 +1370,17 @@ function updateBreadcrumb(items) {
   if (items.length <= 1 && items[0].label === 'Início') { bc.innerHTML = ''; return; }
   let html = '';
   items.forEach((item, i) => {
-    if (i > 0) html += '<span class="bc-sep">›</span>';
+    if (i > 0) html += '<span class="bc-sep">&#8250;</span>';
     if (i === items.length - 1) {
       html += `<span class="bc-current">${item.label}</span>`;
-    } else if (item.action) {
-      html += `<span class="bc-item" onclick="(${item.action.toString()})()">${item.label}</span>`;
+    } else if (item.action === 'goHome') {
+      html += `<span class="bc-item" onclick="goHome()">${item.label}</span>`;
+    } else if (item.action && item.action.startsWith('navigateToState_bc_')) {
+      const st = item.action.replace('navigateToState_bc_','');
+      html += `<span class="bc-item" onclick="navigateToState('${escapeAttr(st)}')">${item.label}</span>`;
+    } else if (item.action && item.action.startsWith('navigateToDivision_bc_')) {
+      const dv = item.action.replace('navigateToDivision_bc_','');
+      html += `<span class="bc-item" onclick="navigateToDivision('${escapeAttr(dv)}')">${item.label}</span>`;
     } else {
       html += `<span class="bc-item" onclick="goHome()">${item.label}</span>`;
     }
@@ -1372,23 +1393,23 @@ function updateBreadcrumb(items) {
 // ============================================================
 function openCitiesModal(nome, region, citiesStr) {
   document.getElementById('modal-title').textContent = nome;
-  document.getElementById('modal-subtitle').textContent = `📍 Principais cidades${region?' — '+region:''}`;
-  const cities = citiesStr.split(/[,;\/]+/).map(c=>c.trim()).filter(c=>c);
+  document.getElementById('modal-subtitle').textContent = `Principais cidades${region?' — '+region:''}`;
+  const cities = citiesStr.split(/[,;]+/).map(c=>c.trim()).filter(c=>c&&c!=='-');
   document.getElementById('modal-cities').innerHTML =
-    cities.map(c=>`<span class="city-tag">📌 ${c}</span>`).join('');
+    cities.length > 0
+      ? cities.map(c=>`<span class="city-tag">${c}</span>`).join('')
+      : '<span class="no-data">Nenhuma cidade cadastrada.</span>';
   document.getElementById('modal-overlay').classList.add('open');
 }
 
 function openClientsModal(nome, region, clientsStr) {
   document.getElementById('modal-title').textContent = nome;
-  document.getElementById('modal-subtitle').textContent = `🏪 Clientes atendidos${region?' — '+region:''}`;
-  const clients = (clientsStr||'').split(/[,;\/]+/).map(c=>c.trim()).filter(c=>c);
-  if (clients.length === 0) {
-    document.getElementById('modal-cities').innerHTML = '<span class="no-data" style="font-size:14px">Nenhum cliente cadastrado ainda.</span>';
-  } else {
-    document.getElementById('modal-cities').innerHTML =
-      clients.map(c=>`<span class="client-tag">🏬 ${c}</span>`).join('');
-  }
+  document.getElementById('modal-subtitle').textContent = `Clientes atendidos${region?' — '+region:''}`;
+  const clients = (clientsStr||'').split(/[,;]+/).map(c=>c.trim()).filter(c=>c&&c!=='-');
+  document.getElementById('modal-cities').innerHTML =
+    clients.length > 0
+      ? clients.map(c=>`<span class="client-tag">${c}</span>`).join('')
+      : '<span class="no-data">Nenhum cliente cadastrado.</span>';
   document.getElementById('modal-overlay').classList.add('open');
 }
 
@@ -1416,7 +1437,7 @@ function startProgressBar() {
   bar.style.transition = 'none';
   bar.style.width = '100%';
   progressTimer = setInterval(() => {
-    const elapsed   = Date.now() - progressStart;
+    const elapsed = Date.now() - progressStart;
     const remaining = Math.max(0, 1 - elapsed / REFRESH_INTERVAL);
     bar.style.transition = 'width 1s linear';
     bar.style.width = (remaining * 100) + '%';
@@ -1434,7 +1455,7 @@ document.getElementById('btn-refresh').addEventListener('click', () => {
   if (progressTimer) clearInterval(progressTimer);
   fetchData().finally(() => {
     const spinner = document.getElementById('refresh-icon');
-    if (spinner) spinner.outerHTML = '<span id="refresh-icon">🔄</span>';
+    if (spinner) spinner.outerHTML = '<span id="refresh-icon">&#128260;</span>';
   });
 });
 
@@ -1453,9 +1474,9 @@ document.getElementById('filter-func').addEventListener('change', () => { if (ap
 document.getElementById('filter-region').addEventListener('change', () => { if (appData.rows.length>0) renderCurrentView(); });
 document.getElementById('btn-clear').addEventListener('click', () => {
   document.getElementById('search-input').value = '';
-  document.getElementById('filter-uf').value    = '';
-  document.getElementById('filter-func').value  = '';
-  document.getElementById('filter-region').value= '';
+  document.getElementById('filter-uf').value = '';
+  document.getElementById('filter-func').value = '';
+  document.getElementById('filter-region').value = '';
   if (appData.rows.length > 0) goHome();
 });
 
@@ -1471,47 +1492,5 @@ function escapeAttr(str) {
 // ============================================================
 fetchData();
 </script>
-
-<!--
-=============================================================
-FILE: .github/workflows/deploy.yml
-=============================================================
-
-name: Deploy to GitHub Pages
-on:
-  push:
-    branches: [main]
-  workflow_dispatch:
-permissions:
-  contents: read
-  pages: write
-  id-token: write
-concurrency:
-  group: pages
-  cancel-in-progress: false
-jobs:
-  deploy:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/configure-pages@v4
-      - uses: actions/upload-pages-artifact@v3
-        with:
-          path: '.'
-      - uses: actions/deploy-pages@v4
-        id: deployment
-
-=============================================================
-PROJECT STRUCTURE:
-/
-├── index.html          ← este arquivo (SPA standalone)
-└── .github/
-    └── workflows/
-        └── deploy.yml  ← GitHub Pages auto-deploy
-=============================================================
--->
 </body>
 </html>
