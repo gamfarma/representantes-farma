@@ -966,15 +966,14 @@ function renderStates() {
   const container = document.getElementById('view-states');
   container.style.display = 'block';
   const ufs = Object.keys(appData.stateMap).filter(uf => appData.stateMap[uf].length > 0).sort();
-  const divisions = Object.keys(appData.divisionMap).sort();
-  const totalTiles = ufs.length + divisions.length;
+  const totalTiles = ufs.length;
 
   let html = `
     <div class="section-title">&#128506;&#65039; Cobertura Comercial <span class="count-badge">${totalTiles}</span></div>
-    <p class="section-sub">Selecione um estado ou divisão para ver coordenadores e equipes.</p>
+    <p class="section-sub">Selecione um estado para ver coordenadores e equipes.</p>
     <div id="states-grid">`;
 
-  // State tiles
+  // State tiles (includes division groups that operate in each state)
   ufs.forEach(uf => {
     const groups = appData.stateMap[uf];
     const total = groups.length;
@@ -984,19 +983,6 @@ function renderStates() {
       <div class="state-card" style="--state-color:${color}" onclick="navigateToState('${uf}')" title="${name}">
         <div class="state-sigla">${uf}</div>
         <div class="state-name">${name}</div>
-        <div class="state-count">${total} grupo${total!==1?'s':''}</div>
-      </div>`;
-  });
-
-  // Division tiles
-  divisions.forEach(div => {
-    const groups = appData.divisionMap[div];
-    const total = groups.length;
-    const color = DIVISION_COLORS[div] || '#8B5CF6';
-    html += `
-      <div class="state-card division-card" style="--state-color:${color}" onclick="navigateToDivision('${escapeAttr(div)}')" title="${div}">
-        <div class="state-sigla" style="font-size:16px;color:${color}">${div === 'PROJ. ESPECIAIS' ? 'Proj. Especiais' : div === 'EXPANSÃO' ? 'Expansão' : div}</div>
-        <div class="state-name">${div === 'PROJ. ESPECIAIS' ? 'Projetos Especiais — SUL' : div === 'EXPANSÃO' ? 'Centro Oeste e Sudeste' : 'Divisão Televendas'}</div>
         <div class="state-count">${total} grupo${total!==1?'s':''}</div>
       </div>`;
   });
@@ -1090,9 +1076,12 @@ function renderCoordCard(group, uf) {
   let region = getRegion(leader);
   // Override region display for EXPANSÃO
   if (group.division === 'EXPANSÃO') region = 'Centro Oeste e Sudeste';
-  const headerColor = getHeaderColor(func, uf);
+  const headerColor = group.division ? (DIVISION_COLORS[group.division] || '#8B5CF6') : getHeaderColor(func, uf);
   const isClient = isClientRole(leader);
-  const memberCount = group.members.length;
+  // For division groups viewed from a state, count only members matching that UF
+  const memberCount = (group.division && uf) 
+    ? group.members.filter(m => getUF(m) === uf).length 
+    : group.members.length;
   const cities = getCities(leader);
 
   let html = `<div class="coord-card">
@@ -1101,6 +1090,11 @@ function renderCoordCard(group, uf) {
   // Region HIGHLIGHTED above name
   if (region && region !== '-') {
     html += `<div class="coord-region-highlight">&#128205; ${region}</div>`;
+  }
+  // Division badge for special groups
+  if (group.division) {
+    const divLabel = group.division === 'PROJ. ESPECIAIS' ? 'Projetos Especiais' : group.division === 'EXPANSÃO' ? 'Expansão' : group.division;
+    html += `<div style="display:inline-block;background:rgba(255,255,255,0.25);color:#fff;font-size:11px;padding:2px 10px;border-radius:20px;margin-bottom:4px;font-weight:600;">${divLabel}</div>`;
   }
   html += `<div class="coord-func">${func}</div>
       <div class="coord-name">${getName(leader)}</div>
@@ -1117,7 +1111,7 @@ function renderCoordCard(group, uf) {
     <div class="coord-footer">`;
 
   if (isClient) {
-    // Gerente de Contas / Coord. Médias Redes: show clients button
+    // Gerente de Contas / Coordenador de Médias Redes: show clients button
     html += `<span class="members-count">&#127978; Portfólio de clientes</span>
       <button class="btn-clients" onclick="openClientsModal('${escapeAttr(getName(leader))}','${escapeAttr(region)}','${escapeAttr(cities)}')">&#128203; Ver Clientes</button>`;
   } else if (memberCount > 0) {
@@ -1159,18 +1153,25 @@ function renderTeam(group, fromState) {
   const leaderName = group.leader ? getName(group.leader) : 'Equipe';
   const isDivision = !!group.division;
 
+  // When a division group is accessed from a state view, show state breadcrumb
+  const showStateBreadcrumb = fromState && STATE_NAMES[fromState];
   updateBreadcrumb([
     { label:'Início', action:'goHome' },
-    isDivision
-      ? { label:group.division, action:`navigateToDivision_bc_${group.division}` }
-      : { label:`${fromState} — ${STATE_NAMES[fromState]||fromState||''}`, action:`navigateToState_bc_${fromState}` },
+    showStateBreadcrumb
+      ? { label:`${fromState} — ${STATE_NAMES[fromState]}`, action:`navigateToState_bc_${fromState}` }
+      : (isDivision
+        ? { label:group.division, action:`navigateToDivision_bc_${group.division}` }
+        : { label:`${fromState} — ${STATE_NAMES[fromState]||fromState||''}`, action:`navigateToState_bc_${fromState}` }),
     { label:leaderName }
   ]);
   const container = document.getElementById('view-team');
   container.style.display = 'block';
   const color = isDivision ? (DIVISION_COLORS[group.division] || '#8B5CF6') : (STATE_COLORS[fromState] || STATE_COLORS.DEFAULT);
 
-  let html = `<button class="btn-back" onclick="${isDivision ? `navigateToDivision('${escapeAttr(group.division)}')` : `navigateToState('${escapeAttr(fromState||currentState||'')}')`}">&#8592; Voltar</button>`;
+  const backAction = (fromState && STATE_NAMES[fromState]) 
+    ? `navigateToState('${escapeAttr(fromState)}')`
+    : (isDivision ? `navigateToDivision('${escapeAttr(group.division)}')` : `navigateToState('${escapeAttr(fromState||currentState||'')}')`);
+  let html = `<button class="btn-back" onclick="${backAction}">&#8592; Voltar</button>`;
 
   // LEADER HEADER CARD
   if (group.leader) {
@@ -1196,14 +1197,18 @@ function renderTeam(group, fromState) {
       </div>`;
   }
 
-  let members = group.members;
+  // For division groups viewed from a state, filter members by that state's UF
+  let members = (group.division && fromState && STATE_NAMES[fromState]) 
+    ? group.members.filter(m => getUF(m) === fromState)
+    : group.members;
+  const showingFiltered = members.length !== group.members.length;
 
   html += `
     <div class="section-title" style="color:${color}">
       &#128101; Equipe${group.leader ? ' de ' + getName(group.leader) : ''}
       <span class="count-badge" style="background:${color}">${members.length} membro${members.length!==1?'s':''}</span>
     </div>
-    <p class="section-sub">${group.distKey !== 'PROJ_ESP' ? 'Distrito ' + group.distKey : 'Projetos Especiais — SUL'}${group.states.length > 0 ? ' · ' + group.states.join(', ') : ''}</p>`;
+    <p class="section-sub">${group.distKey !== 'PROJ_ESP' ? 'Distrito ' + group.distKey : 'Projetos Especiais — SUL'}${showingFiltered ? ' · Exibindo membros de ' + fromState : (group.states.length > 0 ? ' · ' + group.states.join(', ') : '')}</p>`;
 
   if (members.length === 0) {
     html += `<div class="empty-state"><div class="empty-icon">&#128100;</div><div class="empty-text">Nenhum membro na equipe.</div></div>`;
