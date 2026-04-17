@@ -1,12 +1,45 @@
-name: Deploy to GitHub Pages
+# ============================================================
+# deploy.yml — GitHub Actions: Validação + Deploy automático
+# ============================================================
+# Localização: .github/workflows/deploy.yml
+#
+# Triggers:
+#   - Push na branch main
+#   - Schedule: a cada 30 min (para capturar mudanças na planilha)
+#   - Manual (workflow_dispatch)
+#
+# O que faz:
+#   1. Checkout do repositório
+#   2. Executa script.py para validar e cachear dados
+#   3. Commit automático de data.json e changes.log (se houver mudanças)
+#   4. Deploy para GitHub Pages
+#
+# Arquivos esperados no repositório:
+#   /
+#   ├── index.html          ← Página principal (SPA)
+#   ├── script.py           ← Script de processamento
+#   └── .github/
+#       └── workflows/
+#           └── deploy.yml  ← Este arquivo
+# ============================================================
+
+name: Validate & Deploy to GitHub Pages
 
 on:
   push:
     branches: [main]
+  schedule:
+    # Executa a cada 30 minutos para detectar mudanças na planilha
+    - cron: '*/30 * * * *'
   workflow_dispatch:
+    inputs:
+      force_refresh:
+        description: 'Forçar atualização dos dados'
+        required: false
+        default: 'true'
 
 permissions:
-  contents: read
+  contents: write
   pages: write
   id-token: write
 
@@ -15,16 +48,77 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  # ──────────────────────────────────────────────────
+  # JOB 1: Validar dados e atualizar cache
+  # ──────────────────────────────────────────────────
+  validate:
+    runs-on: ubuntu-latest
+    outputs:
+      has_changes: ${{ steps.check.outputs.has_changes }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Run validation script
+        run: |
+          echo "🔄 Executando script.py..."
+          python script.py
+          echo "✅ Script finalizado"
+
+      - name: Check for data changes
+        id: check
+        run: |
+          if git diff --quiet data.json 2>/dev/null && git diff --quiet changes.log 2>/dev/null; then
+            echo "has_changes=false" >> $GITHUB_OUTPUT
+            echo "📋 Nenhuma mudança nos dados"
+          else
+            echo "has_changes=true" >> $GITHUB_OUTPUT
+            echo "📋 Mudanças detectadas nos dados"
+          fi
+
+      - name: Commit updated data
+        if: steps.check.outputs.has_changes == 'true'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add data.json changes.log validation.json 2>/dev/null || true
+          TIMESTAMP=$(date -u '+%Y-%m-%d %H:%M UTC')
+          git commit -m "🔄 Dados atualizados automaticamente — ${TIMESTAMP}" || echo "Nada para commitar"
+          git push || echo "Push falhou — pode haver conflito"
+
+  # ──────────────────────────────────────────────────
+  # JOB 2: Deploy para GitHub Pages
+  # ──────────────────────────────────────────────────
   deploy:
+    needs: validate
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/configure-pages@v4
-      - uses: actions/upload-pages-artifact@v3
+      - name: Checkout repository (com dados atualizados)
+        uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Pull latest changes
+        run: git pull origin main || true
+
+      - name: Configure Pages
+        uses: actions/configure-pages@v4
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
         with:
           path: '.'
-      - uses: actions/deploy-pages@v4
+
+      - name: Deploy to GitHub Pages
         id: deployment
+        uses: actions/deploy-pages@v4
