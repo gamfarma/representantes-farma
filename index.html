@@ -1078,8 +1078,8 @@ function renderCoordCard(group, uf) {
   if (group.division === 'EXPANSÃO') region = 'Centro Oeste e Sudeste';
   const headerColor = group.division ? (DIVISION_COLORS[group.division] || '#8B5CF6') : getHeaderColor(func, uf);
   const isClient = isClientRole(leader);
-  // For division groups viewed from a state, count only members matching that UF
-  const memberCount = (group.division && uf) 
+  // When viewing from a state, count only members matching that UF
+  const memberCount = (uf && group.states && group.states.length > 1) 
     ? group.members.filter(m => getUF(m) === uf).length 
     : group.members.length;
   const cities = getCities(leader);
@@ -1197,8 +1197,8 @@ function renderTeam(group, fromState) {
       </div>`;
   }
 
-  // For division groups viewed from a state, filter members by that state's UF
-  let members = (group.division && fromState && STATE_NAMES[fromState]) 
+  // When viewing from a state, filter members by that state's UF (all group types)
+  let members = (fromState && STATE_NAMES[fromState] && group.states && group.states.length > 1) 
     ? group.members.filter(m => getUF(m) === fromState)
     : group.members;
   const showingFiltered = members.length !== group.members.length;
