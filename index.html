@@ -1250,7 +1250,7 @@ function renderTeam(group, fromState) {
       const isClient = isClientRole(m);
 
       let citiesBtn = '<span class="no-data">—</span>';
-      if (cities) {
+      if (cities && !isClient) {
         citiesBtn = `<button class="btn-cities" onclick="openCitiesModal('${escapeAttr(nome)}','${escapeAttr(region)}','${escapeAttr(cities)}')">&#128205; Cidades</button>`;
       }
 
