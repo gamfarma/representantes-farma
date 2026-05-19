@@ -1,33 +1,18 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """
-script.py — GAM Farma: Validação e cache de dados da planilha Google Sheets
-===========================================================================
-Arquivos gerados:
-  - data.json       → Cache processado dos dados
-  - changes.log     → Registro de mudanças detectadas
-  - validation.json → Relatório de validação
-
-Nomes padrão para GitHub Actions:
-  - script.py   (este arquivo)
-  - index.html  (página principal)
-  - deploy.yml  (workflow do GitHub Actions)
-  - data.json   (dados processados)
+script.py — GAM Farma Representantes
+Lê dados do Google Sheets (CSV público) e atualiza/valida a planilha para uso pelo index.html.
+Detecta automaticamente mudanças de colunas, linhas, nomes, funções, telefones, emails, etc.
+Executado pelo GitHub Actions em cada push ou agendamento.
 """
 
 import csv
-import hashlib
 import io
 import json
-import math
 import os
-import re
 import sys
-import unicodedata
-from datetime import datetime, timezone
 import urllib.request
-import urllib.error
-import time
+from datetime import datetime, timezone
 
 # ============================================================
 # CONFIGURAÇÃO
@@ -38,547 +23,223 @@ CSV_URL = (
     "/pub?output=csv"
 )
 
-DATA_FILE = "data.json"
-CHANGES_LOG = "changes.log"
-VALIDATION_FILE = "validation.json"
+# Nomes-padrão dos arquivos (não altere)
+INDEX_FILE = "index.html"
+SCRIPT_FILE = "script.py"
+DEPLOY_FILE = "deploy.yml"
+SNAPSHOT_FILE = "data_snapshot.json"
 
-EXPECTED_COLUMNS = [
-    "DISTRITO", "SETOR", "REGIAO", "UF", "PRINCIPAIS CIDADES",
-    "FUNCAO", "NOME REPRESENTANTE", "RAZAO SOCIAL",
-    "CONTATO CORPORATIVO", "EMAIL", "COORDENADOR",
-]
+# Mapeamento de normalização de cabeçalhos
+HEADER_ALIASES = {
+    "NOME REPRESENTANTE": "NOME",
+    "CONTATO COORPORATIVO": "CONTATO CORPORATIVO",
+    "CONTATO CORPORATIVO": "CONTATO CORPORATIVO",
+    "COODENADOR": "COORDENADOR",
+    "COORDENADOR": "COORDENADOR",
+    "RAZAO SOCIAL": "RAZAO SOCIAL",
+    "RAZÃO SOCIAL": "RAZAO SOCIAL",
+    "FUNCAO": "FUNCAO",
+    "FUNÇÃO": "FUNCAO",
+    "REGIAO": "REGIAO",
+    "REGIÃO": "REGIAO",
+    "PRINCIPAIS CIDADES": "PRINCIPAIS CIDADES",
+    "UF": "UF",
+    "SETOR": "SETOR",
+    "DISTRITO": "DISTRITO",
+    "EMAIL": "EMAIL",
+    "NOME": "NOME",
+}
 
-KNOWN_FUNCTIONS = [
-    "COORDENADOR EQUIPE", "Consultor de Vendas", "Representante Comercial",
-    "Gerente de Contas", "Coordenador de Contas - Médias Redes",
-    "GERENTE DE PROJETOS ESPECIAIS", "Dedicados",
-]
+# Colunas obrigatórias esperadas
+REQUIRED_COLS = {"DISTRITO", "SETOR", "REGIAO", "UF", "FUNCAO", "NOME", "EMAIL", "CONTATO CORPORATIVO"}
 
 
-# ============================================================
-# UTILITÁRIOS
-# ============================================================
 def normalize_header(h: str) -> str:
-    s = unicodedata.normalize("NFD", h)
-    s = "".join(c for c in s if unicodedata.category(c) != "Mn")
-    s = s.upper().strip()
-    s = s.replace("COORPORATIVO", "CORPORATIVO")
-    s = s.replace("COODENADOR", "COORDENADOR")
-    s = s.replace("RAZAO SOCIAL", "RAZAO SOCIAL")
-    return s
+    """Normaliza cabeçalhos removendo acentos e aplicando aliases."""
+    import unicodedata
+    nfkd = unicodedata.normalize("NFD", h)
+    ascii_str = "".join(c for c in nfkd if not unicodedata.combining(c))
+    upper = ascii_str.upper().strip()
+    return HEADER_ALIASES.get(upper, upper)
 
 
-def hash_row(row: dict) -> str:
-    content = "|".join(str(v) for v in row.values())
-    return hashlib.md5(content.encode("utf-8")).hexdigest()
+def parse_csv_from_url(url: str) -> list[dict]:
+    """Baixa e parseia o CSV do Google Sheets."""
+    cache_bust = f"{url}&cb={int(datetime.now(timezone.utc).timestamp())}"
+    req = urllib.request.Request(
+        cache_bust,
+        headers={
+            "Cache-Control": "no-store, no-cache",
+            "Pragma": "no-cache",
+            "User-Agent": "GAMFarma-GithubActions/1.0",
+        },
+    )
+    with urllib.request.urlopen(req, timeout=30) as resp:
+        raw = resp.read().decode("utf-8-sig")
 
-
-def log_change(message: str):
-    timestamp = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S UTC")
-    line = f"[{timestamp}] {message}\n"
-    with open(CHANGES_LOG, "a", encoding="utf-8") as f:
-        f.write(line)
-    print(f"  CHANGE: {message}")
-
-
-def extract_ufs(uf_str: str) -> list:
-    if not uf_str or uf_str.strip() in ("-", "", "EXPANSÃO", "EXPANSAO"):
-        return []
-    parts = re.split(r"[/\-,\s]+", uf_str.strip())
-    return [p.strip().upper() for p in parts if len(p.strip()) == 2 and p.strip().isalpha()]
-
-
-# ============================================================
-# DOWNLOAD DO CSV
-# ============================================================
-def fetch_csv() -> str:
-    url = f"{CSV_URL}&cb={int(time.time())}"
-    print(f"Buscando CSV: {url[:80]}...")
-    req = urllib.request.Request(url, headers={
-        "Cache-Control": "no-store, no-cache",
-        "Pragma": "no-cache",
-        "User-Agent": "Mozilla/5.0",
-    })
-    try:
-        with urllib.request.urlopen(req, timeout=30) as resp:
-            data = resp.read().decode("utf-8-sig")
-            print(f"  CSV baixado: {len(data)} bytes")
-            return data
-    except urllib.error.URLError as e:
-        print(f"  ERRO ao baixar CSV: {e}")
-        sys.exit(1)
-
-
-# ============================================================
-# PARSE DO CSV
-# ============================================================
-def parse_csv(text: str) -> tuple:
-    lines = text.strip().split("\n")
+    lines = raw.splitlines()
     header_idx = -1
-    update_date = ""
-
     for i, line in enumerate(lines):
         upper = line.upper()
         if "DISTRITO" in upper and ("NOME" in upper or "REPRESENTANTE" in upper):
             header_idx = i
             break
-        date_match = re.search(r"\d{2}/\d{2}/\d{4}", line)
-        if date_match:
-            update_date = date_match.group(0)
 
     if header_idx == -1:
-        print("ERRO: Cabeçalho não encontrado no CSV!")
-        sys.exit(1)
+        raise ValueError("Cabeçalho da planilha não encontrado. Verifique o link do Google Sheets.")
 
-    reader = csv.reader(io.StringIO("\n".join(lines[header_idx:])))
-    raw_headers = next(reader)
-    headers = [normalize_header(h) for h in raw_headers]
-
-    col_map = {}
-    for i, h in enumerate(headers):
-        if "DISTRITO" in h and "SETOR" not in h:
-            col_map["DISTRITO"] = i
-        elif h == "SETOR":
-            col_map["SETOR"] = i
-        elif "REGI" in h and "COORD" not in h:
-            col_map["REGIAO"] = i
-        elif h == "UF":
-            col_map["UF"] = i
-        elif "PRINCIPAIS" in h or ("CIDADES" in h and "COORD" not in h):
-            col_map["PRINCIPAIS CIDADES"] = i
-        elif "FUNC" in h or "FUNCAO" in h:
-            col_map["FUNCAO"] = i
-        elif "NOME" in h and "RAZAO" not in h:
-            col_map["NOME"] = i
-        elif "RAZAO" in h or "SOCIAL" in h:
-            col_map["RAZAO SOCIAL"] = i
-        elif "CONTATO" in h:
-            col_map["CONTATO CORPORATIVO"] = i
-        elif "EMAIL" in h and "COORD" not in h:
-            col_map["EMAIL"] = i
-        elif "COORDENADOR" in h or "COODENADOR" in h:
-            col_map["COORDENADOR"] = i
+    reader = csv.DictReader(
+        io.StringIO("\n".join(lines[header_idx:])),
+    )
+    raw_headers = reader.fieldnames or []
+    normalized_headers = [normalize_header(h) for h in raw_headers]
 
     rows = []
-    for cells in reader:
-        if not cells:
-            continue
+    for raw_row in reader:
         row = {}
-        for key, idx in col_map.items():
-            row[key] = cells[idx].strip() if idx < len(cells) else ""
-        if not row.get("NOME", "").strip():
+        for orig_h, norm_h in zip(raw_headers, normalized_headers):
+            row[norm_h] = (raw_row.get(orig_h) or "").strip()
+        if not row.get("NOME") or row["NOME"] in ("", "-"):
             continue
-        row["_hash"] = hash_row({k: v for k, v in row.items() if k != "_hash"})
         rows.append(row)
 
-    print(f"  Parseado: {len(rows)} linhas, {len(headers)} colunas")
-    print(f"  Colunas mapeadas: {list(col_map.keys())}")
-    print(f"  Data de atualização: {update_date or 'não encontrada'}")
-    return headers, rows, update_date
+    return rows
 
 
-# ============================================================
-# CLASSIFICAÇÃO DE FUNÇÕES
-# ============================================================
-def classify_function(func: str) -> str:
-    f = func.upper().strip()
-    if "COORDENADOR EQUIPE" in f or "COORDENADOR DE EQUIPE" in f:
-        return "COORDENADOR_EQUIPE"
-    if "CONSULTOR DE VENDAS" in f:
-        return "CONSULTOR_VENDAS"
-    if "REPRESENTANTE COMERCIAL" in f:
-        return "REPRESENTANTE_COMERCIAL"
-    if "GERENTE DE CONTAS" in f:
-        return "GERENTE_CONTAS"
-    if ("COORDENADOR DE CONTAS" in f or "MEDIAS REDES" in f
-            or "MÉDIAS REDES" in f or "MEDIAS REDES" in f):
-        return "COORDENADOR_CONTAS"
-    if "GERENTE DE PROJETOS ESPECIAIS" in f:
-        return "GERENTE_PROJETOS_ESPECIAIS"
-    if "DEDICADO" in f:
-        return "DEDICADO"
-    return "OUTRO"
+def validate_structure(rows: list[dict]) -> dict:
+    """Valida a estrutura dos dados e retorna relatório."""
+    if not rows:
+        return {"ok": False, "error": "Nenhuma linha de dados encontrada."}
 
+    found_cols = set(rows[0].keys())
+    missing = REQUIRED_COLS - found_cols
+    extra = found_cols - REQUIRED_COLS - {"RAZAO SOCIAL", "COORDENADOR", "PRINCIPAIS CIDADES"}
 
-# ============================================================
-# PROCESSAMENTO DE DADOS
-# ============================================================
-def process_data(rows: list) -> dict:
-    result = {
-        "coordenadores_equipe": [],
-        "gerentes_contas": [],
-        "coordenadores_contas": [],
-        "projetos_especiais": None,
-        "estados": [],
-        "divisoes": {},
-        "total_representantes": 0,
-        "total_coordenadores": 0,
-        "resumo_funcoes": {},
-    }
-
+    funcs = {}
     for r in rows:
-        cat = classify_function(r.get("FUNCAO", ""))
-        result["resumo_funcoes"][cat] = result["resumo_funcoes"].get(cat, 0) + 1
+        f = r.get("FUNCAO", "").strip()
+        if f:
+            funcs[f] = funcs.get(f, 0) + 1
 
-    # 1. Coordenadores de Equipe
-    coord_equipe = {}
-    for r in rows:
-        if classify_function(r.get("FUNCAO", "")) == "COORDENADOR_EQUIPE":
-            dist = r.get("DISTRITO", "").strip()
-            coord_equipe[dist] = r
-
-    assigned = set()
-    team_map = {}
-
-    # Passo 1: Matching por base do distrito
-    for dist, leader in coord_equipe.items():
-        assigned.add(id(leader))
-        team_map[dist] = []
-        dist_parts = [p.strip() for p in re.split(r"[/,]", dist)]
-        dist_bases = []
-        for part in dist_parts:
-            try:
-                n = int(part)
-                dist_bases.append(math.floor(n / 100) * 100)
-            except ValueError:
-                pass
-
-        for r in rows:
-            if r is leader or id(r) in assigned:
-                continue
-            cat = classify_function(r.get("FUNCAO", ""))
-            if cat in ("COORDENADOR_EQUIPE", "GERENTE_CONTAS", "COORDENADOR_CONTAS",
-                       "GERENTE_PROJETOS_ESPECIAIS", "DEDICADO"):
-                continue
-            r_dist = r.get("DISTRITO", "").strip()
-            if not r_dist or r_dist == "-":
-                continue
-            try:
-                r_base = math.floor(int(r_dist) / 100) * 100
-                if r_base in dist_bases:
-                    team_map[dist].append(r)
-                    assigned.add(id(r))
-            except ValueError:
-                pass
-
-    # Passo 2: Fallback por coluna COORDENADOR
-    for dist, leader in coord_equipe.items():
-        leader_name_upper = leader.get("NOME", "").upper().strip()
-        leader_first = leader_name_upper.split()[0] if leader_name_upper else ""
-        for r in rows:
-            if id(r) in assigned or r is leader:
-                continue
-            cat = classify_function(r.get("FUNCAO", ""))
-            if cat in ("COORDENADOR_EQUIPE", "GERENTE_CONTAS", "COORDENADOR_CONTAS",
-                       "GERENTE_PROJETOS_ESPECIAIS", "DEDICADO"):
-                continue
-            coord_col = r.get("COORDENADOR", "").upper().strip()
-            if coord_col and (coord_col == leader_name_upper or coord_col == leader_first
-                              or leader_first in coord_col):
-                team_map[dist].append(r)
-                assigned.add(id(r))
-
-    # Construir grupos finais
-    for dist, leader in coord_equipe.items():
-        team = team_map.get(dist, [])
-
-        all_ufs = set(extract_ufs(leader.get("UF", "")))
-        for m in team:
-            all_ufs.update(extract_ufs(m.get("UF", "")))
-
-        # Determinar divisão especial
-        division = None
-        uf_val = leader.get("UF", "").upper().strip()
-        region_val = leader.get("REGIAO", "").upper().strip()
-        if uf_val == "-" or "TLV" in region_val:
-            division = "TLV"
-            # Para TLV, pegar UFs dos membros
-            for m in team:
-                all_ufs.update(extract_ufs(m.get("UF", "")))
-        elif "EXPANS" in uf_val or "EXPANS" in region_val:
-            division = "EXPANSÃO"
-            for m in team:
-                all_ufs.update(extract_ufs(m.get("UF", "")))
-
-        group = {
-            "distrito": dist,
-            "divisao": division,
-            "estados": sorted(list(all_ufs)),
-            "coordenador": {
-                "nome": leader.get("NOME", "").strip(),
-                "funcao": leader.get("FUNCAO", "").strip(),
-                "regiao": leader.get("REGIAO", "").strip(),
-                "uf": leader.get("UF", "").strip(),
-                "contato": leader.get("CONTATO CORPORATIVO", "").strip(),
-                "email": leader.get("EMAIL", "").strip(),
-                "razao_social": leader.get("RAZAO SOCIAL", "").strip(),
-            },
-            "equipe": [
-                {
-                    "nome": m.get("NOME", "").strip(),
-                    "funcao": m.get("FUNCAO", "").strip(),
-                    "categoria": classify_function(m.get("FUNCAO", "")),
-                    "regiao": m.get("REGIAO", "").strip(),
-                    "uf": m.get("UF", "").strip(),
-                    "principais_cidades": m.get("PRINCIPAIS CIDADES", "").strip(),
-                    "contato": m.get("CONTATO CORPORATIVO", "").strip(),
-                    "email": m.get("EMAIL", "").strip(),
-                    "razao_social": m.get("RAZAO SOCIAL", "").strip(),
-                    "setor": m.get("SETOR", "").strip(),
-                }
-                for m in team
-            ],
-            "total_membros": len(team),
-        }
-        result["coordenadores_equipe"].append(group)
-        result["total_coordenadores"] += 1
-        result["total_representantes"] += len(team)
-
-    # 2. Gerente de Projetos Especiais + Dedicados
-    gpe = None
-    dedicados = []
-    for r in rows:
-        cat = classify_function(r.get("FUNCAO", ""))
-        if cat == "GERENTE_PROJETOS_ESPECIAIS":
-            gpe = r
-        elif cat == "DEDICADO":
-            dedicados.append(r)
-
-    if gpe:
-        all_ufs = set(extract_ufs(gpe.get("UF", "")))
-        for d in dedicados:
-            all_ufs.update(extract_ufs(d.get("UF", "")))
-        result["projetos_especiais"] = {
-            "lider": {
-                "nome": gpe.get("NOME", "").strip(),
-                "funcao": gpe.get("FUNCAO", "").strip(),
-                "regiao": gpe.get("REGIAO", "").strip(),
-                "uf": gpe.get("UF", "").strip(),
-                "contato": gpe.get("CONTATO CORPORATIVO", "").strip(),
-                "email": gpe.get("EMAIL", "").strip(),
-            },
-            "dedicados": [
-                {
-                    "nome": d.get("NOME", "").strip(),
-                    "funcao": d.get("FUNCAO", "").strip(),
-                    "regiao": d.get("REGIAO", "").strip(),
-                    "uf": d.get("UF", "").strip(),
-                    "principais_cidades": d.get("PRINCIPAIS CIDADES", "").strip(),
-                    "contato": d.get("CONTATO CORPORATIVO", "").strip(),
-                    "email": d.get("EMAIL", "").strip(),
-                    "setor": d.get("SETOR", "").strip(),
-                }
-                for d in dedicados
-            ],
-            "estados": sorted(list(all_ufs)),
-            "total_dedicados": len(dedicados),
-        }
-
-    # 3. Gerentes de Contas
-    for r in rows:
-        if classify_function(r.get("FUNCAO", "")) == "GERENTE_CONTAS":
-            ufs = extract_ufs(r.get("UF", ""))
-            result["gerentes_contas"].append({
-                "nome": r.get("NOME", "").strip(),
-                "funcao": r.get("FUNCAO", "").strip(),
-                "regiao": r.get("REGIAO", "").strip(),
-                "uf": r.get("UF", "").strip(),
-                "ufs": ufs,
-                "contato": r.get("CONTATO CORPORATIVO", "").strip(),
-                "email": r.get("EMAIL", "").strip(),
-                "distrito": r.get("DISTRITO", "").strip(),
-            })
-
-    # 4. Coordenadores de Contas Médias Redes
-    for r in rows:
-        if classify_function(r.get("FUNCAO", "")) == "COORDENADOR_CONTAS":
-            ufs = extract_ufs(r.get("UF", ""))
-            result["coordenadores_contas"].append({
-                "nome": r.get("NOME", "").strip(),
-                "funcao": r.get("FUNCAO", "").strip(),
-                "regiao": r.get("REGIAO", "").strip(),
-                "uf": r.get("UF", "").strip(),
-                "ufs": ufs,
-                "contato": r.get("CONTATO CORPORATIVO", "").strip(),
-                "email": r.get("EMAIL", "").strip(),
-                "distrito": r.get("DISTRITO", "").strip(),
-            })
-
-    # 5. Mapa de estados cobertos
-    all_states = set()
-    for group in result["coordenadores_equipe"]:
-        for uf in group["estados"]:
-            all_states.add(uf)
-    for gc in result["gerentes_contas"]:
-        for uf in gc["ufs"]:
-            all_states.add(uf)
-    for cc in result["coordenadores_contas"]:
-        for uf in cc["ufs"]:
-            all_states.add(uf)
-    if result["projetos_especiais"]:
-        for uf in result["projetos_especiais"]["estados"]:
-            all_states.add(uf)
-    result["estados"] = sorted(all_states)
-
-    return result
-
-
-# ============================================================
-# DETECÇÃO DE MUDANÇAS
-# ============================================================
-def detect_changes(new_rows: list) -> list:
-    changes = []
-    if not os.path.exists(DATA_FILE):
-        changes.append("Primeira execução — nenhum dado anterior para comparar")
-        return changes
-    try:
-        with open(DATA_FILE, "r", encoding="utf-8") as f:
-            old_data = json.load(f)
-    except (json.JSONDecodeError, FileNotFoundError):
-        changes.append("Arquivo de dados anterior corrompido ou inexistente")
-        return changes
-
-    old_rows_by_name = {}
-    if "raw_rows" in old_data:
-        for r in old_data["raw_rows"]:
-            old_rows_by_name[r.get("NOME", "").strip()] = r
-
-    new_rows_by_name = {r.get("NOME", "").strip(): r for r in new_rows}
-
-    for name in new_rows_by_name:
-        if name not in old_rows_by_name:
-            r = new_rows_by_name[name]
-            changes.append(f"NOVO: {name} (Função: {r.get('FUNCAO','')}, UF: {r.get('UF','')}, Região: {r.get('REGIAO','')})")
-
-    for name in old_rows_by_name:
-        if name not in new_rows_by_name:
-            changes.append(f"REMOVIDO: {name}")
-
-    for name in new_rows_by_name:
-        if name in old_rows_by_name:
-            old = old_rows_by_name[name]
-            new = new_rows_by_name[name]
-            fields = {
-                "FUNCAO": "Função", "UF": "UF", "REGIAO": "Região",
-                "CONTATO CORPORATIVO": "Contato", "EMAIL": "Email",
-                "RAZAO SOCIAL": "Razão Social", "PRINCIPAIS CIDADES": "Cidades",
-                "DISTRITO": "Distrito", "SETOR": "Setor", "COORDENADOR": "Coordenador",
-            }
-            for field, label in fields.items():
-                old_val = old.get(field, "").strip()
-                new_val = new.get(field, "").strip()
-                if old_val != new_val:
-                    changes.append(f"ALTERADO: {name} — {label}: '{old_val}' → '{new_val}'")
-
-    old_total = len(old_rows_by_name)
-    new_total = len(new_rows_by_name)
-    if old_total != new_total:
-        changes.append(f"TOTAL LINHAS: {old_total} → {new_total}")
-
-    return changes
-
-
-# ============================================================
-# VALIDAÇÃO
-# ============================================================
-def validate_data(headers: list, rows: list) -> dict:
-    report = {
-        "timestamp": datetime.now(timezone.utc).isoformat(),
-        "status": "OK",
+    return {
+        "ok": True,
         "total_rows": len(rows),
-        "total_columns": len(headers),
-        "headers_found": headers,
-        "warnings": [],
-        "errors": [],
-    }
-    normalized_headers = [normalize_header(h) for h in headers]
-    for expected in EXPECTED_COLUMNS:
-        found = any(expected.replace(" ", "") in nh.replace(" ", "") for nh in normalized_headers)
-        if not found:
-            report["warnings"].append(f"Coluna esperada não encontrada: {expected}")
-    for i, r in enumerate(rows):
-        if not r.get("NOME", "").strip():
-            report["errors"].append(f"Linha {i+2}: NOME vazio")
-        if not r.get("FUNCAO", "").strip():
-            report["warnings"].append(f"Linha {i+2} ({r.get('NOME','')}): FUNÇÃO vazia")
-    if report["errors"]:
-        report["status"] = "ERRORS"
-    elif report["warnings"]:
-        report["status"] = "WARNINGS"
-    return report
-
-
-# ============================================================
-# MAIN
-# ============================================================
-def main():
-    print("=" * 60)
-    print("GAM Farma — Script de Processamento de Dados")
-    print(f"Execução: {datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M:%S UTC')}")
-    print("=" * 60)
-
-    csv_text = fetch_csv()
-    headers, rows, update_date = parse_csv(csv_text)
-
-    print("\nValidando dados...")
-    validation = validate_data(headers, rows)
-    with open(VALIDATION_FILE, "w", encoding="utf-8") as f:
-        json.dump(validation, f, ensure_ascii=False, indent=2)
-    print(f"  Status: {validation['status']}")
-    for w in validation["warnings"]:
-        print(f"  WARNING: {w}")
-    for e in validation["errors"]:
-        print(f"  ERROR: {e}")
-
-    print("\nDetectando mudanças...")
-    changes = detect_changes(rows)
-    if changes:
-        for c in changes:
-            log_change(c)
-        print(f"  {len(changes)} mudança(s) detectada(s)")
-    else:
-        print("  Nenhuma mudança detectada")
-
-    print("\nProcessando dados...")
-    processed = process_data(rows)
-    print(f"  Coordenadores de Equipe: {len(processed['coordenadores_equipe'])}")
-    print(f"  Gerentes de Contas: {len(processed['gerentes_contas'])}")
-    print(f"  Coord. Médias Redes: {len(processed['coordenadores_contas'])}")
-    print(f"  Projetos Especiais: {'Sim' if processed['projetos_especiais'] else 'Não'}")
-    print(f"  Estados cobertos: {', '.join(processed['estados'])}")
-    print(f"  Total representantes: {processed['total_representantes']}")
-
-    output = {
-        "generated_at": datetime.now(timezone.utc).isoformat(),
-        "update_date": update_date,
-        "csv_url": CSV_URL,
-        "total_rows": len(rows),
-        "processed": processed,
-        "raw_rows": rows,
-        "validation": validation,
-        "changes": changes,
+        "columns_found": sorted(found_cols),
+        "missing_cols": sorted(missing),
+        "extra_cols": sorted(extra),
+        "functions_found": funcs,
     }
 
-    with open(DATA_FILE, "w", encoding="utf-8") as f:
-        json.dump(output, f, ensure_ascii=False, indent=2)
-    print(f"\nDados salvos em {DATA_FILE} ({os.path.getsize(DATA_FILE)} bytes)")
 
-    print("\n" + "=" * 60)
-    print("RESUMO")
+def detect_changes(new_rows: list[dict], snapshot_path: str) -> dict:
+    """Detecta mudanças comparando com snapshot anterior."""
+    if not os.path.exists(snapshot_path):
+        return {"first_run": True, "added": len(new_rows), "removed": 0, "modified": 0}
+
+    with open(snapshot_path, "r", encoding="utf-8") as f:
+        old_data = json.load(f)
+
+    old_rows = old_data.get("rows", [])
+    old_by_key = {(r.get("DISTRITO", "") + "|" + r.get("SETOR", "")): r for r in old_rows}
+    new_by_key = {(r.get("DISTRITO", "") + "|" + r.get("SETOR", "")): r for r in new_rows}
+
+    added = [k for k in new_by_key if k not in old_by_key]
+    removed = [k for k in old_by_key if k not in new_by_key]
+    modified = []
+
+    for k in new_by_key:
+        if k in old_by_key:
+            for col in REQUIRED_COLS | {"RAZAO SOCIAL", "NOME"}:
+                if new_by_key[k].get(col, "") != old_by_key[k].get(col, ""):
+                    modified.append({"key": k, "col": col,
+                                     "old": old_by_key[k].get(col, ""),
+                                     "new": new_by_key[k].get(col, "")})
+
+    return {
+        "first_run": False,
+        "added": len(added),
+        "removed": len(removed),
+        "modified": len(modified),
+        "added_keys": added[:20],
+        "removed_keys": removed[:20],
+        "changes": modified[:50],
+    }
+
+
+def save_snapshot(rows: list[dict], path: str):
+    """Salva snapshot dos dados para comparação futura."""
+    snapshot = {
+        "updated_at": datetime.now(timezone.utc).isoformat(),
+        "total": len(rows),
+        "rows": rows,
+    }
+    with open(path, "w", encoding="utf-8") as f:
+        json.dump(snapshot, f, ensure_ascii=False, indent=2)
+
+
+def print_report(validation: dict, changes: dict):
+    """Imprime relatório detalhado para o log do GitHub Actions."""
     print("=" * 60)
-    print(f"  Linhas processadas: {len(rows)}")
-    print(f"  Mudanças encontradas: {len(changes)}")
-    print(f"  Validação: {validation['status']}")
-    for func, count in sorted(processed["resumo_funcoes"].items()):
-        print(f"    - {func}: {count}")
+    print("  GAM Farma — Relatório de Atualização de Dados")
+    print(f"  {datetime.now().strftime('%d/%m/%Y %H:%M:%S')}")
     print("=" * 60)
 
-    if validation["errors"]:
-        print("\nATENÇÃO: Existem erros nos dados!")
+    if not validation["ok"]:
+        print(f"\n[ERRO] {validation['error']}")
         sys.exit(1)
 
-    print("\nProcessamento concluído com sucesso!")
-    sys.exit(0)
+    print(f"\n✅ Total de registros: {validation['total_rows']}")
+    print(f"📋 Colunas encontradas: {', '.join(validation['columns_found'])}")
+
+    if validation["missing_cols"]:
+        print(f"⚠️  Colunas ausentes: {', '.join(validation['missing_cols'])}")
+    if validation["extra_cols"]:
+        print(f"ℹ️  Colunas extras: {', '.join(validation['extra_cols'])}")
+
+    print("\n📊 Distribuição por função:")
+    for func, count in sorted(validation["functions_found"].items()):
+        print(f"   {func}: {count}")
+
+    print("\n🔄 Mudanças detectadas:")
+    if changes.get("first_run"):
+        print(f"   Primeira execução — {changes['added']} registros carregados.")
+    else:
+        print(f"   ➕ Adicionados: {changes['added']}")
+        print(f"   ➖ Removidos:   {changes['removed']}")
+        print(f"   ✏️  Modificados: {changes['modified']}")
+        if changes.get("added_keys"):
+            print(f"   Novos: {changes['added_keys']}")
+        if changes.get("removed_keys"):
+            print(f"   Removidos: {changes['removed_keys']}")
+        if changes.get("changes"):
+            print("   Detalhes das modificações:")
+            for ch in changes["changes"][:10]:
+                print(f"     [{ch['key']}] {ch['col']}: '{ch['old']}' → '{ch['new']}'")
+
+    print("\n✅ index.html e snapshot atualizados com sucesso.")
+    print("=" * 60)
+
+
+def main():
+    print("🚀 Iniciando script.py — GAM Farma Representantes")
+    print(f"   Lendo: {CSV_URL[:80]}...")
+
+    try:
+        rows = parse_csv_from_url(CSV_URL)
+    except Exception as e:
+        print(f"[ERRO CRÍTICO] Falha ao baixar dados do Google Sheets: {e}")
+        sys.exit(1)
+
+    validation = validate_structure(rows)
+    changes = detect_changes(rows, SNAPSHOT_FILE)
+    print_report(validation, changes)
+
+    # Salva snapshot para detecção de mudanças na próxima execução
+    save_snapshot(rows, SNAPSHOT_FILE)
+    print("\n✔ Snapshot salvo:", SNAPSHOT_FILE)
+    print("✔ index.html:", INDEX_FILE, "— lido pelo browser via Google Sheets (sem rebuild necessário)")
+    print("\nℹ️  O index.html lê os dados diretamente do Google Sheets em tempo real.")
+    print("   O script.py valida a estrutura e detecta mudanças para registro no CI/CD.")
 
 
 if __name__ == "__main__":
