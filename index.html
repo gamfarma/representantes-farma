@@ -217,7 +217,8 @@ let currentView='states',currentState=null,currentGroup=null;
 let refreshTimer=null,progressTimer=null,progressStart=null;
 
 function parseCSV(text){
-  const lines=text.split(/?
+  const lines=text.split(/
+?
 /);
   let headerIdx=-1,updateDate='';
   for(let i=0;i<lines.length;i++){
