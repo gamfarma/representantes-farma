@@ -188,12 +188,6 @@ body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background
 .state-sigla { font-size: 28px; font-weight: 900; color: var(--state-color); line-height: 1; }
 .state-name { font-size: 12px; color: var(--text-muted); margin-top: 4px; font-weight: 600; }
 .state-count { font-size: 11px; color: var(--text-muted); margin-top: 6px; opacity: 0.7; }
-/* Division card variant */
-.state-card.division-card {
-  border-top: 4px solid var(--purple);
-  background: linear-gradient(135deg, #faf5ff 0%, #fff 100%);
-}
-.state-card.division-card .state-sigla { color: var(--purple); font-size: 20px; }
 
 /* COORDINATORS GRID */
 #coordinators-grid {
@@ -257,18 +251,6 @@ body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background
   transition: background 0.2s;
 }
 .btn-team:hover { background: var(--primary-light); }
-.btn-clients {
-  background: #fff3e0;
-  color: #bf360c;
-  border: 1px solid #ffcc80;
-  border-radius: 8px;
-  padding: 7px 14px;
-  font-size: 12px;
-  font-weight: 700;
-  cursor: pointer;
-  transition: background 0.2s, border-color 0.2s;
-}
-.btn-clients:hover { background: #ffe0b2; border-color: #ff9800; }
 
 /* TEAM LEADER HEADER */
 .team-leader-header {
@@ -351,19 +333,6 @@ tbody tr:hover { background: #f5f8ff; }
   white-space: nowrap;
 }
 .btn-cities:hover { background: #c5d8fc; }
-.btn-clients-sm {
-  background: #fff3e0;
-  color: #bf360c;
-  border: 1px solid #ffcc80;
-  border-radius: 8px;
-  padding: 5px 10px;
-  font-size: 12px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background 0.2s;
-  white-space: nowrap;
-}
-.btn-clients-sm:hover { background: #ffe0b2; }
 .contact-link { color: var(--primary); text-decoration: none; font-weight: 500; }
 .contact-link:hover { text-decoration: underline; }
 
@@ -433,15 +402,6 @@ tbody tr:hover { background: #f5f8ff; }
   padding: 5px 14px;
   font-size: 13px;
   font-weight: 600;
-}
-.client-tag {
-  background: #fff3e0;
-  color: #bf360c;
-  border-radius: 20px;
-  padding: 5px 14px;
-  font-size: 13px;
-  font-weight: 600;
-  border: 1px solid #ffcc80;
 }
 
 /* PROGRESS BAR */
@@ -573,15 +533,12 @@ tbody tr:hover { background: #f5f8ff; }
 // CONSTANTS & CONFIG
 // ============================================================
 const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQJRPejEYUGjqFiruPTGJuS2Itk6qjvyk6moB4_ChCe5_z4_CW0jYcYXJFimYYw4kGcbP2fpdRccLkq/pub?output=csv';
-const REFRESH_INTERVAL = 5 * 60 * 1000; // 5 minutes
+const REFRESH_INTERVAL = 5 * 60 * 1000; // 5 minutos
 
 const STATE_COLORS = {
   SC:'#1565c0', RS:'#c62828', PR:'#2e7d32', MS:'#e65100',
   SP:'#6a1b9a', GO:'#00838f', DF:'#4527a0', MT:'#827717',
   MG:'#4e342e', RJ:'#00695c', BA:'#f57f17', DEFAULT:'#607d8b'
-};
-const DIVISION_COLORS = {
-  'Televendas':'#1565c0', 'EXPANSÃO':'#00838f', 'PROJ. ESPECIAIS':'#2e7d32'
 };
 const STATE_NAMES = {
   AC:'Acre', AL:'Alagoas', AP:'Amapá', AM:'Amazonas', BA:'Bahia',
@@ -596,7 +553,7 @@ const STATE_NAMES = {
 // ============================================================
 // APP STATE
 // ============================================================
-let appData = { rows:[], groups:[], stateMap:{}, divisionMap:{}, updateDate:'' };
+let appData = { rows:[], groups:[], stateMap:{}, updateDate:'' };
 let currentView = 'states';
 let currentState = null;
 let currentGroup = null;
@@ -661,22 +618,15 @@ function normalizeHeader(h) {
 // ============================================================
 // FIELD HELPERS
 // ============================================================
-function getFunc(row) {
-  return row['FUNCAO'] || row['FUNÇÃO'] || row['FUNCAO'] || '';
-}
-function getRegion(row) {
-  return row['REGIAO'] || row['REGIÃO'] || '';
-}
-function getPhone(row) {
-  return row['CONTATO CORPORATIVO'] || row['CONTATO COORPORATIVO'] || '';
-}
+function getFunc(row) { return row['FUNCAO'] || row['FUNÇÃO'] || ''; }
+function getRegion(row) { return row['REGIAO'] || row['REGIÃO'] || ''; }
+function getPhone(row) { return row['CONTATO CORPORATIVO'] || row['CONTATO COORPORATIVO'] || ''; }
 function getEmail(row) { return row['EMAIL'] || ''; }
 function getCities(row) { return row['PRINCIPAIS CIDADES'] || ''; }
 function getRazaoSocial(row) { return row['RAZAO SOCIAL'] || ''; }
 function getName(row) { return row['NOME'] || ''; }
 function getUF(row) { return (row['UF'] || '').trim(); }
 function getDistrito(row) { return (row['DISTRITO'] || '').trim(); }
-function getSetor(row) { return (row['SETOR'] || '').trim(); }
 
 function isCoordEquipe(row) {
   return getFunc(row).toUpperCase().includes('COORDENADOR EQUIPE') || getFunc(row).toUpperCase().includes('COORDENADOR DE EQUIPE');
@@ -684,26 +634,14 @@ function isCoordEquipe(row) {
 function isGerenteProjetosEspeciais(row) {
   return getFunc(row).toUpperCase().includes('GERENTE DE PROJETOS ESPECIAIS');
 }
-function isDedicado(row) {
-  return getFunc(row).toUpperCase().includes('DEDICADO');
-}
-function isGerenteContas(row) {
-  const f = getFunc(row).toLowerCase();
-  return f.includes('gerente de contas');
-}
+function isDedicado(row) { return getFunc(row).toUpperCase().includes('DEDICADO'); }
+function isGerenteContas(row) { return getFunc(row).toLowerCase().includes('gerente de contas'); }
 function isCoordContas(row) {
   const f = getFunc(row).toLowerCase();
   return f.includes('coordenador de contas') || f.includes('medias redes') || f.includes('médias redes');
 }
-function isClientRole(row) {
-  return isGerenteContas(row) || isCoordContas(row);
-}
-function isRepComercial(row) {
-  return getFunc(row).toLowerCase().includes('representante comercial');
-}
-function isConsultorVendas(row) {
-  return getFunc(row).toLowerCase().includes('consultor de vendas');
-}
+function isClientRole(row) { return isGerenteContas(row) || isCoordContas(row); }
+function isRepComercial(row) { return getFunc(row).toLowerCase().includes('representante comercial'); }
 
 function getUFs(ufStr) {
   if (!ufStr || ufStr === '-' || ufStr.toUpperCase().includes('EXPANS')) return [];
@@ -716,9 +654,8 @@ function getUFs(ufStr) {
 function processData(rows) {
   const groups = [];
   const stateMap = {};
-  const divisionMap = {};
 
-  // --- 1) IDENTIFY COORDENADORES DE EQUIPE by DISTRITO ---
+  // Identify coordinators by DISTRITO
   const coordsByDist = {};
   rows.forEach(r => {
     if (isCoordEquipe(r)) {
@@ -727,14 +664,14 @@ function processData(rows) {
     }
   });
 
-  // --- 2) BUILD GROUPS: Pass 1 - Match by district base ---
   const assignedRows = new Set();
   const groupMembers = {};
+
+  // Match members to coordinator by district base
   Object.keys(coordsByDist).forEach(dist => {
     const leader = coordsByDist[dist];
     assignedRows.add(leader);
     groupMembers[dist] = [];
-
     const distParts = dist.split('/').map(p => p.trim());
     const distBases = distParts.map(p => { const n = parseInt(p); return isNaN(n) ? null : Math.floor(n/100)*100; }).filter(b => b !== null);
     rows.forEach(r => {
@@ -745,13 +682,11 @@ function processData(rows) {
       const rDistNum = parseInt(rDist);
       if (isNaN(rDistNum)) return;
       const rBase = Math.floor(rDistNum/100)*100;
-      if (distBases.includes(rBase)) {
-        groupMembers[dist].push(r); assignedRows.add(r);
-      }
+      if (distBases.includes(rBase)) { groupMembers[dist].push(r); assignedRows.add(r); }
     });
   });
 
-  // --- Pass 2: Fallback - assign remaining by COORDENADOR column ---
+  // Fallback: assign by COORDENADOR column
   Object.keys(coordsByDist).forEach(dist => {
     const leader = coordsByDist[dist];
     const leaderNameUp = getName(leader).toUpperCase().trim();
@@ -760,124 +695,116 @@ function processData(rows) {
       if (assignedRows.has(r)) return;
       if (isCoordEquipe(r) || isGerenteProjetosEspeciais(r) || isDedicado(r) || isGerenteContas(r) || isCoordContas(r)) return;
       const coordCol = (r['COORDENADOR'] || '').toUpperCase().trim();
-      if (coordCol && (coordCol === leaderNameUp || coordCol === leaderFirst)) {
+      if (coordCol && (coordCol === leaderNameUp || coordCol.includes(leaderFirst))) {
         groupMembers[dist].push(r); assignedRows.add(r);
       }
     });
   });
 
-  // --- Build final group objects ---
+  // Build group objects
   Object.keys(coordsByDist).forEach(dist => {
     const leader = coordsByDist[dist];
     const members = groupMembers[dist];
-
     const leaderUF = getUF(leader);
     const leaderRegion = getRegion(leader);
 
-    // Determine which states this group covers
-    const allUFs = new Set();
-    getUFs(leaderUF).forEach(u => allUFs.add(u));
-    members.forEach(m => getUFs(getUF(m)).forEach(u => allUFs.add(u)));
-
-    // Determine display category
+    // Determine division type
     let division = null;
+    let displayRegion = leaderRegion;
+    let groupStates = [];
+
     if (leaderUF === '-' || leaderRegion.toUpperCase().includes('TLV')) {
+      // TELEVENDAS: states derived from members only
       division = 'Televendas';
+      const memberUFs = new Set();
+      members.forEach(m => getUFs(getUF(m)).forEach(u => memberUFs.add(u)));
+      groupStates = Array.from(memberUFs);
+      displayRegion = 'Televendas';
     } else if (leaderUF.toUpperCase().includes('EXPANS') || leaderRegion.toUpperCase().includes('EXPANS')) {
+      // EXPANSÃO: states derived from members only
       division = 'EXPANSÃO';
-      // States determined by actual member UFs only
+      const memberUFs = new Set();
+      members.forEach(m => getUFs(getUF(m)).forEach(u => memberUFs.add(u)));
+      groupStates = Array.from(memberUFs);
+      displayRegion = 'Centro Oeste e Sudeste';
+    } else {
+      // Normal state coordinator
+      const allUFs = new Set();
+      getUFs(leaderUF).forEach(u => allUFs.add(u));
+      members.forEach(m => getUFs(getUF(m)).forEach(u => allUFs.add(u)));
+      groupStates = Array.from(allUFs);
     }
 
     const group = {
       leader: leader,
       members: members,
       distKey: dist,
-      states: Array.from(allUFs),
+      states: groupStates,
       division: division,
+      displayRegion: displayRegion,
       type: 'coordEquipe'
     };
     groups.push(group);
   });
 
-  // --- 3) GERENTE DE PROJETOS ESPECIAIS + DEDICADOS ---
+  // GERENTE DE PROJETOS ESPECIAIS + DEDICADOS
   const gpeRow = rows.find(r => isGerenteProjetosEspeciais(r));
   if (gpeRow) {
     assignedRows.add(gpeRow);
     const dedicados = rows.filter(r => isDedicado(r));
     dedicados.forEach(d => assignedRows.add(d));
     const allUFs = new Set();
-    getUFs(getUF(gpeRow)).forEach(u => allUFs.add(u));
     dedicados.forEach(m => getUFs(getUF(m)).forEach(u => allUFs.add(u)));
-    const group = {
+    groups.push({
       leader: gpeRow,
       members: dedicados,
       distKey: 'PROJ_ESP',
       states: Array.from(allUFs),
       division: 'PROJ. ESPECIAIS',
+      displayRegion: 'SUL — PR / RS / SC',
       type: 'projetosEspeciais'
-    };
-    groups.push(group);
+    });
   }
 
-  // --- 4) GERENTES DE CONTAS (individual, no team) ---
+  // GERENTES DE CONTAS (individual)
   rows.filter(r => isGerenteContas(r)).forEach(r => {
     assignedRows.add(r);
     const ufs = getUFs(getUF(r));
-    const group = {
-      leader: r,
-      members: [],
-      distKey: getDistrito(r),
-      states: ufs,
-      division: null,
-      type: 'gerenteContas'
-    };
-    groups.push(group);
+    groups.push({
+      leader: r, members: [], distKey: getDistrito(r),
+      states: ufs, division: null, displayRegion: getRegion(r), type: 'gerenteContas'
+    });
   });
 
-  // --- 5) COORDENADORES DE CONTAS MÉDIAS REDES (individual, no team) ---
+  // COORDENADORES DE CONTAS (individual)
   rows.filter(r => isCoordContas(r)).forEach(r => {
     assignedRows.add(r);
     const ufs = getUFs(getUF(r));
-    const group = {
-      leader: r,
-      members: [],
-      distKey: getDistrito(r),
-      states: ufs,
-      division: null,
-      type: 'coordContas'
-    };
-    groups.push(group);
+    groups.push({
+      leader: r, members: [], distKey: getDistrito(r),
+      states: ufs, division: null, displayRegion: getRegion(r), type: 'coordContas'
+    });
   });
 
-  // --- 6) BUILD STATE MAP & DIVISION MAP ---
+  // BUILD STATE MAP
+  // Division groups only appear in states where they have members
+  // Regular groups appear in their own states
   groups.forEach(group => {
-    if (group.division) {
-      if (!divisionMap[group.division]) divisionMap[group.division] = [];
-      divisionMap[group.division].push(group);
-      // ALSO add division groups to their respective state tiles (only valid 2-letter UFs with members)
-      group.states.forEach(uf => {
-        if (uf && /^[A-Z]{2}$/.test(uf)) {
-          // Only add to state if this group has members in that state
-          const hasMembers = group.members.length === 0 || group.members.some(m => getUF(m) === uf);
-          if (!hasMembers) return;
-          if (!stateMap[uf]) stateMap[uf] = [];
-          stateMap[uf].push(group);
-        }
-      });
-    } else {
-      group.states.forEach(uf => {
-        // For multi-state groups with members, only show in UFs that have team members
-        if (group.states.length > 1 && group.members.length > 0) {
-          const hasMembers = group.members.some(m => getUF(m) === uf);
-          if (!hasMembers) return; // Skip UFs with no members
-        }
-        if (!stateMap[uf]) stateMap[uf] = [];
-        stateMap[uf].push(group);
-      });
-    }
+    group.states.forEach(uf => {
+      if (!uf || uf === '-') return;
+      // For multi-state groups: only show in UFs with actual members
+      if (group.states.length > 1 && group.members.length > 0) {
+        const hasMembers = group.members.some(m => getUF(m) === uf);
+        if (!hasMembers && !group.division) return;
+        // Division groups: only show if members in that UF
+        if (group.division && !hasMembers) return;
+      }
+      if (!stateMap[uf]) stateMap[uf] = [];
+      stateMap[uf].push(group);
+    });
   });
 
-  return { groups, stateMap, divisionMap };
+  return { groups, stateMap };
 }
 
 // ============================================================
@@ -892,8 +819,8 @@ async function fetchData() {
     const text = await resp.text();
     const { rows, updateDate } = parseCSV(text);
     if (rows.length === 0) throw new Error('Nenhum dado encontrado na planilha.');
-    const { groups, stateMap, divisionMap } = processData(rows);
-    appData = { rows, groups, stateMap, divisionMap, updateDate };
+    const { groups, stateMap } = processData(rows);
+    appData = { rows, groups, stateMap, updateDate };
     populateFilters();
     const now = new Date();
     document.getElementById('timestamp').textContent =
@@ -955,7 +882,6 @@ function renderCurrentView() {
   const filterFunc = document.getElementById('filter-func').value.toLowerCase();
   const filterRegion = document.getElementById('filter-region').value.toLowerCase();
   const hasFilter = query || filterFunc || filterRegion;
-
   if (hasFilter || (query && filterUF)) { renderSearchResults(query, filterUF, filterFunc, filterRegion); return; }
   if (filterUF && !hasFilter) { navigateToState(filterUF); return; }
   if (currentView === 'states') renderStates();
@@ -964,7 +890,7 @@ function renderCurrentView() {
 }
 
 // ============================================================
-// VIEW 1 — HOME (States + Divisions)
+// VIEW 1 — HOME (States only — no division tiles)
 // ============================================================
 function renderStates() {
   currentView = 'states';
@@ -972,25 +898,22 @@ function renderStates() {
   updateBreadcrumb([{ label:'Início' }]);
   const container = document.getElementById('view-states');
   container.style.display = 'block';
-  const ufs = Object.keys(appData.stateMap).filter(uf => /^[A-Z]{2}$/.test(uf) && appData.stateMap[uf].length > 0).sort();
-  const totalTiles = ufs.length;
+  const ufs = Object.keys(appData.stateMap).filter(uf => appData.stateMap[uf].length > 0).sort();
 
   let html = `
-    <div class="section-title">&#128506;&#65039; Cobertura Comercial <span class="count-badge">${totalTiles}</span></div>
+    <div class="section-title">&#128506;&#65039; Cobertura Comercial <span class="count-badge">${ufs.length}</span></div>
     <p class="section-sub">Selecione um estado para ver coordenadores e equipes.</p>
     <div id="states-grid">`;
 
-  // State tiles (includes division groups that operate in each state)
   ufs.forEach(uf => {
-    const groups = appData.stateMap[uf];
-    const total = groups.length;
+    const grpCount = appData.stateMap[uf].length;
     const color = STATE_COLORS[uf] || STATE_COLORS.DEFAULT;
     const name = STATE_NAMES[uf] || uf;
     html += `
       <div class="state-card" style="--state-color:${color}" onclick="navigateToState('${uf}')" title="${name}">
         <div class="state-sigla">${uf}</div>
         <div class="state-name">${name}</div>
-        <div class="state-count">${total} grupo${total!==1?'s':''}</div>
+        <div class="state-count">${grpCount} grupo${grpCount!==1?'s':''}</div>
       </div>`;
   });
 
@@ -999,19 +922,13 @@ function renderStates() {
 }
 
 // ============================================================
-// VIEW 2 — COORDINATORS (State or Division)
+// VIEW 2 — COORDINATORS (State)
 // ============================================================
 function navigateToState(uf) {
   currentView = 'coordinators';
   currentState = uf;
   document.getElementById('filter-uf').value = uf;
   renderCoordinators(uf);
-}
-
-function navigateToDivision(div) {
-  currentView = 'coordinators';
-  currentState = div;
-  renderDivisionCoordinators(div);
 }
 
 function renderCoordinators(uf) {
@@ -1037,38 +954,8 @@ function renderCoordinators(uf) {
   if (groups.length === 0) {
     html += `<div class="empty-state"><div class="empty-icon">&#128269;</div><div class="empty-text">Nenhum grupo encontrado para este estado.</div></div>`;
   } else {
-    groups.forEach(group => {
-      html += renderCoordCard(group, uf);
-    });
+    groups.forEach(group => { html += renderCoordCard(group, uf); });
   }
-
-  html += '</div>';
-  container.innerHTML = html;
-}
-
-function renderDivisionCoordinators(div) {
-  hideAllViews();
-  updateBreadcrumb([
-    { label:'Início', action:'goHome' },
-    { label:div }
-  ]);
-  const container = document.getElementById('view-coordinators');
-  container.style.display = 'block';
-  const groups = appData.divisionMap[div] || [];
-  const color = DIVISION_COLORS[div] || '#8B5CF6';
-
-  let html = `
-    <button class="btn-back" onclick="goHome()">&#8592; Voltar</button>
-    <div class="section-title" style="color:${color}">
-      ${div === 'PROJ. ESPECIAIS' ? 'Projetos Especiais — SUL' : div === 'EXPANSÃO' ? 'Expansão — Centro Oeste e Sudeste' : div}
-      <span class="count-badge" style="background:${color}">${groups.length}</span>
-    </div>
-    <p class="section-sub">Equipes e representantes desta divisão.</p>
-    <div id="coordinators-grid">`;
-
-  groups.forEach(group => {
-    html += renderCoordCard(group, null);
-  });
 
   html += '</div>';
   container.innerHTML = html;
@@ -1080,28 +967,32 @@ function renderCoordCard(group, uf) {
   const func = getFunc(leader);
   const phone = getPhone(leader);
   const email = getEmail(leader);
-  let region = getRegion(leader);
-  // Override region display for divisions
-  if (group.division === 'EXPANSÃO') region = 'Centro Oeste e Sudeste';
-  if (region === 'TLV' || region.toUpperCase() === 'TLV') region = 'Televendas';
-  const headerColor = group.division ? (DIVISION_COLORS[group.division] || '#8B5CF6') : getHeaderColor(func, uf);
+  const region = group.displayRegion || getRegion(leader);
+  const headerColor = group.division ? getDivisionColor(group.division) : getHeaderColor(func, uf);
+
+  // Count members for this state
+  let memberCount = 0;
+  if (uf && group.states.length > 1 && group.members.length > 0) {
+    memberCount = group.members.filter(m => getUF(m) === uf).length;
+  } else {
+    memberCount = group.members.length;
+  }
+
   const isClient = isClientRole(leader);
-  // When viewing from a state, count only members matching that UF
-  const memberCount = (uf && group.states && group.states.length > 1) 
-    ? group.members.filter(m => getUF(m) === uf).length 
-    : group.members.length;
-  const cities = getCities(leader);
+  const isGPE = isGerenteProjetosEspeciais(leader);
 
   let html = `<div class="coord-card">
     <div class="coord-header" style="background:${headerColor}">`;
 
-  // Region HIGHLIGHTED above name
+  // Region HIGHLIGHTED above function/name
   if (region && region !== '-') {
     html += `<div class="coord-region-highlight">&#128205; ${region}</div>`;
   }
-  // Division badge for special groups
+  // Division badge
   if (group.division) {
-    const divLabel = group.division === 'PROJ. ESPECIAIS' ? 'Projetos Especiais' : group.division === 'EXPANSÃO' ? 'Expansão' : group.division;
+    const divLabel = group.division === 'PROJ. ESPECIAIS' ? 'Projetos Especiais' :
+                     group.division === 'EXPANSÃO' ? 'Expansão' :
+                     group.division === 'Televendas' ? 'Televendas' : group.division;
     html += `<div style="display:inline-block;background:rgba(255,255,255,0.25);color:#fff;font-size:11px;padding:2px 10px;border-radius:20px;margin-bottom:4px;font-weight:600;">${divLabel}</div>`;
   }
   html += `<div class="coord-func">${func}</div>
@@ -1118,18 +1009,26 @@ function renderCoordCard(group, uf) {
     </div>
     <div class="coord-footer">`;
 
+  // CLIENT ROLES: no clients button, just "atua individualmente" removed - show simple info
   if (isClient) {
-    // Gerentes de Contas / Coordenadores de Médias Redes: não mostram informações de clientes
-  } else if (memberCount > 0) {
+    html += `<span class="members-count">&#127978; Atua individualmente</span>`;
+  } else if (memberCount > 0 || isGPE || group.type === 'coordEquipe') {
     html += `<span class="members-count">&#128101; ${memberCount} membro${memberCount!==1?'s':''}</span>
-      <button class="btn-team" onclick="navigateToTeam('${escapeAttr(group.distKey)}','${escapeAttr(uf||currentState||'')}')">Ver equipe &#8594;</button>`;
+      <button class="btn-team" onclick="navigateToTeam('${escapeAttr(group.distKey)}','${escapeAttr(uf||currentState||'')}'">Ver equipe &#8594;</button>`;
   } else {
     html += `<span class="members-count">&#128101; Equipe</span>
-      <button class="btn-team" onclick="navigateToTeam('${escapeAttr(group.distKey)}','${escapeAttr(uf||currentState||'')}')">Ver equipe &#8594;</button>`;
+      <button class="btn-team" onclick="navigateToTeam('${escapeAttr(group.distKey)}','${escapeAttr(uf||currentState||'')}'">Ver equipe &#8594;</button>`;
   }
 
-  html += `</div></div>`;
+  html += '</div></div>';
   return html;
+}
+
+function getDivisionColor(div) {
+  if (div === 'Televendas') return '#1565c0';
+  if (div === 'EXPANSÃO') return '#00838f';
+  if (div === 'PROJ. ESPECIAIS') return '#2e7d32';
+  return '#607d8b';
 }
 
 function getHeaderColor(func, uf) {
@@ -1137,7 +1036,7 @@ function getHeaderColor(func, uf) {
   if (f.includes('projetos especiais')) return '#2e7d32';
   if (f.includes('gerente de contas')) return '#ad1457';
   if (f.includes('medias redes') || f.includes('médias redes')) return '#e65100';
-  if (uf && (STATE_COLORS[uf])) return STATE_COLORS[uf];
+  if (uf && STATE_COLORS[uf]) return STATE_COLORS[uf];
   return STATE_COLORS.DEFAULT;
 }
 
@@ -1157,26 +1056,20 @@ function renderTeam(group, fromState) {
   if (!group) return;
   hideAllViews();
   const leaderName = group.leader ? getName(group.leader) : 'Equipe';
-  const isDivision = !!group.division;
-
-  // When a division group is accessed from a state view, show state breadcrumb
-  const showStateBreadcrumb = fromState && STATE_NAMES[fromState];
   updateBreadcrumb([
     { label:'Início', action:'goHome' },
-    showStateBreadcrumb
-      ? { label:`${fromState} — ${STATE_NAMES[fromState]}`, action:`navigateToState_bc_${fromState}` }
-      : (isDivision
-        ? { label:group.division, action:`navigateToDivision_bc_${group.division}` }
-        : { label:`${fromState} — ${STATE_NAMES[fromState]||fromState||''}`, action:`navigateToState_bc_${fromState}` }),
+    { label:`${fromState} — ${STATE_NAMES[fromState]||fromState||''}`, action:`navigateToState_bc_${fromState}` },
     { label:leaderName }
   ]);
   const container = document.getElementById('view-team');
   container.style.display = 'block';
-  const color = isDivision ? (DIVISION_COLORS[group.division] || '#8B5CF6') : (STATE_COLORS[fromState] || STATE_COLORS.DEFAULT);
+  const color = fromState && STATE_COLORS[fromState] ? STATE_COLORS[fromState] :
+    (group.division ? getDivisionColor(group.division) : STATE_COLORS.DEFAULT);
 
-  const backAction = (fromState && STATE_NAMES[fromState]) 
+  const backAction = fromState && STATE_NAMES[fromState]
     ? `navigateToState('${escapeAttr(fromState)}')`
-    : (isDivision ? `navigateToDivision('${escapeAttr(group.division)}')` : `navigateToState('${escapeAttr(fromState||currentState||'')}')`);
+    : `goHome()`;
+
   let html = `<button class="btn-back" onclick="${backAction}">&#8592; Voltar</button>`;
 
   // LEADER HEADER CARD
@@ -1185,9 +1078,7 @@ function renderTeam(group, fromState) {
     const lFunc = getFunc(ldr);
     const lPhone = getPhone(ldr);
     const lEmail = getEmail(ldr);
-    let lRegion = getRegion(ldr);
-    if (group.division === 'EXPANSÃO') lRegion = 'Centro Oeste e Sudeste';
-    if (lRegion === 'TLV' || lRegion.toUpperCase() === 'TLV') lRegion = 'Televendas';
+    const lRegion = group.displayRegion || getRegion(ldr);
     const initials = getName(ldr).split(' ').filter(w=>w.length>0).slice(0,2).map(w=>w[0]).join('').toUpperCase();
     html += `
       <div class="team-leader-header" style="background:linear-gradient(135deg,${color} 0%,${color}cc 100%)">
@@ -1204,18 +1095,17 @@ function renderTeam(group, fromState) {
       </div>`;
   }
 
-  // When viewing from a state, filter members by that state's UF (all group types)
-  let members = (fromState && STATE_NAMES[fromState] && group.states && group.states.length > 1) 
+  // Filter members by state when viewing from state context
+  let members = (fromState && STATE_NAMES[fromState] && group.states.length > 1)
     ? group.members.filter(m => getUF(m) === fromState)
     : group.members;
-  const showingFiltered = members.length !== group.members.length;
 
   html += `
     <div class="section-title" style="color:${color}">
       &#128101; Equipe${group.leader ? ' de ' + getName(group.leader) : ''}
       <span class="count-badge" style="background:${color}">${members.length} membro${members.length!==1?'s':''}</span>
     </div>
-    <p class="section-sub">${group.distKey !== 'PROJ_ESP' ? 'Distrito ' + group.distKey : 'Projetos Especiais — SUL'}${showingFiltered ? ' · Exibindo membros de ' + fromState : (group.states.length > 0 ? ' · ' + group.states.join(', ') : '')}</p>`;
+    <p class="section-sub">${group.distKey !== 'PROJ_ESP' ? 'Distrito ' + group.distKey : 'Projetos Especiais — SUL'}</p>`;
 
   if (members.length === 0) {
     html += `<div class="empty-state"><div class="empty-icon">&#128100;</div><div class="empty-text">Nenhum membro na equipe.</div></div>`;
@@ -1231,7 +1121,7 @@ function renderTeam(group, fromState) {
               <th>E-mail</th>
               <th>UF</th>
               <th>Região</th>
-              <th>Cidades / Clientes</th>
+              <th>Principais Cidades</th>
             </tr>
           </thead>
           <tbody>`;
@@ -1247,11 +1137,10 @@ function renderTeam(group, fromState) {
       const uf = getUF(m);
       const razao = getRazaoSocial(m);
       const isRC = isRepComercial(m);
-      const isClient = isClientRole(m);
 
       let citiesBtn = '<span class="no-data">—</span>';
-      if (cities && !isClient) {
-        citiesBtn = `<button class="btn-cities" onclick="openCitiesModal('${escapeAttr(nome)}','${escapeAttr(region)}','${escapeAttr(cities)}')">&#128205; Cidades</button>`;
+      if (cities && cities !== '-') {
+        citiesBtn = `<button class="btn-cities" onclick="openCitiesModal('${escapeAttr(nome)}','${escapeAttr(region)}','${escapeAttr(cities)}')">&#128205; Principais cidades</button>`;
       }
 
       html += `
@@ -1315,7 +1204,7 @@ function renderSearchResults(query, filterUF, filterFunc, filterRegion) {
 
   let html = `
     <div class="section-title">&#128269; Resultados <span class="count-badge">${results.length}</span></div>
-    <p class="section-sub">${results.length} resultado${results.length!==1?'s':''} encontrado${results.length!==1?'s':''}.</p>`;
+    <p class="section-sub">${results.length} resultado${results.length!==1?'s':''} encontrado${results.length!==1?'s':''}.`;
 
   if (results.length === 0) {
     html += `<div class="empty-state"><div class="empty-icon">&#128269;</div><div class="empty-text">Nenhum resultado encontrado.</div></div>`;
@@ -1323,7 +1212,7 @@ function renderSearchResults(query, filterUF, filterFunc, filterRegion) {
     html += `
       <div class="table-wrapper">
         <table>
-          <thead><tr><th>Nome</th><th>Função</th><th>UF</th><th>Região</th><th>Contato</th><th>E-mail</th><th>Cidades / Clientes</th></tr></thead>
+          <thead><tr><th>Nome</th><th>Função</th><th>UF</th><th>Região</th><th>Contato</th><th>E-mail</th><th>Principais Cidades</th></tr></thead>
           <tbody>`;
     results.forEach(r => {
       const func = getFunc(r);
@@ -1338,7 +1227,7 @@ function renderSearchResults(query, filterUF, filterFunc, filterRegion) {
       const isRC = isRepComercial(r);
       const isClient = isClientRole(r);
       let citiesBtn = '<span class="no-data">—</span>';
-      if (cities && !isClient) {
+      if (cities && cities !== '-') {
         citiesBtn = `<button class="btn-cities" onclick="openCitiesModal('${escapeAttr(nome)}','${escapeAttr(region)}','${escapeAttr(cities)}')">&#128205; Cidades</button>`;
       }
       html += `
@@ -1391,9 +1280,6 @@ function updateBreadcrumb(items) {
     } else if (item.action && item.action.startsWith('navigateToState_bc_')) {
       const st = item.action.replace('navigateToState_bc_','');
       html += `<span class="bc-item" onclick="navigateToState('${escapeAttr(st)}')">${item.label}</span>`;
-    } else if (item.action && item.action.startsWith('navigateToDivision_bc_')) {
-      const dv = item.action.replace('navigateToDivision_bc_','');
-      html += `<span class="bc-item" onclick="navigateToDivision('${escapeAttr(dv)}')">${item.label}</span>`;
     } else {
       html += `<span class="bc-item" onclick="goHome()">${item.label}</span>`;
     }
@@ -1402,7 +1288,7 @@ function updateBreadcrumb(items) {
 }
 
 // ============================================================
-// MODALS
+// MODAL
 // ============================================================
 function openCitiesModal(nome, region, citiesStr) {
   document.getElementById('modal-title').textContent = nome;
@@ -1415,20 +1301,7 @@ function openCitiesModal(nome, region, citiesStr) {
   document.getElementById('modal-overlay').classList.add('open');
 }
 
-function openClientsModal(nome, region, clientsStr) {
-  document.getElementById('modal-title').textContent = nome;
-  document.getElementById('modal-subtitle').textContent = `Clientes atendidos${region?' — '+region:''}`;
-  const clients = (clientsStr||'').split(/[,;]+/).map(c=>c.trim()).filter(c=>c&&c!=='-');
-  document.getElementById('modal-cities').innerHTML =
-    clients.length > 0
-      ? clients.map(c=>`<span class="client-tag">${c}</span>`).join('')
-      : '<span class="no-data">Nenhum cliente cadastrado.</span>';
-  document.getElementById('modal-overlay').classList.add('open');
-}
-
-function closeModal() {
-  document.getElementById('modal-overlay').classList.remove('open');
-}
+function closeModal() { document.getElementById('modal-overlay').classList.remove('open'); }
 document.getElementById('modal-close').addEventListener('click', closeModal);
 document.getElementById('modal-overlay').addEventListener('click', e => {
   if (e.target === document.getElementById('modal-overlay')) closeModal();
@@ -1497,7 +1370,7 @@ document.getElementById('btn-clear').addEventListener('click', () => {
 // UTILS
 // ============================================================
 function escapeAttr(str) {
-  return (str||'').replace(/\\/g,'\\\\').replace(/'/g,"\\'").replace(/"/g,'&quot;').replace(/\n/g,' ');
+  return (str||''). replace(/\\/g,'\\\\'). replace(/'/g,"\\'"). replace(/"/g,'&quot;'). replace(/\n/g,' ');
 }
 
 // ============================================================
