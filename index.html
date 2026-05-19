@@ -1,1594 +1,1513 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Rede de Representantes GAM Farma</title>
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
-      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-      min-height: 100vh;
-      color: #2c3e50;
-      padding: 20px;
-    }
-
-    .container {
-      max-width: 1400px;
-      margin: 0 auto;
-    }
-
-    /* HEADER */
-    header {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      color: white;
-      padding: 30px 40px;
-      border-radius: 15px;
-      margin-bottom: 30px;
-      box-shadow: 0 8px 32px rgba(102, 126, 234, 0.3);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      gap: 20px;
-    }
-
-    .header-left {
-      display: flex;
-      align-items: center;
-      gap: 20px;
-      flex: 1;
-    }
-
-    .header-logo img {
-      height: 60px;
-      object-fit: contain;
-      filter: brightness(0) invert(1);
-    }
-
-    .header-title h1 {
-      font-size: 28px;
-      font-weight: 700;
-      margin-bottom: 5px;
-      letter-spacing: -0.5px;
-    }
-
-    .header-title p {
-      font-size: 14px;
-      opacity: 0.85;
-    }
-
-    .header-right {
-      display: flex;
-      align-items: center;
-      gap: 15px;
-      flex-wrap: wrap;
-    }
-
-    .update-info {
-      background: rgba(255, 255, 255, 0.15);
-      padding: 8px 16px;
-      border-radius: 8px;
-      font-size: 12px;
-      backdrop-filter: blur(10px);
-    }
-
-    .btn-refresh {
-      background: rgba(255, 255, 255, 0.2);
-      border: 2px solid rgba(255, 255, 255, 0.4);
-      color: white;
-      padding: 10px 20px;
-      border-radius: 8px;
-      cursor: pointer;
-      font-size: 13px;
-      font-weight: 600;
-      transition: all 0.3s ease;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .btn-refresh:hover {
-      background: rgba(255, 255, 255, 0.3);
-      transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-    }
-
-    /* TOOLBAR */
-    .toolbar {
-      background: white;
-      padding: 25px 30px;
-      border-radius: 15px;
-      margin-bottom: 30px;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
-      display: flex;
-      gap: 15px;
-      flex-wrap: wrap;
-      align-items: center;
-    }
-
-    .search-container {
-      flex: 1;
-      min-width: 300px;
-      position: relative;
-    }
-
-    .search-container input {
-      width: 100%;
-      padding: 12px 40px 12px 16px;
-      border: 2px solid #e0e6ed;
-      border-radius: 10px;
-      font-size: 14px;
-      transition: all 0.3s ease;
-      background: #f8f9fa;
-    }
-
-    .search-container input:focus {
-      outline: none;
-      border-color: #667eea;
-      background: white;
-      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-    }
-
-    .search-container svg {
-      position: absolute;
-      right: 12px;
-      top: 50%;
-      transform: translateY(-50%);
-      color: #999;
-      width: 18px;
-      height: 18px;
-    }
-
-    .filters {
-      display: flex;
-      gap: 12px;
-      flex-wrap: wrap;
-    }
-
-    .filters select {
-      padding: 10px 14px;
-      border: 2px solid #e0e6ed;
-      border-radius: 8px;
-      font-size: 13px;
-      background: white;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      min-width: 150px;
-    }
-
-    .filters select:focus {
-      outline: none;
-      border-color: #667eea;
-      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-    }
-
-    .btn-clear {
-      padding: 10px 18px;
-      background: #ff6b6b;
-      border: none;
-      border-radius: 8px;
-      color: white;
-      font-size: 13px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .btn-clear:hover {
-      background: #ff5252;
-      transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(255, 107, 107, 0.3);
-    }
-
-    /* MAIN CONTENT */
-    main {
-      min-height: 400px;
-    }
-
-    .loading-state, .error-state {
-      text-align: center;
-      padding: 80px 40px;
-      background: white;
-      border-radius: 15px;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
-      display: none;
-    }
-
-    .loading-state.visible, .error-state.visible {
-      display: block;
-    }
-
-    .spinner {
-      width: 50px;
-      height: 50px;
-      border: 4px solid #e0e6ed;
-      border-top: 4px solid #667eea;
-      border-radius: 50%;
-      animation: spin 1s linear infinite;
-      margin: 0 auto 20px;
-    }
-
-    @keyframes spin {
-      to { transform: rotate(360deg); }
-    }
-
-    .loading-state p {
-      font-size: 16px;
-      color: #7f8c8d;
-    }
-
-    .error-state {
-      display: none;
-    }
-
-    .error-state.visible {
-      display: block;
-    }
-
-    .error-icon {
-      font-size: 48px;
-      margin-bottom: 15px;
-    }
-
-    .error-title {
-      font-size: 20px;
-      font-weight: 600;
-      margin-bottom: 10px;
-      color: #e74c3c;
-    }
-
-    .error-description {
-      font-size: 14px;
-      color: #7f8c8d;
-      margin-bottom: 20px;
-    }
-
-    /* STATS BAR */
-    .stats-bar {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 15px;
-      margin-bottom: 30px;
-    }
-
-    .stat-card {
-      background: white;
-      padding: 20px 25px;
-      border-radius: 12px;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
-      border-left: 4px solid #667eea;
-    }
-
-    .stat-label {
-      font-size: 12px;
-      color: #7f8c8d;
-      margin-bottom: 8px;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      font-weight: 600;
-    }
-
-    .stat-value {
-      font-size: 28px;
-      font-weight: 700;
-      color: #667eea;
-    }
-
-    /* SECTION TITLE */
-    .section-title {
-      font-size: 18px;
-      font-weight: 700;
-      color: #2c3e50;
-      margin: 40px 0 20px;
-      padding-bottom: 10px;
-      border-bottom: 3px solid #667eea;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .section-title.hidden {
-      display: none;
-    }
-
-    /* STATES GRID */
-    .states-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-      gap: 15px;
-      margin-bottom: 20px;
-    }
-
-    .state-card {
-      background: white;
-      border: 3px solid #e0e6ed;
-      border-radius: 12px;
-      padding: 20px 15px;
-      text-align: center;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
-    }
-
-    .state-card:hover {
-      border-color: #667eea;
-      transform: translateY(-5px);
-      box-shadow: 0 8px 25px rgba(102, 126, 234, 0.25);
-    }
-
-    .state-card.active {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      border-color: #667eea;
-      color: white;
-    }
-
-    .state-card.division-card {
-      border-color: #f39c12;
-    }
-
-    .state-card.division-card:hover {
-      border-color: #e67e22;
-      box-shadow: 0 8px 25px rgba(243, 156, 18, 0.25);
-    }
-
-    .state-card.division-card.active {
-      background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);
-      border-color: #f39c12;
-      color: white;
-    }
-
-    .state-sigla {
-      font-size: 32px;
-      font-weight: 800;
-      line-height: 1;
-      margin-bottom: 8px;
-    }
-
-    .state-name {
-      font-size: 11px;
-      opacity: 0.6;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      margin-bottom: 8px;
-    }
-
-    .state-badge {
-      background: rgba(102, 126, 234, 0.15);
-      color: #667eea;
-      border-radius: 15px;
-      padding: 3px 12px;
-      font-size: 11px;
-      font-weight: 600;
-      display: inline-block;
-    }
-
-    .state-card.active .state-badge {
-      background: rgba(255, 255, 255, 0.3);
-      color: white;
-    }
-
-    /* PANEL */
-    .coord-panel {
-      background: white;
-      border-radius: 15px;
-      margin-bottom: 30px;
-      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
-      overflow: hidden;
-      display: none;
-    }
-
-    .coord-panel.visible {
-      display: block;
-      animation: slideDown 0.3s ease;
-    }
-
-    @keyframes slideDown {
-      from {
-        opacity: 0;
-        transform: translateY(-10px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    .panel-header {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      color: white;
-      padding: 20px 30px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 15px;
-    }
-
-    .panel-header-content h3 {
-      font-size: 18px;
-      margin-bottom: 5px;
-    }
-
-    .panel-header-content p {
-      font-size: 12px;
-      opacity: 0.85;
-    }
-
-    .btn-close {
-      background: rgba(255, 255, 255, 0.2);
-      border: none;
-      color: white;
-      width: 36px;
-      height: 36px;
-      border-radius: 8px;
-      cursor: pointer;
-      font-size: 20px;
-      flex-shrink: 0;
-      transition: all 0.3s ease;
-    }
-
-    .btn-close:hover {
-      background: rgba(255, 255, 255, 0.3);
-      transform: rotate(90deg);
-    }
-
-    .panel-content {
-      padding: 30px;
-      display: flex;
-      flex-direction: column;
-      gap: 25px;
-    }
-
-    /* COORDINATOR CARD */
-    .coordinator-card {
-      border: 2px solid #e0e6ed;
-      border-radius: 12px;
-      overflow: hidden;
-      transition: all 0.3s ease;
-    }
-
-    .coordinator-card:hover {
-      border-color: #667eea;
-      box-shadow: 0 8px 20px rgba(102, 126, 234, 0.15);
-    }
-
-    .coordinator-header {
-      background: linear-gradient(135deg, #f5f7fa 0%, #e0e6ed 100%);
-      padding: 20px;
-      cursor: pointer;
-      display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-      gap: 15px;
-    }
-
-    .coordinator-info {
-      flex: 1;
-    }
-
-    .coordinator-region {
-      font-size: 12px;
-      color: #667eea;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      margin-bottom: 5px;
-    }
-
-    .coordinator-name {
-      font-size: 16px;
-      font-weight: 700;
-      color: #2c3e50;
-      margin-bottom: 10px;
-    }
-
-    .coordinator-meta {
-      display: flex;
-      gap: 20px;
-      flex-wrap: wrap;
-      font-size: 13px;
-      color: #7f8c8d;
-    }
-
-    .meta-item {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .meta-item a {
-      color: #667eea;
-      text-decoration: none;
-      font-weight: 600;
-    }
-
-    .meta-item a:hover {
-      text-decoration: underline;
-    }
-
-    .badge {
-      display: inline-block;
-      background: #667eea;
-      color: white;
-      padding: 4px 12px;
-      border-radius: 15px;
-      font-size: 11px;
-      font-weight: 600;
-      margin-bottom: 8px;
-    }
-
-    .badge-gerente {
-      background: #27ae60;
-    }
-
-    .badge-coord-contas {
-      background: #f39c12;
-    }
-
-    .badge-dedicado {
-      background: #e74c3c;
-    }
-
-    .badge-rep {
-      background: #9b59b6;
-    }
-
-    .badge-consultor {
-      background: #3498db;
-    }
-
-    .team-toggle-btn {
-      background: #667eea;
-      color: white;
-      border: none;
-      padding: 8px 16px;
-      border-radius: 8px;
-      cursor: pointer;
-      font-size: 12px;
-      font-weight: 600;
-      transition: all 0.3s ease;
-      white-space: nowrap;
-      flex-shrink: 0;
-    }
-
-    .team-toggle-btn:hover {
-      background: #764ba2;
-      transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
-    }
-
-    /* TEAM SECTION */
-    .team-section {
-      display: none;
-      background: #f8f9fa;
-      border-top: 2px solid #e0e6ed;
-    }
-
-    .team-section.visible {
-      display: block;
-    }
-
-    .team-header {
-      background: #667eea;
-      color: white;
-      padding: 12px 20px;
-      font-size: 13px;
-      font-weight: 600;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .team-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-      gap: 15px;
-      padding: 20px;
-    }
-
-    /* MEMBER CARD */
-    .member-card {
-      background: white;
-      border: 1px solid #e0e6ed;
-      border-radius: 10px;
-      padding: 16px;
-      transition: all 0.3s ease;
-    }
-
-    .member-card:hover {
-      border-color: #667eea;
-      box-shadow: 0 6px 15px rgba(102, 126, 234, 0.15);
-    }
-
-    .member-region {
-      font-size: 12px;
-      color: #667eea;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      margin-bottom: 6px;
-    }
-
-    .member-name {
-      font-size: 14px;
-      font-weight: 700;
-      color: #2c3e50;
-      margin-bottom: 6px;
-    }
-
-    .member-razao {
-      font-size: 12px;
-      color: #7f8c8d;
-      font-style: italic;
-      margin-bottom: 8px;
-      padding: 6px;
-      background: #f8f9fa;
-      border-radius: 5px;
-    }
-
-    .member-contacts {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-      font-size: 12px;
-      margin-bottom: 10px;
-    }
-
-    .member-contact {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      color: #7f8c8d;
-    }
-
-    .member-contact a {
-      color: #667eea;
-      text-decoration: none;
-    }
-
-    .member-contact a:hover {
-      text-decoration: underline;
-    }
-
-    .cities-btn {
-      background: none;
-      border: 2px solid #667eea;
-      color: #667eea;
-      padding: 6px 12px;
-      border-radius: 6px;
-      font-size: 11px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      margin-top: 8px;
-    }
-
-    .cities-btn:hover {
-      background: #667eea;
-      color: white;
-    }
-
-    .cities-list {
-      display: none;
-      margin-top: 8px;
-      padding: 10px;
-      background: white;
-      border: 1px solid #e0e6ed;
-      border-radius: 6px;
-      font-size: 12px;
-      color: #7f8c8d;
-      line-height: 1.6;
-    }
-
-    .cities-list.visible {
-      display: block;
-    }
-
-    /* INDIVIDUAL CARD */
-    .individual-card {
-      background: white;
-      border: 2px solid #e0e6ed;
-      border-radius: 12px;
-      padding: 20px;
-      transition: all 0.3s ease;
-    }
-
-    .individual-card:hover {
-      border-color: #667eea;
-      box-shadow: 0 8px 20px rgba(102, 126, 234, 0.15);
-    }
-
-    .individual-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-      gap: 15px;
-    }
-
-    .empty-state {
-      text-align: center;
-      padding: 60px 40px;
-      background: white;
-      border-radius: 15px;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
-      display: none;
-    }
-
-    .empty-state.visible {
-      display: block;
-    }
-
-    .empty-state-icon {
-      font-size: 48px;
-      margin-bottom: 15px;
-    }
-
-    .empty-state-text {
-      font-size: 14px;
-      color: #7f8c8d;
-    }
-
-    @media (max-width: 768px) {
-      .toolbar {
-        flex-direction: column;
-      }
-
-      .search-container {
-        min-width: 100%;
-      }
-
-      .states-grid {
-        grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
-      }
-
-      .header {
-        flex-direction: column;
-        text-align: center;
-      }
-
-      .team-grid {
-        grid-template-columns: 1fr;
-      }
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<title>GAM Farma — Rede de Representantes</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --primary: #0a2d6e;
+  --primary-light: #1a4a9e;
+  --accent: #FFB800;
+  --purple: #8B5CF6;
+  --bg: #f0f4f8;
+  --surface: #fff;
+  --border: #dde3ee;
+  --text: #1a2340;
+  --text-muted: #5a6a8a;
+  --radius: 12px;
+  --shadow: 0 2px 12px rgba(10,45,110,0.10);
+  --shadow-hover: 0 6px 24px rgba(10,45,110,0.18);
+}
+html { scroll-behavior: smooth; }
+body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+
+/* HEADER */
+#app-header {
+  background: linear-gradient(135deg, #0a2d6e 0%, #1a4a9e 60%, #0d3b8e 100%);
+  color: #fff;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 2px 16px rgba(10,45,110,0.25);
+}
+.header-inner {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 10px 20px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.logo-img {
+  height: 54px;
+  width: auto;
+  flex-shrink: 0;
+  filter: drop-shadow(0 2px 6px rgba(0,0,0,0.18));
+}
+.header-titles { flex: 1; min-width: 160px; }
+.header-titles h1 { font-size: 16px; font-weight: 700; letter-spacing: 0.5px; }
+.header-titles p { font-size: 11px; opacity: 0.8; margin-top: 2px; }
+.header-search {
+  flex: 2;
+  min-width: 200px;
+  max-width: 380px;
+  position: relative;
+}
+.header-search input {
+  width: 100%;
+  padding: 9px 16px 9px 38px;
+  border-radius: 24px;
+  border: none;
+  background: rgba(255,255,255,0.18);
+  color: #fff;
+  font-size: 14px;
+  outline: none;
+  transition: background 0.2s;
+}
+.header-search input::placeholder { color: rgba(255,255,255,0.7); }
+.header-search input:focus { background: rgba(255,255,255,0.28); }
+.search-icon { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); opacity: 0.7; font-size: 15px; pointer-events: none; }
+.header-actions { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+.btn-refresh {
+  background: rgba(255,255,255,0.18);
+  border: 1px solid rgba(255,255,255,0.3);
+  color: #fff;
+  border-radius: 8px;
+  padding: 8px 14px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+  transition: background 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.btn-refresh:hover { background: rgba(255,255,255,0.28); }
+.spinner { display: inline-block; width: 14px; height: 14px; border: 2px solid rgba(255,255,255,0.4); border-top-color: #fff; border-radius: 50%; animation: spin 0.7s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.timestamp { font-size: 11px; opacity: 0.75; white-space: nowrap; }
+
+/* FILTER BAR */
+#filter-bar {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 10px 20px;
+}
+.filter-inner {
+  max-width: 1400px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.filter-label { font-size: 13px; font-weight: 700; color: var(--text-muted); }
+.filter-select {
+  padding: 7px 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-size: 13px;
+  background: var(--surface);
+  color: var(--text);
+  cursor: pointer;
+  min-width: 130px;
+}
+.btn-clear {
+  background: #fee;
+  color: #c62828;
+  border: 1px solid #fcc;
+  border-radius: 8px;
+  padding: 7px 14px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.btn-clear:hover { background: #fdd; }
+
+/* BREADCRUMB */
+#breadcrumb {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 12px 20px 0;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.bc-item { color: var(--primary); cursor: pointer; font-weight: 600; }
+.bc-item:hover { text-decoration: underline; }
+.bc-sep { color: #bbb; }
+.bc-current { color: var(--text-muted); font-weight: 500; }
+
+/* MAIN CONTENT */
+#main-content {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 16px 20px 60px;
+}
+.section-title { font-size: 1.15rem; font-weight: 800; margin-bottom: 6px; display: flex; align-items: center; gap: 10px; }
+.section-sub { font-size: 13px; color: var(--text-muted); margin-bottom: 18px; }
+.count-badge { background: var(--primary); color: #fff; font-size: 11px; padding: 3px 10px; border-radius: 20px; font-weight: 700; }
+
+/* STATE GRID */
+#states-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 14px;
+}
+.state-card {
+  background: var(--surface);
+  border-radius: var(--radius);
+  padding: 20px 16px;
+  text-align: center;
+  cursor: pointer;
+  transition: transform 0.18s, box-shadow 0.18s;
+  box-shadow: var(--shadow);
+  border-top: 4px solid var(--state-color);
+  position: relative;
+  overflow: hidden;
+}
+.state-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-hover); }
+.state-card::after {
+  content: '';
+  position: absolute;
+  right: -20px; top: -20px;
+  width: 80px; height: 80px;
+  background: var(--state-color);
+  opacity: 0.06;
+  border-radius: 50%;
+}
+.state-sigla { font-size: 28px; font-weight: 900; color: var(--state-color); line-height: 1; }
+.state-name { font-size: 12px; color: var(--text-muted); margin-top: 4px; font-weight: 600; }
+.state-count { font-size: 11px; color: var(--text-muted); margin-top: 6px; opacity: 0.7; }
+/* Division card variant */
+.state-card.division-card {
+  border-top: 4px solid var(--purple);
+  background: linear-gradient(135deg, #faf5ff 0%, #fff 100%);
+}
+.state-card.division-card .state-sigla { color: var(--purple); font-size: 20px; }
+
+/* COORDINATORS GRID */
+#coordinators-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 16px;
+}
+.coord-card {
+  background: var(--surface);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+  transition: box-shadow 0.2s;
+}
+.coord-card:hover { box-shadow: var(--shadow-hover); }
+.coord-header {
+  padding: 16px;
+  color: #fff;
+  position: relative;
+  overflow: hidden;
+}
+.coord-header::after {
+  content: '';
+  position: absolute;
+  right: -20px; top: -20px;
+  width: 100px; height: 100px;
+  background: rgba(255,255,255,0.08);
+  border-radius: 50%;
+}
+.coord-region-highlight {
+  font-size: 16px;
+  font-weight: 900;
+  margin-bottom: 4px;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.15);
+  letter-spacing: 0.3px;
+}
+.coord-func { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.2px; opacity: 0.85; margin-bottom: 2px; }
+.coord-name { font-size: 15px; font-weight: 700; line-height: 1.3; }
+.coord-body { padding: 12px 16px; display: flex; flex-direction: column; gap: 6px; }
+.coord-contact { display: flex; align-items: center; gap: 8px; font-size: 13px; }
+.coord-contact a { color: var(--primary); text-decoration: none; font-weight: 500; transition: opacity 0.2s; }
+.coord-contact a:hover { opacity: 0.7; text-decoration: underline; }
+.contact-icon { font-size: 15px; flex-shrink: 0; }
+.coord-footer {
+  padding: 10px 16px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.members-count { font-size: 12px; color: var(--text-muted); }
+.btn-team {
+  background: var(--primary);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 7px 14px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.btn-team:hover { background: var(--primary-light); }
+.btn-clients {
+  background: #fff3e0;
+  color: #bf360c;
+  border: 1px solid #ffcc80;
+  border-radius: 8px;
+  padding: 7px 14px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s;
+}
+.btn-clients:hover { background: #ffe0b2; border-color: #ff9800; }
+
+/* TEAM LEADER HEADER */
+.team-leader-header {
+  border-radius: var(--radius);
+  padding: 20px 24px;
+  color: #fff;
+  margin-bottom: 20px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 16px;
+  box-shadow: var(--shadow-hover);
+  position: relative;
+  overflow: hidden;
+}
+.team-leader-header::after {
+  content: '';
+  position: absolute;
+  right: -30px; top: -30px;
+  width: 140px; height: 140px;
+  background: rgba(255,255,255,0.07);
+  border-radius: 50%;
+}
+.tlh-avatar {
+  width: 56px; height: 56px;
+  background: rgba(255,255,255,0.22);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  font-weight: 900;
+  flex-shrink: 0;
+  border: 2px solid rgba(255,255,255,0.4);
+}
+.tlh-info-block { flex: 1; min-width: 200px; }
+.tlh-region-highlight { font-size: 18px; font-weight: 900; margin-bottom: 2px; text-shadow: 0 1px 3px rgba(0,0,0,0.15); }
+.tlh-func { font-size: 10px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; opacity: 0.8; margin-bottom: 4px; }
+.tlh-name { font-size: 22px; font-weight: 900; line-height: 1.2; margin-bottom: 4px; }
+.tlh-region { font-size: 13px; opacity: 0.9; margin-bottom: 10px; }
+.tlh-contacts { display: flex; flex-wrap: wrap; gap: 12px; }
+.tlh-contact-item { display: flex; align-items: center; gap: 6px; font-size: 13px; }
+.tlh-contact-item a { color: rgba(255,255,255,0.92); text-decoration: none; font-weight: 600; transition: opacity 0.2s; }
+.tlh-contact-item a:hover { opacity: 0.75; text-decoration: underline; }
+
+/* TABLE */
+.table-wrapper { overflow-x: auto; border-radius: var(--radius); box-shadow: var(--shadow); }
+table { width: 100%; border-collapse: collapse; background: var(--surface); font-size: 13px; }
+thead tr { background: var(--primary); color: #fff; }
+th { padding: 12px 14px; text-align: left; font-weight: 700; font-size: 12px; letter-spacing: 0.5px; white-space: nowrap; }
+td { padding: 11px 14px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+tbody tr:last-child td { border-bottom: none; }
+tbody tr:hover { background: #f5f8ff; }
+.func-badge {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+.badge-rep { background: #e8f5e9; color: #1b5e20; }
+.badge-cv { background: #e3f2fd; color: #0d47a1; }
+.badge-tlv { background: #e3f2fd; color: #0d47a1; }
+.badge-ger { background: #fce4ec; color: #880e4f; }
+.badge-coord-med { background: #fff3e0; color: #bf360c; }
+.badge-ded { background: #f3e5f5; color: #4a148c; }
+.badge-coord { background: #e8eaf6; color: #1a237e; }
+.badge-default { background: #eceff1; color: #37474f; }
+.btn-cities {
+  background: #e8f0fe;
+  color: var(--primary);
+  border: none;
+  border-radius: 8px;
+  padding: 5px 10px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+  white-space: nowrap;
+}
+.btn-cities:hover { background: #c5d8fc; }
+.btn-clients-sm {
+  background: #fff3e0;
+  color: #bf360c;
+  border: 1px solid #ffcc80;
+  border-radius: 8px;
+  padding: 5px 10px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+  white-space: nowrap;
+}
+.btn-clients-sm:hover { background: #ffe0b2; }
+.contact-link { color: var(--primary); text-decoration: none; font-weight: 500; }
+.contact-link:hover { text-decoration: underline; }
+
+/* BACK BUTTON */
+.btn-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--primary);
+  border-radius: 8px;
+  padding: 8px 16px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  margin-bottom: 16px;
+  transition: background 0.2s, box-shadow 0.2s;
+  box-shadow: var(--shadow);
+}
+.btn-back:hover { background: #e8f0fe; box-shadow: var(--shadow-hover); }
+
+/* MODAL */
+#modal-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(10,20,50,0.55);
+  z-index: 1000;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+#modal-overlay.open { display: flex; }
+.modal-box {
+  background: var(--surface);
+  border-radius: 14px;
+  padding: 28px;
+  max-width: 520px;
+  width: 100%;
+  max-height: 80vh;
+  overflow-y: auto;
+  position: relative;
+  box-shadow: 0 12px 48px rgba(10,45,110,0.25);
+  animation: modalIn 0.22s ease;
+}
+@keyframes modalIn { from { transform: scale(0.92); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+.modal-close {
+  position: absolute;
+  top: 14px; right: 16px;
+  background: none;
+  border: none;
+  font-size: 22px;
+  cursor: pointer;
+  color: var(--text-muted);
+  line-height: 1;
+  transition: color 0.2s;
+}
+.modal-close:hover { color: #c62828; }
+.modal-title { font-size: 18px; font-weight: 800; color: var(--primary); margin-bottom: 4px; padding-right: 30px; }
+.modal-subtitle { font-size: 13px; color: var(--text-muted); margin-bottom: 18px; }
+.cities-container { display: flex; flex-wrap: wrap; gap: 8px; }
+.city-tag {
+  background: #e8f0fe;
+  color: var(--primary);
+  border-radius: 20px;
+  padding: 5px 14px;
+  font-size: 13px;
+  font-weight: 600;
+}
+.client-tag {
+  background: #fff3e0;
+  color: #bf360c;
+  border-radius: 20px;
+  padding: 5px 14px;
+  font-size: 13px;
+  font-weight: 600;
+  border: 1px solid #ffcc80;
+}
+
+/* PROGRESS BAR */
+#progress-bar {
+  position: fixed;
+  bottom: 0; left: 0;
+  height: 3px;
+  background: #4caf50;
+  z-index: 9999;
+  transition: width 1s linear;
+  width: 100%;
+}
+
+/* EMPTY & LOADING */
+.empty-state { text-align: center; padding: 60px 20px; color: var(--text-muted); }
+.empty-icon { font-size: 48px; margin-bottom: 12px; }
+.empty-text { font-size: 16px; font-weight: 600; }
+#loading-state { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 80px 20px; gap: 14px; }
+#loading-state .spinner { width: 36px; height: 36px; border-width: 3px; border-color: #ccc; border-top-color: var(--primary); }
+#error-state { display: none; text-align: center; padding: 60px 20px; }
+
+.district-label {
+  font-size: 10px;
+  background: rgba(255,255,255,0.22);
+  border-radius: 6px;
+  padding: 2px 7px;
+  display: inline-block;
+  margin-top: 4px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+.no-data { color: #bbb; font-style: italic; font-size: 12px; }
+.razao-social { font-size: 0.78em; color: #5a6a8a; font-style: italic; margin-top: 2px; }
+
+/* RESPONSIVE */
+@media (max-width: 600px) {
+  .header-inner { padding: 10px 14px; gap: 10px; }
+  .header-search { min-width: 100%; order: 3; }
+  .logo-img { height: 40px; }
+  #main-content { padding: 14px; }
+  #states-grid { grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 10px; }
+  #coordinators-grid { grid-template-columns: 1fr; }
+  th, td { padding: 9px 10px; }
+  .team-leader-header { padding: 16px; }
+  .tlh-name { font-size: 18px; }
+}
+</style>
 </head>
 <body>
 
-<div class="container">
-
-  <header>
-    <div class="header-left">
-      <div class="header-logo">
-        <img src="https://raw.githubusercontent.com/gamfarma/imagem-site/2091104c3fa6efcc97594176ed36b38218ffa0f2/Logo%20GAM%20Nova%20Branca.png" alt="GAM Farma">
-      </div>
-      <div class="header-title">
-        <h1>Rede de Representantes</h1>
-        <p>Diretório comercial interativo</p>
-      </div>
+<!-- HEADER -->
+<header id="app-header">
+  <div class="header-inner">
+    <img src="https://raw.githubusercontent.com/gamfarma/imagem-site/2091104c3fa6efcc97594176ed36b38218ffa0f2/Logo%20GAM%20Nova%20Branca.png" class="logo-img" alt="GAM Farma Logo" onerror="this.style.display='none'">
+    <div class="header-titles">
+      <h1>Rede de Representantes</h1>
+      <p>Diretório comercial interativo</p>
     </div>
-    <div class="header-right">
-      <span class="update-info" id="updateInfo">Carregando...</span>
-      <button class="btn-refresh" onclick="forceRefresh()">
-        🔄 Atualizar
+    <div class="header-search">
+      <span class="search-icon">&#128269;</span>
+      <input type="text" id="search-input" placeholder="Buscar por nome, cidade, região…" autocomplete="off">
+    </div>
+    <div class="header-actions">
+      <button class="btn-refresh" id="btn-refresh">
+        <span id="refresh-icon">&#128260;</span>
+        Atualizar
       </button>
-    </div>
-  </header>
-
-  <div class="toolbar">
-    <div class="search-container">
-      <input type="text" id="searchInput" placeholder="🔍 Buscar por nome, região ou cidade..." oninput="applyFilters()">
-    </div>
-    <div class="filters">
-      <select id="filterUF" onchange="applyFilters()">
-        <option value="">Todos os estados</option>
-      </select>
-      <select id="filterFunc" onchange="applyFilters()">
-        <option value="">Todas as funções</option>
-        <option value="COORDENADOR_EQUIPE">Coordenador de Equipe</option>
-        <option value="REPRESENTANTE_COMERCIAL">Representante Comercial</option>
-        <option value="CONSULTOR_VENDAS">Consultor de Vendas</option>
-        <option value="GERENTE_CONTAS">Gerente de Contas</option>
-        <option value="COORDENADOR_CONTAS">Coord. Médias Redes</option>
-        <option value="GERENTE_PROJETOS_ESPECIAIS">Gerente Proj. Especiais</option>
-        <option value="DEDICADO">Dedicados</option>
-      </select>
-      <select id="filterRegiao" onchange="applyFilters()">
-        <option value="">Todas as regiões</option>
-      </select>
-      <button class="btn-clear" onclick="clearFilters()">✕ Limpar</button>
+      <span class="timestamp" id="timestamp"></span>
     </div>
   </div>
+</header>
 
-  <main>
-    <div class="loading-state visible" id="loadingState">
-      <div class="spinner"></div>
-      <p>Carregando dados da planilha…</p>
-    </div>
-
-    <div class="error-state" id="errorState">
-      <div class="error-icon">⚠️</div>
-      <div class="error-title">Erro ao carregar dados</div>
-      <div class="error-description">Não foi possível carregar os dados. Tente novamente.</div>
-      <button class="btn-refresh" onclick="forceRefresh()">Tentar novamente</button>
-    </div>
-
-    <div id="appContent" style="display: none;">
-      <div class="stats-bar" id="statsBar"></div>
-
-      <div class="section-title" id="statesSectionTitle">📍 Estados</div>
-      <div class="states-grid" id="statesGrid"></div>
-      <div id="statesPanels"></div>
-
-      <div class="section-title hidden" id="divSectionTitle">🗂️ Divisões Especiais</div>
-      <div class="states-grid" id="divisionsGrid"></div>
-      <div id="divisionsPanels"></div>
-
-      <div class="section-title hidden" id="gcSectionTitle">🏢 Gerentes de Contas</div>
-      <div class="individual-grid" id="gerentesGrid"></div>
-
-      <div class="section-title hidden" id="ccSectionTitle">🔗 Coordenadores de Contas – Médias Redes</div>
-      <div class="individual-grid" id="coordContasGrid"></div>
-
-      <div class="section-title hidden" id="peSectionTitle">⭐ Projetos Especiais</div>
-      <div id="projetosGrid"></div>
-
-      <div class="empty-state" id="emptyState">
-        <div class="empty-state-icon">🔍</div>
-        <div class="empty-state-text">Nenhum resultado encontrado para sua busca.</div>
-      </div>
-    </div>
-  </main>
-
+<!-- FILTER BAR -->
+<div id="filter-bar">
+  <div class="filter-inner">
+    <span class="filter-label">Filtrar:</span>
+    <select class="filter-select" id="filter-uf"><option value="">Todos os estados</option></select>
+    <select class="filter-select" id="filter-func">
+      <option value="">Todas as funções</option>
+      <option value="coordenador de equipe">Coordenadores de Equipe</option>
+      <option value="representante comercial">Representante Comercial</option>
+      <option value="consultor de vendas">Consultor de Vendas</option>
+      <option value="televendas">Televendas</option>
+      <option value="gerente de contas">Gerente de Contas</option>
+      <option value="médias redes">Coordenador de Médias Redes</option>
+      <option value="dedicados">Dedicados</option>
+      <option value="projetos especiais">Gerente de Projetos Especiais</option>
+    </select>
+    <select class="filter-select" id="filter-region"><option value="">Todas as regiões</option></select>
+    <button class="btn-clear" id="btn-clear">&#10005; Limpar</button>
+  </div>
 </div>
 
-<script>
-const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQJRPejEYUGjqFiruPTGJuS2Itk6qjvyk6moB4_ChCe5_z4_CW0jYcYXJFimYYw4kGcbP2fpdRccLkq/pub?output=csv";
-let DATA = null;
-let REFRESH_TIMER = null;
-const REFRESH_INTERVAL = 5 * 60 * 1000;
+<!-- BREADCRUMB -->
+<div id="breadcrumb"></div>
 
+<!-- MAIN CONTENT -->
+<div id="main-content">
+  <div id="loading-state">
+    <span class="spinner"></span>
+    <span style="color:var(--text-muted);font-size:14px">Carregando dados da planilha…</span>
+  </div>
+  <div id="error-state">
+    <div class="empty-icon">&#9888;&#65039;</div>
+    <div class="empty-text" id="error-msg">Erro ao carregar dados</div>
+    <button class="btn-team" id="btn-retry" style="margin-top:16px">Tentar novamente</button>
+  </div>
+  <div id="view-states" style="display:none"></div>
+  <div id="view-coordinators" style="display:none"></div>
+  <div id="view-team" style="display:none"></div>
+  <div id="view-search" style="display:none"></div>
+</div>
+
+<!-- MODAL -->
+<div id="modal-overlay">
+  <div class="modal-box">
+    <button class="modal-close" id="modal-close">&#10005;</button>
+    <div class="modal-title" id="modal-title"></div>
+    <div class="modal-subtitle" id="modal-subtitle"></div>
+    <div class="cities-container" id="modal-cities"></div>
+  </div>
+</div>
+
+<!-- PROGRESS BAR -->
+<div id="progress-bar"></div>
+
+<script>
+// ============================================================
+// CONSTANTS & CONFIG
+// ============================================================
+const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQJRPejEYUGjqFiruPTGJuS2Itk6qjvyk6moB4_ChCe5_z4_CW0jYcYXJFimYYw4kGcbP2fpdRccLkq/pub?output=csv';
+const REFRESH_INTERVAL = 5 * 60 * 1000; // 5 minutes
+
+const STATE_COLORS = {
+  SC:'#1565c0', RS:'#c62828', PR:'#2e7d32', MS:'#e65100',
+  SP:'#6a1b9a', GO:'#00838f', DF:'#4527a0', MT:'#827717',
+  MG:'#4e342e', RJ:'#00695c', BA:'#f57f17', DEFAULT:'#607d8b'
+};
+const DIVISION_COLORS = {
+  'Televendas':'#1565c0', 'EXPANSÃO':'#00838f', 'PROJ. ESPECIAIS':'#2e7d32'
+};
 const STATE_NAMES = {
-  SC: 'Santa Catarina', RS: 'Rio Grande do Sul', PR: 'Paraná', SP: 'São Paulo',
-  MS: 'Mato Grosso do Sul', MT: 'Mato Grosso', GO: 'Goiás', DF: 'Distrito Federal',
-  MG: 'Minas Gerais', RJ: 'Rio de Janeiro', BA: 'Bahia', ES: 'Espírito Santo'
+  AC:'Acre', AL:'Alagoas', AP:'Amapá', AM:'Amazonas', BA:'Bahia',
+  CE:'Ceará', DF:'Distrito Federal', ES:'Espírito Santo', GO:'Goiás',
+  MA:'Maranhão', MT:'Mato Grosso', MS:'Mato Grosso do Sul', MG:'Minas Gerais',
+  PA:'Pará', PB:'Paraíba', PR:'Paraná', PE:'Pernambuco', PI:'Piauí',
+  RJ:'Rio de Janeiro', RN:'Rio Grande do Norte', RS:'Rio Grande do Sul',
+  RO:'Rondônia', RR:'Roraima', SC:'Santa Catarina', SP:'São Paulo',
+  SE:'Sergipe', TO:'Tocantins'
 };
 
-function getBadgeClass(cat) {
-  const m = {
-    COORDENADOR_EQUIPE: 'badge',
-    GERENTE_CONTAS: 'badge-gerente',
-    COORDENADOR_CONTAS: 'badge-coord-contas',
-    GERENTE_PROJETOS_ESPECIAIS: 'badge-dedicado',
-    DEDICADO: 'badge-dedicado',
-    REPRESENTANTE_COMERCIAL: 'badge-rep',
-    CONSULTOR_VENDAS: 'badge-consultor'
-  };
-  return m[cat] || 'badge-consultor';
-}
+// ============================================================
+// APP STATE
+// ============================================================
+let appData = { rows:[], groups:[], stateMap:{}, divisionMap:{}, updateDate:'' };
+let currentView = 'states';
+let currentState = null;
+let currentGroup = null;
+let refreshTimer = null;
+let progressTimer = null;
+let progressStart = null;
 
-function getFuncLabel(cat) {
-  const m = {
-    COORDENADOR_EQUIPE: 'Coord. Equipe',
-    GERENTE_CONTAS: 'Gerente de Contas',
-    COORDENADOR_CONTAS: 'Coord. Médias Redes',
-    GERENTE_PROJETOS_ESPECIAIS: 'Ger. Proj. Especiais',
-    DEDICADO: 'Dedicado',
-    REPRESENTANTE_COMERCIAL: 'Rep. Comercial',
-    CONSULTOR_VENDAS: 'Consultor de Vendas'
-  };
-  return m[cat] || cat;
-}
-
-function classifyFunc(funcao) {
-  const f = funcao.toUpperCase().trim();
-  if (f.includes('COORDENADOR EQUIPE') || f.includes('COORDENADOR DE EQUIPE')) return 'COORDENADOR_EQUIPE';
-  if (f.includes('CONSULTOR DE VENDAS')) return 'CONSULTOR_VENDAS';
-  if (f.includes('REPRESENTANTE COMERCIAL')) return 'REPRESENTANTE_COMERCIAL';
-  if (f.includes('GERENTE DE CONTAS')) return 'GERENTE_CONTAS';
-  if (f.includes('COORDENADOR DE CONTAS') || f.includes('MÉDIAS REDES') || f.includes('MEDIAS REDES')) return 'COORDENADOR_CONTAS';
-  if (f.includes('GERENTE DE PROJETOS ESPECIAIS')) return 'GERENTE_PROJETOS_ESPECIAIS';
-  if (f.includes('DEDICADO')) return 'DEDICADO';
-  return 'OUTRO';
-}
-
-function contactLink(tel) {
-  if (!tel || tel === '-') return '—';
-  const clean = tel.replace(/\D/g, '');
-  return `<a href="tel:+55${clean}">${tel}</a>`;
-}
-
-function emailLink(email) {
-  if (!email || email === '-') return '—';
-  return `<a href="mailto:${email}">${email}</a>`;
-}
-
-// ─── PARSE CSV ─────────────────────────────────────────────────
+// ============================================================
+// CSV PARSER
+// ============================================================
 function parseCSV(text) {
-  const lines = text.split('\n');
+  const lines = text.split(/\r?\n/);
   let headerIdx = -1;
   let updateDate = '';
-
   for (let i = 0; i < lines.length; i++) {
-    const up = lines[i].toUpperCase();
-    if (up.includes('DISTRITO') && (up.includes('NOME') || up.includes('REPRESENTANTE'))) {
-      headerIdx = i;
-      break;
-    }
-    const dm = lines[i].match(/\d{2}\/\d{2}\/\d{4}/);
-    if (dm) updateDate = dm[0];
+    const upper = lines[i].toUpperCase();
+    if (upper.includes('DISTRITO') && (upper.includes('NOME') || upper.includes('REPRESENTANTE'))) { headerIdx = i; break; }
+    const dateMatch = lines[i].match(/\d{2}\/\d{2}\/\d{4}/);
+    if (dateMatch) updateDate = dateMatch[0];
   }
-
-  if (headerIdx === -1) throw new Error('Cabeçalho não encontrado');
-
-  function parseRow(line) {
-    const res = [];
-    let cur = '';
-    let inQ = false;
-    for (let i = 0; i < line.length; i++) {
-      const c = line[i];
-      if (c === '"') {
-        inQ = !inQ;
-      } else if (c === ',' && !inQ) {
-        res.push(cur.trim());
-        cur = '';
-      } else {
-        cur += c;
-      }
-    }
-    res.push(cur.trim());
-    return res;
-  }
-
-  const rawHeaders = parseRow(lines[headerIdx]);
-  const headers = rawHeaders.map(h =>
-    h.replace(/['"]/g, '').trim().toUpperCase()
-      .replace('COORPORATIVO', 'CORPORATIVO')
-      .replace('COODENADOR', 'COORDENADOR')
-      .normalize('NFD')
-      .replace(/[\u0300-\u036f]/g, '')
-  );
-
-  const colMap = {};
-  headers.forEach((h, i) => {
-    if (h.includes('DISTRITO') && !h.includes('SETOR')) colMap.DISTRITO = i;
-    else if (h === 'SETOR') colMap.SETOR = i;
-    else if (h.includes('REGI') && !h.includes('COORD')) colMap.REGIAO = i;
-    else if (h === 'UF') colMap.UF = i;
-    else if (h.includes('PRINCIPAIS') || h.includes('CIDADES')) colMap.CIDADES = i;
-    else if (h.includes('FUNC')) colMap.FUNCAO = i;
-    else if (h.includes('NOME') && !h.includes('RAZAO')) colMap.NOME = i;
-    else if (h.includes('RAZAO') || h.includes('SOCIAL')) colMap.RAZAO_SOCIAL = i;
-    else if (h.includes('CONTATO')) colMap.CONTATO = i;
-    else if (h.includes('EMAIL') && !h.includes('COORD')) colMap.EMAIL = i;
-    else if (h.includes('COORDENADOR') || h.includes('COODENADOR')) colMap.COORDENADOR_COL = i;
-  });
-
+  if (headerIdx === -1) return { rows:[], updateDate };
+  const rawHeaders = parseLine(lines[headerIdx]);
+  const headers = rawHeaders.map(h => normalizeHeader(h));
   const rows = [];
   for (let i = headerIdx + 1; i < lines.length; i++) {
-    const cells = parseRow(lines[i]);
-    if (!cells || cells.length < 3) continue;
-    const get = (k) => (colMap[k] !== undefined && colMap[k] < cells.length) ? cells[colMap[k]].replace(/^["']|["']$/g, '').trim() : '';
-    const nome = get('NOME');
-    if (!nome) continue;
-    rows.push({
-      DISTRITO: get('DISTRITO'),
-      SETOR: get('SETOR'),
-      REGIAO: get('REGIAO'),
-      UF: get('UF'),
-      CIDADES: get('CIDADES'),
-      FUNCAO: get('FUNCAO'),
-      NOME: nome,
-      RAZAO_SOCIAL: get('RAZAO_SOCIAL'),
-      CONTATO: get('CONTATO'),
-      EMAIL: get('EMAIL'),
-      COORDENADOR_COL: get('COORDENADOR_COL')
-    });
+    const line = lines[i].trim();
+    if (!line) continue;
+    const cells = parseLine(lines[i]);
+    const row = {};
+    headers.forEach((h, idx) => { row[h] = (cells[idx] || '').trim(); });
+    if (!row['NOME'] || row['NOME'] === '') continue;
+    rows.push(row);
   }
   return { rows, updateDate };
 }
 
-// ─── PROCESS DATA ──────────────────────────────────────────────
-function processData(rows) {
-  const result = {
-    coordenadoresEquipe: [],
-    gerentesContas: [],
-    coordContas: [],
-    projetosEspeciais: null,
-    estados: new Set(),
-    divisoes: new Set()
-  };
-
-  rows.forEach(r => r._cat = classifyFunc(r.FUNCAO));
-
-  const coords = rows.filter(r => r._cat === 'COORDENADOR_EQUIPE');
-  const assigned = new Set();
-  coords.forEach(ldr => { assigned.add(ldr); });
-
-  const teams = new Map();
-  coords.forEach(ldr => {
-    const dist = ldr.DISTRITO || '';
-    teams.set(ldr, { leader: ldr, members: [] });
-    const bases = [];
-    dist.split('/').concat(dist.split(',')).forEach(p => {
-      const n = parseInt(p.trim(), 10);
-      if (!isNaN(n)) bases.push(Math.floor(n / 100) * 100);
-    });
-
-    rows.forEach(r => {
-      if (assigned.has(r)) return;
-      const cat = r._cat;
-      if (['COORDENADOR_EQUIPE', 'GERENTE_CONTAS', 'COORDENADOR_CONTAS', 'GERENTE_PROJETOS_ESPECIAIS', 'DEDICADO'].includes(cat)) return;
-      const rd = r.DISTRITO || '';
-      if (!rd || rd === '-') return;
-      const rn = parseInt(rd, 10);
-      if (!isNaN(rn) && bases.includes(Math.floor(rn / 100) * 100)) {
-        teams.get(ldr).members.push(r);
-        assigned.add(r);
-      }
-    });
-  });
-
-  coords.forEach(ldr => {
-    const lName = ldr.NOME.toUpperCase().trim();
-    const lFirst = lName.split(' ')[0];
-    rows.forEach(r => {
-      if (assigned.has(r)) return;
-      const cat = r._cat;
-      if (['COORDENADOR_EQUIPE', 'GERENTE_CONTAS', 'COORDENADOR_CONTAS', 'GERENTE_PROJETOS_ESPECIAIS', 'DEDICADO'].includes(cat)) return;
-      const cc = (r.COORDENADOR_COL || '').toUpperCase().trim();
-      if (cc && (cc === lName || cc === lFirst || (lFirst && cc.includes(lFirst)))) {
-        teams.get(ldr).members.push(r);
-        assigned.add(r);
-      }
-    });
-  });
-
-  teams.forEach(({ leader: ldr, members }) => {
-    const ufVal = (ldr.UF || '').toUpperCase().trim();
-    const regVal = (ldr.REGIAO || '').toUpperCase().trim();
-    let division = null;
-    const allUFs = new Set();
-
-    if (ufVal === '-' || regVal.includes('TLV')) {
-      division = 'TLV';
-      members.forEach(m => extractUFs(m.UF).forEach(u => allUFs.add(u)));
-    } else if (ufVal.includes('EXPANS') || regVal.includes('EXPANS')) {
-      division = 'EXPANSÃO';
-      extractUFs(ldr.UF).forEach(u => allUFs.add(u));
-      members.forEach(m => extractUFs(m.UF).forEach(u => allUFs.add(u)));
-    } else {
-      extractUFs(ldr.UF).forEach(u => allUFs.add(u));
-      members.forEach(m => extractUFs(m.UF).forEach(u => allUFs.add(u)));
-    }
-
-    const group = {
-      distrito: ldr.DISTRITO,
-      division,
-      estados: [...allUFs].sort(),
-      coordenador: {
-        nome: ldr.NOME,
-        funcao: ldr.FUNCAO,
-        regiao: ldr.REGIAO,
-        uf: ldr.UF,
-        contato: ldr.CONTATO,
-        email: ldr.EMAIL,
-        razao: ldr.RAZAO_SOCIAL
-      },
-      equipe: members.map(m => ({
-        nome: m.NOME,
-        funcao: m.FUNCAO,
-        categoria: m._cat,
-        regiao: m.REGIAO,
-        uf: m.UF,
-        cidades: m.CIDADES,
-        contato: m.CONTATO,
-        email: m.EMAIL,
-        razao: m.RAZAO_SOCIAL,
-        setor: m.SETOR
-      }))
-    };
-
-    result.coordenadoresEquipe.push(group);
-    if (division) {
-      result.divisoes.add(division);
-    } else {
-      allUFs.forEach(u => result.estados.add(u));
-    }
-  });
-
-  // GPE + Dedicados
-  const gpe = rows.find(r => r._cat === 'GERENTE_PROJETOS_ESPECIAIS');
-  const ded = rows.filter(r => r._cat === 'DEDICADO');
-  if (gpe) {
-    const allUFs = new Set(extractUFs(gpe.UF));
-    ded.forEach(d => extractUFs(d.UF).forEach(u => allUFs.add(u)));
-    result.projetosEspeciais = {
-      lider: { nome: gpe.NOME, funcao: gpe.FUNCAO, regiao: gpe.REGIAO, uf: gpe.UF, contato: gpe.CONTATO, email: gpe.EMAIL },
-      dedicados: ded.map(d => ({ nome: d.NOME, funcao: d.FUNCAO, regiao: d.REGIAO, uf: d.UF, cidades: d.CIDADES, contato: d.CONTATO, email: d.EMAIL })),
-      estados: [...allUFs].sort()
-    };
+function parseLine(line) {
+  const result = [];
+  let current = '';
+  let inQuotes = false;
+  for (let i = 0; i < line.length; i++) {
+    const ch = line[i];
+    if (ch === '"') {
+      if (inQuotes && line[i+1] === '"') { current += '"'; i++; }
+      else inQuotes = !inQuotes;
+    } else if (ch === ',' && !inQuotes) {
+      result.push(current); current = '';
+    } else { current += ch; }
   }
-
-  rows.filter(r => r._cat === 'GERENTE_CONTAS').forEach(r => {
-    const ufs = extractUFs(r.UF);
-    result.gerentesContas.push({
-      nome: r.NOME,
-      funcao: r.FUNCAO,
-      regiao: r.REGIAO,
-      uf: r.UF,
-      ufs,
-      contato: r.CONTATO,
-      email: r.EMAIL,
-      distrito: r.DISTRITO
-    });
-    ufs.forEach(u => result.estados.add(u));
-  });
-
-  rows.filter(r => r._cat === 'COORDENADOR_CONTAS').forEach(r => {
-    const ufs = extractUFs(r.UF);
-    result.coordContas.push({
-      nome: r.NOME,
-      funcao: r.FUNCAO,
-      regiao: r.REGIAO,
-      uf: r.UF,
-      ufs,
-      contato: r.CONTATO,
-      email: r.EMAIL,
-      distrito: r.DISTRITO
-    });
-    ufs.forEach(u => result.estados.add(u));
-  });
-
+  result.push(current);
   return result;
 }
 
-function extractUFs(str) {
-  if (!str || ['-', 'EXPANSÃO', 'EXPANSAO', ''].includes(str.trim().toUpperCase())) return [];
-  return str.split(/[/\-,\s]+/).map(p => p.trim().toUpperCase()).filter(p => p.length === 2 && /^[A-Z]+$/.test(p));
+function normalizeHeader(h) {
+  let s = h.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toUpperCase().trim();
+  s = s.replace('COORPORATIVO','CORPORATIVO').replace('COODENADOR','COORDENADOR');
+  if (s === 'NOME REPRESENTANTE') s = 'NOME';
+  if (s === 'RAZAO SOCIAL') s = 'RAZAO SOCIAL';
+  return s;
 }
 
-// ─── RENDER ────────────────────────────────────────────────────
-function render(data) {
-  const p = data.processed || data;
-  const groups = p.coordenadoresEquipe || p.coordenadores_equipe || [];
-  const gc = p.gerentesContas || p.gerentes_contas || [];
-  const cc = p.coordContas || p.coordenadores_contas || [];
-  const pe = p.projetosEspeciais || p.projetos_especiais || null;
+// ============================================================
+// FIELD HELPERS
+// ============================================================
+function getFunc(row) {
+  return row['FUNCAO'] || row['FUNÇÃO'] || row['FUNCAO'] || '';
+}
+function getRegion(row) {
+  return row['REGIAO'] || row['REGIÃO'] || '';
+}
+function getPhone(row) {
+  return row['CONTATO CORPORATIVO'] || row['CONTATO COORPORATIVO'] || '';
+}
+function getEmail(row) { return row['EMAIL'] || ''; }
+function getCities(row) { return row['PRINCIPAIS CIDADES'] || ''; }
+function getRazaoSocial(row) { return row['RAZAO SOCIAL'] || ''; }
+function getName(row) { return row['NOME'] || ''; }
+function getUF(row) { return (row['UF'] || '').trim(); }
+function getDistrito(row) { return (row['DISTRITO'] || '').trim(); }
+function getSetor(row) { return (row['SETOR'] || '').trim(); }
 
-  // Stats
-  const totalRep = groups.reduce((a, g) => (g.equipe || []).length + a, 0);
-  document.getElementById('statsBar').innerHTML = `
-    <div class="stat-card">
-      <div class="stat-label">Atualizado</div>
-      <div class="stat-value">${data.update_date || data.generated_at?.substring(0, 10) || '—'}</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-label">Coord. Equipe</div>
-      <div class="stat-value">${groups.filter(g => !g.division).length}</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-label">Representantes</div>
-      <div class="stat-value">${totalRep}</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-label">Gerentes Contas</div>
-      <div class="stat-value">${gc.length}</div>
-    </div>
-  `;
+function isCoordEquipe(row) {
+  return getFunc(row).toUpperCase().includes('COORDENADOR EQUIPE') || getFunc(row).toUpperCase().includes('COORDENADOR DE EQUIPE');
+}
+function isGerenteProjetosEspeciais(row) {
+  return getFunc(row).toUpperCase().includes('GERENTE DE PROJETOS ESPECIAIS');
+}
+function isDedicado(row) {
+  return getFunc(row).toUpperCase().includes('DEDICADO');
+}
+function isGerenteContas(row) {
+  const f = getFunc(row).toLowerCase();
+  return f.includes('gerente de contas');
+}
+function isCoordContas(row) {
+  const f = getFunc(row).toLowerCase();
+  return f.includes('coordenador de contas') || f.includes('medias redes') || f.includes('médias redes');
+}
+function isClientRole(row) {
+  return isGerenteContas(row) || isCoordContas(row);
+}
+function isRepComercial(row) {
+  return getFunc(row).toLowerCase().includes('representante comercial');
+}
+function isConsultorVendas(row) {
+  return getFunc(row).toLowerCase().includes('consultor de vendas');
+}
 
-  // Populate filters
-  const allUFs = new Set();
-  const allRegioes = new Set();
-  groups.forEach(g => {
-    (g.estados || []).forEach(u => allUFs.add(u));
-    allRegioes.add(g.coordenador.regiao);
-    (g.equipe || []).forEach(m => allRegioes.add(m.regiao));
+function getUFs(ufStr) {
+  if (!ufStr || ufStr === '-' || ufStr.toUpperCase().includes('EXPANS')) return [];
+  return ufStr.split(/[\/\-,\s]+/).map(s => s.trim().toUpperCase()).filter(s => s.length === 2 && /^[A-Z]{2}$/.test(s));
+}
+
+// ============================================================
+// PROCESS DATA
+// ============================================================
+function processData(rows) {
+  const groups = [];
+  const stateMap = {};
+  const divisionMap = {};
+
+  // --- 1) IDENTIFY COORDENADORES DE EQUIPE by DISTRITO ---
+  const coordsByDist = {};
+  rows.forEach(r => {
+    if (isCoordEquipe(r)) {
+      const dist = getDistrito(r);
+      coordsByDist[dist] = r;
+    }
   });
-  gc.forEach(x => { (x.ufs || []).forEach(u => allUFs.add(u)); allRegioes.add(x.regiao); });
-  cc.forEach(x => { (x.ufs || []).forEach(u => allUFs.add(u)); allRegioes.add(x.regiao); });
 
-  const ufSel = document.getElementById('filterUF');
-  const rSel = document.getElementById('filterRegiao');
-  [...allUFs].sort().forEach(u => {
-    const o = document.createElement('option');
-    o.value = u;
-    o.textContent = STATE_NAMES[u] || u;
-    ufSel.appendChild(o);
-  });
-  [...allRegioes].filter(Boolean).sort().forEach(r => {
-    const o = document.createElement('option');
-    o.value = r;
-    o.textContent = r;
-    rSel.appendChild(o);
+  // --- 2) BUILD GROUPS: Pass 1 - Match by district base ---
+  const assignedRows = new Set();
+  const groupMembers = {};
+  Object.keys(coordsByDist).forEach(dist => {
+    const leader = coordsByDist[dist];
+    assignedRows.add(leader);
+    groupMembers[dist] = [];
+
+    const distParts = dist.split('/').map(p => p.trim());
+    const distBases = distParts.map(p => { const n = parseInt(p); return isNaN(n) ? null : Math.floor(n/100)*100; }).filter(b => b !== null);
+    rows.forEach(r => {
+      if (r === leader || assignedRows.has(r)) return;
+      if (isCoordEquipe(r) || isGerenteProjetosEspeciais(r) || isDedicado(r) || isGerenteContas(r) || isCoordContas(r)) return;
+      const rDist = getDistrito(r);
+      if (rDist === '-' || rDist === '') return;
+      const rDistNum = parseInt(rDist);
+      if (isNaN(rDistNum)) return;
+      const rBase = Math.floor(rDistNum/100)*100;
+      if (distBases.includes(rBase)) {
+        groupMembers[dist].push(r); assignedRows.add(r);
+      }
+    });
   });
 
-  // Build state groups
-  const byState = {};
-  const byDiv = {};
-  groups.forEach(g => {
-    if (g.division) {
-      if (!byDiv[g.division]) byDiv[g.division] = [];
-      byDiv[g.division].push(g);
+  // --- Pass 2: Fallback - assign remaining by COORDENADOR column ---
+  Object.keys(coordsByDist).forEach(dist => {
+    const leader = coordsByDist[dist];
+    const leaderNameUp = getName(leader).toUpperCase().trim();
+    const leaderFirst = leaderNameUp.split(' ')[0];
+    rows.forEach(r => {
+      if (assignedRows.has(r)) return;
+      if (isCoordEquipe(r) || isGerenteProjetosEspeciais(r) || isDedicado(r) || isGerenteContas(r) || isCoordContas(r)) return;
+      const coordCol = (r['COORDENADOR'] || '').toUpperCase().trim();
+      if (coordCol && (coordCol === leaderNameUp || coordCol === leaderFirst)) {
+        groupMembers[dist].push(r); assignedRows.add(r);
+      }
+    });
+  });
+
+  // --- Build final group objects ---
+  Object.keys(coordsByDist).forEach(dist => {
+    const leader = coordsByDist[dist];
+    const members = groupMembers[dist];
+
+    const leaderUF = getUF(leader);
+    const leaderRegion = getRegion(leader);
+
+    // Determine which states this group covers
+    const allUFs = new Set();
+    getUFs(leaderUF).forEach(u => allUFs.add(u));
+    members.forEach(m => getUFs(getUF(m)).forEach(u => allUFs.add(u)));
+
+    // Determine display category
+    let division = null;
+    if (leaderUF === '-' || leaderRegion.toUpperCase().includes('TLV')) {
+      division = 'Televendas';
+    } else if (leaderUF.toUpperCase().includes('EXPANS') || leaderRegion.toUpperCase().includes('EXPANS')) {
+      division = 'EXPANSÃO';
+      // Garantir que estados de atuação incluem MS, SP, GO, DF, MT
+      ['MS','SP','GO','DF','MT'].forEach(u => allUFs.add(u));
+    }
+
+    const group = {
+      leader: leader,
+      members: members,
+      distKey: dist,
+      states: Array.from(allUFs),
+      division: division,
+      type: 'coordEquipe'
+    };
+    groups.push(group);
+  });
+
+  // --- 3) GERENTE DE PROJETOS ESPECIAIS + DEDICADOS ---
+  const gpeRow = rows.find(r => isGerenteProjetosEspeciais(r));
+  if (gpeRow) {
+    assignedRows.add(gpeRow);
+    const dedicados = rows.filter(r => isDedicado(r));
+    dedicados.forEach(d => assignedRows.add(d));
+    const allUFs = new Set();
+    getUFs(getUF(gpeRow)).forEach(u => allUFs.add(u));
+    dedicados.forEach(m => getUFs(getUF(m)).forEach(u => allUFs.add(u)));
+    const group = {
+      leader: gpeRow,
+      members: dedicados,
+      distKey: 'PROJ_ESP',
+      states: Array.from(allUFs),
+      division: 'PROJ. ESPECIAIS',
+      type: 'projetosEspeciais'
+    };
+    groups.push(group);
+  }
+
+  // --- 4) GERENTES DE CONTAS (individual, no team) ---
+  rows.filter(r => isGerenteContas(r)).forEach(r => {
+    assignedRows.add(r);
+    const ufs = getUFs(getUF(r));
+    const group = {
+      leader: r,
+      members: [],
+      distKey: getDistrito(r),
+      states: ufs,
+      division: null,
+      type: 'gerenteContas'
+    };
+    groups.push(group);
+  });
+
+  // --- 5) COORDENADORES DE CONTAS MÉDIAS REDES (individual, no team) ---
+  rows.filter(r => isCoordContas(r)).forEach(r => {
+    assignedRows.add(r);
+    const ufs = getUFs(getUF(r));
+    const group = {
+      leader: r,
+      members: [],
+      distKey: getDistrito(r),
+      states: ufs,
+      division: null,
+      type: 'coordContas'
+    };
+    groups.push(group);
+  });
+
+  // --- 6) BUILD STATE MAP & DIVISION MAP ---
+  groups.forEach(group => {
+    if (group.division) {
+      if (!divisionMap[group.division]) divisionMap[group.division] = [];
+      divisionMap[group.division].push(group);
+      // ALSO add division groups to their respective state tiles
+      group.states.forEach(uf => {
+        if (uf && uf !== '-' && uf !== 'EXPANSÃO') {
+          if (!stateMap[uf]) stateMap[uf] = [];
+          stateMap[uf].push(group);
+        }
+      });
     } else {
-      (g.estados || []).forEach(uf => {
-        if (!byState[uf]) byState[uf] = [];
-        if (!byState[uf].find(x => x.coordenador.nome === g.coordenador.nome))
-          byState[uf].push(g);
+      group.states.forEach(uf => {
+        // For multi-state groups with members, only show in UFs that have team members
+        if (group.states.length > 1 && group.members.length > 0) {
+          const hasMembers = group.members.some(m => getUF(m) === uf);
+          if (!hasMembers) return; // Skip UFs with no members
+        }
+        if (!stateMap[uf]) stateMap[uf] = [];
+        stateMap[uf].push(group);
       });
     }
   });
 
-  gc.forEach(x => (x.ufs || []).forEach(u => { if (!byState[u]) byState[u] = []; }));
-  cc.forEach(x => (x.ufs || []).forEach(u => { if (!byState[u]) byState[u] = []; }));
+  return { groups, stateMap, divisionMap };
+}
 
-  // Render state cards
-  const statesGrid = document.getElementById('statesGrid');
-  const statesPanels = document.getElementById('statesPanels');
-  statesGrid.innerHTML = '';
-  statesPanels.innerHTML = '';
+// ============================================================
+// FETCH DATA
+// ============================================================
+async function fetchData() {
+  showLoading();
+  try {
+    const url = `${CSV_URL}&cb=${Date.now()}_${Math.random().toString(36).slice(2)}`;
+    const resp = await fetch(url, { cache:'no-store', headers:{'Cache-Control':'no-store','Pragma':'no-cache'} });
+    if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+    const text = await resp.text();
+    const { rows, updateDate } = parseCSV(text);
+    if (rows.length === 0) throw new Error('Nenhum dado encontrado na planilha.');
+    const { groups, stateMap, divisionMap } = processData(rows);
+    appData = { rows, groups, stateMap, divisionMap, updateDate };
+    populateFilters();
+    const now = new Date();
+    document.getElementById('timestamp').textContent =
+      `Atualizado: ${now.getHours().toString().padStart(2,'0')}:${now.getMinutes().toString().padStart(2,'0')}`;
+    hideLoading();
+    renderCurrentView();
+    startProgressBar();
+    scheduleRefresh();
+  } catch(e) {
+    showError(e.message || 'Erro ao carregar dados');
+  }
+}
 
-  Object.keys(byState).sort().forEach(uf => {
-    const coordsInState = byState[uf];
-    const gcInState = gc.filter(x => (x.ufs || []).includes(uf));
-    const ccInState = cc.filter(x => (x.ufs || []).includes(uf));
-    const total = coordsInState.length + gcInState.length + ccInState.length;
+function populateFilters() {
+  const ufSel = document.getElementById('filter-uf');
+  const regionSel = document.getElementById('filter-region');
+  const allUFs = new Set();
+  appData.rows.forEach(r => getUFs(getUF(r)).forEach(u => allUFs.add(u)));
+  const ufs = Array.from(allUFs).sort();
+  ufSel.innerHTML = '<option value="">Todos os estados</option>';
+  ufs.forEach(uf => {
+    const opt = document.createElement('option');
+    opt.value = uf;
+    opt.textContent = `${uf} — ${STATE_NAMES[uf]||uf}`;
+    ufSel.appendChild(opt);
+  });
+  const regions = new Set();
+  appData.rows.forEach(r => {
+    const reg = getRegion(r).trim();
+    if (reg && reg !== '-') regions.add(reg);
+  });
+  regionSel.innerHTML = '<option value="">Todas as regiões</option>';
+  Array.from(regions).sort().forEach(reg => {
+    const opt = document.createElement('option');
+    opt.value = reg.toLowerCase();
+    opt.textContent = reg;
+    regionSel.appendChild(opt);
+  });
+}
 
-    const card = document.createElement('div');
-    card.className = 'state-card';
-    card.dataset.uf = uf;
-    card.innerHTML = `
-      <div class="state-sigla">${uf}</div>
-      <div class="state-name">${STATE_NAMES[uf] || uf}</div>
-      <span class="state-badge">${total} lider${total !== 1 ? 'es' : ''}</span>
-    `;
-    card.onclick = () => toggleStatePanel(uf);
-    statesGrid.appendChild(card);
+// ============================================================
+// VIEWS — LOADING, ERROR
+// ============================================================
+function showLoading() {
+  document.getElementById('loading-state').style.display = 'flex';
+  document.getElementById('error-state').style.display = 'none';
+  hideAllViews();
+}
+function hideLoading() { document.getElementById('loading-state').style.display = 'none'; }
+function showError(msg) {
+  document.getElementById('loading-state').style.display = 'none';
+  document.getElementById('error-state').style.display = 'block';
+  document.getElementById('error-msg').textContent = msg || 'Erro desconhecido.';
+}
 
-    // Panel
-    const panel = document.createElement('div');
-    panel.className = 'coord-panel';
-    panel.id = `panel-${uf}`;
-    panel.innerHTML = `
-      <div class="panel-header">
-        <div class="panel-header-content">
-          <h3>📍 ${STATE_NAMES[uf] || uf}</h3>
-          <p>${total} lider${total !== 1 ? 'es' : ''} neste estado</p>
-        </div>
-        <button class="btn-close" onclick="toggleStatePanel('${uf}')">✕</button>
-      </div>
-      <div class="panel-content" id="panelContent-${uf}"></div>
-    `;
-    statesPanels.appendChild(panel);
+function renderCurrentView() {
+  const query = document.getElementById('search-input').value.trim().toLowerCase();
+  const filterUF = document.getElementById('filter-uf').value;
+  const filterFunc = document.getElementById('filter-func').value.toLowerCase();
+  const filterRegion = document.getElementById('filter-region').value.toLowerCase();
+  const hasFilter = query || filterFunc || filterRegion;
 
-    const content = panel.querySelector(`#panelContent-${uf}`);
-    coordsInState.forEach((g, gi) => content.appendChild(buildCoordCard(g, `${uf}-${gi}`)));
-    gcInState.forEach((x, i) => content.appendChild(buildIndividualCard(x, 'GERENTE_CONTAS', `gc-${uf}-${i}`)));
-    ccInState.forEach((x, i) => content.appendChild(buildIndividualCard(x, 'COORDENADOR_CONTAS', `cc-${uf}-${i}`)));
+  if (hasFilter || (query && filterUF)) { renderSearchResults(query, filterUF, filterFunc, filterRegion); return; }
+  if (filterUF && !hasFilter) { navigateToState(filterUF); return; }
+  if (currentView === 'states') renderStates();
+  else if (currentView === 'coordinators') renderCoordinators(currentState);
+  else if (currentView === 'team') renderTeam(currentGroup, currentState);
+}
+
+// ============================================================
+// VIEW 1 — HOME (States + Divisions)
+// ============================================================
+function renderStates() {
+  currentView = 'states';
+  hideAllViews();
+  updateBreadcrumb([{ label:'Início' }]);
+  const container = document.getElementById('view-states');
+  container.style.display = 'block';
+  const ufs = Object.keys(appData.stateMap).filter(uf => appData.stateMap[uf].length > 0).sort();
+  const totalTiles = ufs.length;
+
+  let html = `
+    <div class="section-title">&#128506;&#65039; Cobertura Comercial <span class="count-badge">${totalTiles}</span></div>
+    <p class="section-sub">Selecione um estado para ver coordenadores e equipes.</p>
+    <div id="states-grid">`;
+
+  // State tiles (includes division groups that operate in each state)
+  ufs.forEach(uf => {
+    const groups = appData.stateMap[uf];
+    const total = groups.length;
+    const color = STATE_COLORS[uf] || STATE_COLORS.DEFAULT;
+    const name = STATE_NAMES[uf] || uf;
+    html += `
+      <div class="state-card" style="--state-color:${color}" onclick="navigateToState('${uf}')" title="${name}">
+        <div class="state-sigla">${uf}</div>
+        <div class="state-name">${name}</div>
+        <div class="state-count">${total} grupo${total!==1?'s':''}</div>
+      </div>`;
   });
 
-  // Divisions
-  const divGrid = document.getElementById('divisionsGrid');
-  const divPanels = document.getElementById('divisionsPanels');
-  divGrid.innerHTML = '';
-  divPanels.innerHTML = '';
-  if (Object.keys(byDiv).length > 0) {
-    document.getElementById('divSectionTitle').classList.remove('hidden');
-    Object.keys(byDiv).forEach(div => {
-      const dGroups = byDiv[div];
-      const card = document.createElement('div');
-      card.className = 'state-card division-card';
-      card.dataset.div = div;
-      card.innerHTML = `
-        <div class="state-sigla" style="font-size: 24px;">${div === 'TLV' ? '📞' : '🗺️'}</div>
-        <div class="state-name">${div}</div>
-        <span class="state-badge">${dGroups.length} coord.</span>
-      `;
-      card.onclick = () => toggleDivPanel(div);
-      divGrid.appendChild(card);
+  html += '</div>';
+  container.innerHTML = html;
+}
 
-      const panel = document.createElement('div');
-      panel.className = 'coord-panel';
-      panel.id = `divpanel-${div}`;
-      panel.innerHTML = `
-        <div class="panel-header" style="background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);">
-          <div class="panel-header-content">
-            <h3>${div === 'TLV' ? '📞' : '🗺️'} Divisão ${div}</h3>
-            <p>${dGroups.length} coordenador${dGroups.length !== 1 ? 'es' : ''}</p>
-          </div>
-          <button class="btn-close" onclick="toggleDivPanel('${div}')">✕</button>
-        </div>
-        <div class="panel-content" id="divPanelContent-${div}"></div>
-      `;
-      divPanels.appendChild(panel);
-      const content = panel.querySelector(`#divPanelContent-${div}`);
-      dGroups.forEach((g, gi) => content.appendChild(buildCoordCard(g, `div-${div}-${gi}`)));
+// ============================================================
+// VIEW 2 — COORDINATORS (State or Division)
+// ============================================================
+function navigateToState(uf) {
+  currentView = 'coordinators';
+  currentState = uf;
+  document.getElementById('filter-uf').value = uf;
+  renderCoordinators(uf);
+}
+
+function navigateToDivision(div) {
+  currentView = 'coordinators';
+  currentState = div;
+  renderDivisionCoordinators(div);
+}
+
+function renderCoordinators(uf) {
+  hideAllViews();
+  updateBreadcrumb([
+    { label:'Início', action:'goHome' },
+    { label:`${uf} — ${STATE_NAMES[uf]||uf}` }
+  ]);
+  const container = document.getElementById('view-coordinators');
+  container.style.display = 'block';
+  const groups = appData.stateMap[uf] || [];
+  const color = STATE_COLORS[uf] || STATE_COLORS.DEFAULT;
+
+  let html = `
+    <button class="btn-back" onclick="goHome()">&#8592; Voltar</button>
+    <div class="section-title" style="color:${color}">
+      ${uf} — ${STATE_NAMES[uf]||uf}
+      <span class="count-badge" style="background:${color}">${groups.length} grupo${groups.length!==1?'s':''}</span>
+    </div>
+    <p class="section-sub">Coordenadores, gerentes e representantes com atuação neste estado.</p>
+    <div id="coordinators-grid">`;
+
+  if (groups.length === 0) {
+    html += `<div class="empty-state"><div class="empty-icon">&#128269;</div><div class="empty-text">Nenhum grupo encontrado para este estado.</div></div>`;
+  } else {
+    groups.forEach(group => {
+      html += renderCoordCard(group, uf);
     });
   }
 
-  // Gerentes Contas
-  const gcGrid = document.getElementById('gerentesGrid');
-  gcGrid.innerHTML = '';
-  if (gc.length > 0) {
-    document.getElementById('gcSectionTitle').classList.remove('hidden');
-    gc.forEach((x, i) => gcGrid.appendChild(buildIndividualCard(x, 'GERENTE_CONTAS', `gc-all-${i}`)));
-  }
-
-  // Coord Contas
-  const ccGrid = document.getElementById('coordContasGrid');
-  ccGrid.innerHTML = '';
-  if (cc.length > 0) {
-    document.getElementById('ccSectionTitle').classList.remove('hidden');
-    cc.forEach((x, i) => ccGrid.appendChild(buildIndividualCard(x, 'COORDENADOR_CONTAS', `cc-all-${i}`)));
-  }
-
-  // Projetos Especiais
-  const peGrid = document.getElementById('projetosGrid');
-  peGrid.innerHTML = '';
-  if (pe) {
-    document.getElementById('peSectionTitle').classList.remove('hidden');
-    peGrid.appendChild(buildPECard(pe));
-  }
+  html += '</div>';
+  container.innerHTML = html;
 }
 
-function buildCoordCard(g, uid) {
-  const c = g.coordenador;
-  const cat = classifyFunc(c.funcao || '');
-  const div = document.createElement('div');
-  div.className = 'coordinator-card';
+function renderDivisionCoordinators(div) {
+  hideAllViews();
+  updateBreadcrumb([
+    { label:'Início', action:'goHome' },
+    { label:div }
+  ]);
+  const container = document.getElementById('view-coordinators');
+  container.style.display = 'block';
+  const groups = appData.divisionMap[div] || [];
+  const color = DIVISION_COLORS[div] || '#8B5CF6';
 
-  const hasTeam = (g.equipe || []).length > 0;
-  div.innerHTML = `
-    <div class="coordinator-header" onclick="${hasTeam ? `toggleTeam('team-${uid}')` : ''}">
-      <div class="coordinator-info">
-        <span class="badge ${getBadgeClass(cat)}">${getFuncLabel(cat)}</span>
-        <div class="coordinator-region">${c.regiao || '—'}</div>
-        <div class="coordinator-name">${c.nome}</div>
-        <div class="coordinator-meta">
-          <span class="meta-item">📞 ${contactLink(c.contato)}</span>
-          <span class="meta-item">✉️ ${emailLink(c.email)}</span>
-          ${c.razao && c.razao !== '-' ? `<span class="meta-item">🏢 ${c.razao}</span>` : ''}
-        </div>
-      </div>
-      ${hasTeam ? `<button class="team-toggle-btn" onclick="toggleTeam('team-${uid}'); event.stopPropagation();">Ver equipe (${g.equipe.length})</button>` : ''}
+  let html = `
+    <button class="btn-back" onclick="goHome()">&#8592; Voltar</button>
+    <div class="section-title" style="color:${color}">
+      ${div === 'PROJ. ESPECIAIS' ? 'Projetos Especiais — SUL' : div === 'EXPANSÃO' ? 'Expansão — Centro Oeste e Sudeste' : div}
+      <span class="count-badge" style="background:${color}">${groups.length}</span>
     </div>
-    ${hasTeam ? `
-    <div class="team-section" id="team-${uid}">
-      <div class="team-header">👥 Equipe de ${c.nome} — ${c.regiao}</div>
-      <div class="team-grid">
-        ${(g.equipe || []).map((m, mi) => buildMemberCard(m, `m-${uid}-${mi}`)).join('')}
-      </div>
-    </div>` : ''}
-  `;
-  return div;
-}
+    <p class="section-sub">Equipes e representantes desta divisão.</p>
+    <div id="coordinators-grid">`;
 
-function buildMemberCard(m, uid) {
-  const isRep = m.categoria === 'REPRESENTANTE_COMERCIAL';
-  const hasCities = m.cidades && m.cidades !== '-' && m.cidades.length > 2;
-  return `
-    <div class="member-card">
-      <div class="member-region">${m.regiao || '—'}</div>
-      <span class="badge ${getBadgeClass(m.categoria)}" style="margin-bottom: 6px;">${getFuncLabel(m.categoria)}</span>
-      <div class="member-name">${m.nome}</div>
-      ${isRep && m.razao && m.razao !== '-' ? `<div class="member-razao">🏢 ${m.razao}</div>` : ''}
-      <div class="member-contacts">
-        <span class="member-contact">📞 ${contactLink(m.contato)}</span>
-        <span class="member-contact">✉️ ${emailLink(m.email)}</span>
-      </div>
-      ${hasCities ? `<button class="cities-btn" onclick="toggleCities('cities-${uid}', this)">🏙️ Principais cidades</button>
-      <div class="cities-list" id="cities-${uid}">${m.cidades}</div>` : ''}
-    </div>
-  `;
-}
-
-function buildIndividualCard(x, cat, uid) {
-  const div = document.createElement('div');
-  div.className = 'individual-card';
-  div.innerHTML = `
-    <span class="badge ${getBadgeClass(cat)}">${getFuncLabel(cat)}</span>
-    <div class="coordinator-region" style="margin-top: 10px;">${x.regiao || x.uf || '—'}</div>
-    <div class="coordinator-name" style="margin-top: 8px;">${x.nome}</div>
-    <div class="coordinator-meta" style="margin-top: 12px;">
-      <span class="meta-item">📞 ${contactLink(x.contato)}</span>
-      <span class="meta-item">✉️ ${emailLink(x.email)}</span>
-    </div>
-  `;
-  return div;
-}
-
-function buildPECard(pe) {
-  const ldr = pe.lider;
-  const div = document.createElement('div');
-  div.className = 'coord-panel';
-  div.innerHTML = `
-    <div class="panel-header" style="background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);">
-      <div class="panel-header-content">
-        <h3>⭐ Projetos Especiais</h3>
-        <p>Liderado por ${ldr.nome}</p>
-      </div>
-      <button class="btn-close" onclick="toggleTeam('pe-team')">✕</button>
-    </div>
-    <div class="panel-content" style="padding: 0;">
-      <div class="coordinator-card" style="border: none; margin: 20px;">
-        <div class="coordinator-header" onclick="toggleTeam('pe-team')" style="cursor: pointer;">
-          <div class="coordinator-info">
-            <span class="badge badge-dedicado">Ger. Proj. Especiais</span>
-            <div class="coordinator-region" style="margin-top: 8px;">${ldr.regiao || 'SUL'}</div>
-            <div class="coordinator-name">${ldr.nome}</div>
-            <div class="coordinator-meta">
-              <span class="meta-item">📞 ${contactLink(ldr.contato)}</span>
-              <span class="meta-item">✉️ ${emailLink(ldr.email)}</span>
-            </div>
-          </div>
-          <button class="team-toggle-btn" style="background: #e74c3c;" onclick="toggleTeam('pe-team'); event.stopPropagation();">Ver dedicados (${(pe.dedicados || []).length})</button>
-        </div>
-      </div>
-      <div class="team-section" id="pe-team" style="border-top: 2px solid #e0e6ed;">
-        <div class="team-header" style="background: #e74c3c;">⭐ Equipe de Dedicados</div>
-        <div class="team-grid">
-          ${(pe.dedicados || []).map((d, i) => `
-            <div class="member-card">
-              <div class="member-region">${d.regiao || '—'}</div>
-              <span class="badge badge-dedicado">Dedicado</span>
-              <div class="member-name" style="margin-top: 6px;">${d.nome}</div>
-              <div class="member-contacts" style="margin-top: 10px;">
-                <span class="member-contact">📞 ${contactLink(d.contato)}</span>
-                <span class="member-contact">✉️ ${emailLink(d.email)}</span>
-              </div>
-            </div>
-          `).join('')}
-        </div>
-      </div>
-    </div>
-  `;
-  return div;
-}
-
-// ─── INTERACTIONS ──────────────────────────────────────────────
-function toggleStatePanel(uf) {
-  const panel = document.getElementById(`panel-${uf}`);
-  const card = document.querySelector(`.state-card[data-uf="${uf}"]`);
-  if (!panel) return;
-  const open = panel.classList.contains('visible');
-  document.querySelectorAll('.coord-panel.visible').forEach(p => p.classList.remove('visible'));
-  document.querySelectorAll('.state-card.active').forEach(c => c.classList.remove('active'));
-  if (!open) {
-    panel.classList.add('visible');
-    card && card.classList.add('active');
-    panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-  }
-}
-
-function toggleDivPanel(div) {
-  const panel = document.getElementById(`divpanel-${div}`);
-  const card = document.querySelector(`.state-card[data-div="${div}"]`);
-  if (!panel) return;
-  const open = panel.classList.contains('visible');
-  document.querySelectorAll('.coord-panel.visible').forEach(p => p.classList.remove('visible'));
-  document.querySelectorAll('.state-card.active').forEach(c => c.classList.remove('active'));
-  if (!open) {
-    panel.classList.add('visible');
-    card && card.classList.add('active');
-    panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-  }
-}
-
-function toggleTeam(id) {
-  const el = document.getElementById(id);
-  if (!el) return;
-  el.classList.toggle('visible');
-}
-
-function toggleCities(id, btn) {
-  const el = document.getElementById(id);
-  if (!el) return;
-  el.classList.toggle('visible');
-  btn.textContent = el.classList.contains('visible') ? '🏙️ Ocultar cidades' : '🏙️ Principais cidades';
-}
-
-// ─── FILTERS ───────────────────────────────────────────────────
-function applyFilters() {
-  const q = (document.getElementById('searchInput').value || '').toLowerCase();
-  const uf = (document.getElementById('filterUF').value || '').toLowerCase();
-  const func = (document.getElementById('filterFunc').value || '').toLowerCase();
-  const reg = (document.getElementById('filterRegiao').value || '').toLowerCase();
-
-  const cards = document.querySelectorAll('.coordinator-card, .individual-card, .member-card');
-  let visible = 0;
-  cards.forEach(card => {
-    const text = (card.textContent || '').toLowerCase();
-    const ufMatch = !uf || text.includes(uf) || card.dataset.uf === uf.toUpperCase();
-    const qMatch = !q || text.includes(q);
-    const funcMatch = !func || text.includes(func.replace('_', ' ')) || card.innerHTML.toLowerCase().includes(func.toLowerCase());
-    const regMatch = !reg || text.includes(reg.toLowerCase());
-    const show = ufMatch && qMatch && funcMatch && regMatch;
-    card.style.display = show ? '' : 'none';
-    if (show) visible++;
+  groups.forEach(group => {
+    html += renderCoordCard(group, null);
   });
-  document.getElementById('emptyState').classList.toggle('visible', visible === 0);
+
+  html += '</div>';
+  container.innerHTML = html;
 }
 
-function clearFilters() {
-  document.getElementById('searchInput').value = '';
-  document.getElementById('filterUF').value = '';
-  document.getElementById('filterFunc').value = '';
-  document.getElementById('filterRegiao').value = '';
-  applyFilters();
-}
+function renderCoordCard(group, uf) {
+  const leader = group.leader;
+  if (!leader) return '';
+  const func = getFunc(leader);
+  const phone = getPhone(leader);
+  const email = getEmail(leader);
+  let region = getRegion(leader);
+  // Override region display for EXPANSÃO
+  if (group.division === 'EXPANSÃO') region = 'Centro Oeste e Sudeste';
+  const headerColor = group.division ? (DIVISION_COLORS[group.division] || '#8B5CF6') : getHeaderColor(func, uf);
+  const isClient = isClientRole(leader);
+  // When viewing from a state, count only members matching that UF
+  const memberCount = (uf && group.states && group.states.length > 1) 
+    ? group.members.filter(m => getUF(m) === uf).length 
+    : group.members.length;
+  const cities = getCities(leader);
 
-// ─── DATA LOADING ──────────────────────────────────────────────
-async function loadData(force = false) {
-  const cb = force ? `?cb=${Date.now()}` : `?cb=${Math.floor(Date.now() / 300000) * 300000}`;
-  try {
-    let resp = await fetch(`./data.json${cb}`);
-    if (resp.ok) {
-      const json = await resp.json();
-      DATA = json;
-      document.getElementById('updateInfo').textContent = `Atualizado: ${json.update_date || json.generated_at?.substring(0, 10) || '—'}`;
-      const p = json.processed || json;
-      render({ processed: p, update_date: json.update_date, generated_at: json.generated_at });
-    } else {
-      await loadFromCSV(force);
-    }
-  } catch (e) {
-    try {
-      await loadFromCSV(force);
-    } catch (e2) {
-      showError();
-    }
+  let html = `<div class="coord-card">
+    <div class="coord-header" style="background:${headerColor}">`;
+
+  // Region HIGHLIGHTED above name
+  if (region && region !== '-') {
+    html += `<div class="coord-region-highlight">&#128205; ${region}</div>`;
   }
+  // Division badge for special groups
+  if (group.division) {
+    const divLabel = group.division === 'PROJ. ESPECIAIS' ? 'Projetos Especiais' : group.division === 'EXPANSÃO' ? 'Expansão' : group.division;
+    html += `<div style="display:inline-block;background:rgba(255,255,255,0.25);color:#fff;font-size:11px;padding:2px 10px;border-radius:20px;margin-bottom:4px;font-weight:600;">${divLabel}</div>`;
+  }
+  html += `<div class="coord-func">${func}</div>
+      <div class="coord-name">${getName(leader)}</div>
+      <span class="district-label">Distrito ${group.distKey}</span>
+    </div>
+    <div class="coord-body">
+      ${phone
+        ? `<div class="coord-contact"><span class="contact-icon">&#128241;</span><a href="tel:${phone.replace(/\D/g,'')}">${phone}</a></div>`
+        : `<div class="coord-contact"><span class="contact-icon">&#128241;</span><span class="no-data">Sem contato</span></div>`}
+      ${email
+        ? `<div class="coord-contact"><span class="contact-icon">&#9993;&#65039;</span><a href="mailto:${email}">${email}</a></div>`
+        : `<div class="coord-contact"><span class="contact-icon">&#9993;&#65039;</span><span class="no-data">Sem e-mail</span></div>`}
+    </div>
+    <div class="coord-footer">`;
+
+  if (isClient) {
+    // Gerente de Contas / Coordenador de Médias Redes: show clients button
+    html += `<span class="members-count">&#127978; Portfólio de clientes</span>
+      <button class="btn-clients" onclick="openClientsModal('${escapeAttr(getName(leader))}','${escapeAttr(region)}','${escapeAttr(cities)}')">&#128203; Ver Clientes</button>`;
+  } else if (memberCount > 0) {
+    html += `<span class="members-count">&#128101; ${memberCount} membro${memberCount!==1?'s':''}</span>
+      <button class="btn-team" onclick="navigateToTeam('${escapeAttr(group.distKey)}','${escapeAttr(uf||currentState||'')}')">Ver equipe &#8594;</button>`;
+  } else {
+    html += `<span class="members-count">&#128101; Equipe</span>
+      <button class="btn-team" onclick="navigateToTeam('${escapeAttr(group.distKey)}','${escapeAttr(uf||currentState||'')}')">Ver equipe &#8594;</button>`;
+  }
+
+  html += `</div></div>`;
+  return html;
 }
 
-async function loadFromCSV(force = false) {
-  const cb = force ? Date.now() : Math.floor(Date.now() / 300000) * 300000;
-  const url = `${CSV_URL}&cb=${cb}`;
-  const resp = await fetch(url);
-  if (!resp.ok) throw new Error('CSV not found');
-  const text = await resp.text();
-  const { rows, updateDate } = parseCSV(text);
-  const processed = processData(rows);
-  DATA = { processed, update_date: updateDate, generated_at: new Date().toISOString() };
-  document.getElementById('updateInfo').textContent = `Atualizado: ${updateDate || '—'} (CSV direto)`;
-  render(DATA);
+function getHeaderColor(func, uf) {
+  const f = func.toLowerCase();
+  if (f.includes('projetos especiais')) return '#2e7d32';
+  if (f.includes('gerente de contas')) return '#ad1457';
+  if (f.includes('medias redes') || f.includes('médias redes')) return '#e65100';
+  if (uf && (STATE_COLORS[uf])) return STATE_COLORS[uf];
+  return STATE_COLORS.DEFAULT;
 }
 
-function showError() {
-  document.getElementById('loadingState').classList.remove('visible');
-  document.getElementById('errorState').classList.add('visible');
+// ============================================================
+// VIEW 3 — TEAM DETAIL
+// ============================================================
+function navigateToTeam(distKey, fromState) {
+  const group = appData.groups.find(g => g.distKey === distKey);
+  if (!group) return;
+  currentView = 'team';
+  currentGroup = group;
+  currentState = fromState;
+  renderTeam(group, fromState);
 }
 
-async function forceRefresh() {
-  document.getElementById('appContent').style.display = 'none';
-  document.getElementById('loadingState').classList.add('visible');
-  document.getElementById('errorState').classList.remove('visible');
-  document.getElementById('filterUF').innerHTML = '<option value="">Todos os estados</option>';
-  document.getElementById('filterRegiao').innerHTML = '<option value="">Todas as regiões</option>';
-  await loadData(true);
+function renderTeam(group, fromState) {
+  if (!group) return;
+  hideAllViews();
+  const leaderName = group.leader ? getName(group.leader) : 'Equipe';
+  const isDivision = !!group.division;
+
+  // When a division group is accessed from a state view, show state breadcrumb
+  const showStateBreadcrumb = fromState && STATE_NAMES[fromState];
+  updateBreadcrumb([
+    { label:'Início', action:'goHome' },
+    showStateBreadcrumb
+      ? { label:`${fromState} — ${STATE_NAMES[fromState]}`, action:`navigateToState_bc_${fromState}` }
+      : (isDivision
+        ? { label:group.division, action:`navigateToDivision_bc_${group.division}` }
+        : { label:`${fromState} — ${STATE_NAMES[fromState]||fromState||''}`, action:`navigateToState_bc_${fromState}` }),
+    { label:leaderName }
+  ]);
+  const container = document.getElementById('view-team');
+  container.style.display = 'block';
+  const color = isDivision ? (DIVISION_COLORS[group.division] || '#8B5CF6') : (STATE_COLORS[fromState] || STATE_COLORS.DEFAULT);
+
+  const backAction = (fromState && STATE_NAMES[fromState]) 
+    ? `navigateToState('${escapeAttr(fromState)}')`
+    : (isDivision ? `navigateToDivision('${escapeAttr(group.division)}')` : `navigateToState('${escapeAttr(fromState||currentState||'')}')`);
+  let html = `<button class="btn-back" onclick="${backAction}">&#8592; Voltar</button>`;
+
+  // LEADER HEADER CARD
+  if (group.leader) {
+    const ldr = group.leader;
+    const lFunc = getFunc(ldr);
+    const lPhone = getPhone(ldr);
+    const lEmail = getEmail(ldr);
+    let lRegion = getRegion(ldr);
+    if (group.division === 'EXPANSÃO') lRegion = 'Centro Oeste e Sudeste';
+    const initials = getName(ldr).split(' ').filter(w=>w.length>0).slice(0,2).map(w=>w[0]).join('').toUpperCase();
+    html += `
+      <div class="team-leader-header" style="background:linear-gradient(135deg,${color} 0%,${color}cc 100%)">
+        <div class="tlh-avatar">${initials}</div>
+        <div class="tlh-info-block">
+          ${lRegion ? `<div class="tlh-region-highlight">&#128205; ${lRegion}</div>` : ''}
+          <div class="tlh-func">${lFunc}</div>
+          <div class="tlh-name">${getName(ldr)}</div>
+          <div class="tlh-contacts">
+            ${lPhone ? `<div class="tlh-contact-item"><span>&#128241;</span><a href="tel:${lPhone.replace(/\D/g,'')}">${lPhone}</a></div>` : ''}
+            ${lEmail ? `<div class="tlh-contact-item"><span>&#9993;&#65039;</span><a href="mailto:${lEmail}">${lEmail}</a></div>` : ''}
+          </div>
+        </div>
+      </div>`;
+  }
+
+  // When viewing from a state, filter members by that state's UF (all group types)
+  let members = (fromState && STATE_NAMES[fromState] && group.states && group.states.length > 1) 
+    ? group.members.filter(m => getUF(m) === fromState)
+    : group.members;
+  const showingFiltered = members.length !== group.members.length;
+
+  html += `
+    <div class="section-title" style="color:${color}">
+      &#128101; Equipe${group.leader ? ' de ' + getName(group.leader) : ''}
+      <span class="count-badge" style="background:${color}">${members.length} membro${members.length!==1?'s':''}</span>
+    </div>
+    <p class="section-sub">${group.distKey !== 'PROJ_ESP' ? 'Distrito ' + group.distKey : 'Projetos Especiais — SUL'}${showingFiltered ? ' · Exibindo membros de ' + fromState : (group.states.length > 0 ? ' · ' + group.states.join(', ') : '')}</p>`;
+
+  if (members.length === 0) {
+    html += `<div class="empty-state"><div class="empty-icon">&#128100;</div><div class="empty-text">Nenhum membro na equipe.</div></div>`;
+  } else {
+    html += `
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Nome</th>
+              <th>Função</th>
+              <th>Contato Corporativo</th>
+              <th>E-mail</th>
+              <th>UF</th>
+              <th>Região</th>
+              <th>Cidades / Clientes</th>
+            </tr>
+          </thead>
+          <tbody>`;
+
+    members.forEach(m => {
+      const func = getFunc(m);
+      const badge = getFuncBadge(func);
+      const phone = getPhone(m);
+      const email = getEmail(m);
+      const region = getRegion(m);
+      const cities = getCities(m);
+      const nome = getName(m);
+      const uf = getUF(m);
+      const razao = getRazaoSocial(m);
+      const isRC = isRepComercial(m);
+      const isClient = isClientRole(m);
+
+      let citiesBtn = '<span class="no-data">—</span>';
+      if (cities) {
+        if (isClient) {
+          citiesBtn = `<button class="btn-clients-sm" onclick="openClientsModal('${escapeAttr(nome)}','${escapeAttr(region)}','${escapeAttr(cities)}')">&#127978; Clientes</button>`;
+        } else {
+          citiesBtn = `<button class="btn-cities" onclick="openCitiesModal('${escapeAttr(nome)}','${escapeAttr(region)}','${escapeAttr(cities)}')">&#128205; Cidades</button>`;
+        }
+      }
+
+      html += `
+            <tr>
+              <td>
+                <div style="font-weight:700;margin-bottom:2px">${nome}</div>
+                ${isRC && razao && razao !== '-' && razao !== '' ? `<div class="razao-social">&#127970; ${razao}</div>` : ''}
+              </td>
+              <td><span class="func-badge ${badge.cls}">${badge.label}</span></td>
+              <td>${phone ? `<a class="contact-link" href="tel:${phone.replace(/\D/g,'')}">${phone}</a>` : '<span class="no-data">—</span>'}</td>
+              <td>${email ? `<a class="contact-link" href="mailto:${email}">${email}</a>` : '<span class="no-data">—</span>'}</td>
+              <td>${uf || '—'}</td>
+              <td>${region || '<span class="no-data">—</span>'}</td>
+              <td>${citiesBtn}</td>
+            </tr>`;
+    });
+    html += '</tbody></table></div>';
+  }
+  container.innerHTML = html;
 }
 
+function getFuncBadge(func) {
+  const f = func.toLowerCase();
+  if (f.includes('representante comercial')) return { cls:'badge-rep', label:'Representante Comercial' };
+  if (f.includes('consultor de vendas')) return { cls:'badge-cv', label:'Consultor de Vendas' };
+  if (f.includes('gerente de contas')) return { cls:'badge-ger', label:'Gerente de Contas' };
+  if (f.includes('medias redes') || f.includes('médias redes')) return { cls:'badge-coord-med', label:'Coordenador de Médias Redes' };
+  if (f.includes('dedicado')) return { cls:'badge-ded', label:'Dedicado' };
+  if (f.includes('coordenador')) return { cls:'badge-coord', label:'Coordenador' };
+  return { cls:'badge-default', label:func||'—' };
+}
+
+// ============================================================
+// SEARCH RESULTS
+// ============================================================
+function renderSearchResults(query, filterUF, filterFunc, filterRegion) {
+  hideAllViews();
+  updateBreadcrumb([
+    { label:'Início', action:'goHome' },
+    { label:'Resultados da busca' }
+  ]);
+  const container = document.getElementById('view-search');
+  container.style.display = 'block';
+
+  let results = appData.rows.filter(r => {
+    const nome = getName(r).toLowerCase();
+    const uf = getUF(r).toUpperCase();
+    const func = getFunc(r).toLowerCase();
+    const region = getRegion(r).toLowerCase();
+    const cities = getCities(r).toLowerCase();
+    const razao = getRazaoSocial(r).toLowerCase();
+    if (query && !nome.includes(query) && !cities.includes(query) && !region.includes(query) && !razao.includes(query)) return false;
+    if (filterUF) {
+      const rowUFs = getUFs(uf);
+      if (!rowUFs.includes(filterUF) && !uf.includes(filterUF)) return false;
+    }
+    if (filterFunc && !func.includes(filterFunc)) return false;
+    if (filterRegion && !region.includes(filterRegion)) return false;
+    return true;
+  });
+
+  let html = `
+    <div class="section-title">&#128269; Resultados <span class="count-badge">${results.length}</span></div>
+    <p class="section-sub">${results.length} resultado${results.length!==1?'s':''} encontrado${results.length!==1?'s':''}.</p>`;
+
+  if (results.length === 0) {
+    html += `<div class="empty-state"><div class="empty-icon">&#128269;</div><div class="empty-text">Nenhum resultado encontrado.</div></div>`;
+  } else {
+    html += `
+      <div class="table-wrapper">
+        <table>
+          <thead><tr><th>Nome</th><th>Função</th><th>UF</th><th>Região</th><th>Contato</th><th>E-mail</th><th>Cidades / Clientes</th></tr></thead>
+          <tbody>`;
+    results.forEach(r => {
+      const func = getFunc(r);
+      const badge = getFuncBadge(func);
+      const phone = getPhone(r);
+      const email = getEmail(r);
+      const region = getRegion(r);
+      const cities = getCities(r);
+      const uf = getUF(r);
+      const nome = getName(r);
+      const razao = getRazaoSocial(r);
+      const isRC = isRepComercial(r);
+      const isClient = isClientRole(r);
+      let citiesBtn = '<span class="no-data">—</span>';
+      if (cities) {
+        citiesBtn = isClient
+          ? `<button class="btn-clients-sm" onclick="openClientsModal('${escapeAttr(nome)}','${escapeAttr(region)}','${escapeAttr(cities)}')">&#127978; Clientes</button>`
+          : `<button class="btn-cities" onclick="openCitiesModal('${escapeAttr(nome)}','${escapeAttr(region)}','${escapeAttr(cities)}')">&#128205; Cidades</button>`;
+      }
+      html += `
+            <tr>
+              <td>
+                <strong>${nome}</strong>
+                ${isRC && razao && razao !== '-' && razao !== '' ? `<div class="razao-social">&#127970; ${razao}</div>` : ''}
+              </td>
+              <td><span class="func-badge ${badge.cls}">${badge.label}</span></td>
+              <td>${uf}</td>
+              <td>${region||'<span class="no-data">—</span>'}</td>
+              <td>${phone?`<a class="contact-link" href="tel:${phone.replace(/\D/g,'')}">${phone}</a>`:'<span class="no-data">—</span>'}</td>
+              <td>${email?`<a class="contact-link" href="mailto:${email}">${email}</a>`:'<span class="no-data">—</span>'}</td>
+              <td>${citiesBtn}</td>
+            </tr>`;
+    });
+    html += '</tbody></table></div>';
+  }
+  container.innerHTML = html;
+}
+
+// ============================================================
+// NAVIGATION
+// ============================================================
+function goHome() {
+  currentView = 'states'; currentState = null; currentGroup = null;
+  document.getElementById('filter-uf').value = '';
+  document.getElementById('filter-func').value = '';
+  document.getElementById('filter-region').value = '';
+  document.getElementById('search-input').value = '';
+  renderStates();
+}
+
+function hideAllViews() {
+  ['view-states','view-coordinators','view-team','view-search'].forEach(id => {
+    document.getElementById(id).style.display = 'none';
+  });
+}
+
+function updateBreadcrumb(items) {
+  const bc = document.getElementById('breadcrumb');
+  if (items.length <= 1 && items[0].label === 'Início') { bc.innerHTML = ''; return; }
+  let html = '';
+  items.forEach((item, i) => {
+    if (i > 0) html += '<span class="bc-sep">&#8250;</span>';
+    if (i === items.length - 1) {
+      html += `<span class="bc-current">${item.label}</span>`;
+    } else if (item.action === 'goHome') {
+      html += `<span class="bc-item" onclick="goHome()">${item.label}</span>`;
+    } else if (item.action && item.action.startsWith('navigateToState_bc_')) {
+      const st = item.action.replace('navigateToState_bc_','');
+      html += `<span class="bc-item" onclick="navigateToState('${escapeAttr(st)}')">${item.label}</span>`;
+    } else if (item.action && item.action.startsWith('navigateToDivision_bc_')) {
+      const dv = item.action.replace('navigateToDivision_bc_','');
+      html += `<span class="bc-item" onclick="navigateToDivision('${escapeAttr(dv)}')">${item.label}</span>`;
+    } else {
+      html += `<span class="bc-item" onclick="goHome()">${item.label}</span>`;
+    }
+  });
+  bc.innerHTML = html;
+}
+
+// ============================================================
+// MODALS
+// ============================================================
+function openCitiesModal(nome, region, citiesStr) {
+  document.getElementById('modal-title').textContent = nome;
+  document.getElementById('modal-subtitle').textContent = `Principais cidades${region?' — '+region:''}`;
+  const cities = citiesStr.split(/[,;]+/).map(c=>c.trim()).filter(c=>c&&c!=='-');
+  document.getElementById('modal-cities').innerHTML =
+    cities.length > 0
+      ? cities.map(c=>`<span class="city-tag">${c}</span>`).join('')
+      : '<span class="no-data">Nenhuma cidade cadastrada.</span>';
+  document.getElementById('modal-overlay').classList.add('open');
+}
+
+function openClientsModal(nome, region, clientsStr) {
+  document.getElementById('modal-title').textContent = nome;
+  document.getElementById('modal-subtitle').textContent = `Clientes atendidos${region?' — '+region:''}`;
+  const clients = (clientsStr||'').split(/[,;]+/).map(c=>c.trim()).filter(c=>c&&c!=='-');
+  document.getElementById('modal-cities').innerHTML =
+    clients.length > 0
+      ? clients.map(c=>`<span class="client-tag">${c}</span>`).join('')
+      : '<span class="no-data">Nenhum cliente cadastrado.</span>';
+  document.getElementById('modal-overlay').classList.add('open');
+}
+
+function closeModal() {
+  document.getElementById('modal-overlay').classList.remove('open');
+}
+document.getElementById('modal-close').addEventListener('click', closeModal);
+document.getElementById('modal-overlay').addEventListener('click', e => {
+  if (e.target === document.getElementById('modal-overlay')) closeModal();
+});
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+// ============================================================
+// AUTO-REFRESH & PROGRESS BAR
+// ============================================================
 function scheduleRefresh() {
-  if (REFRESH_TIMER) clearInterval(REFRESH_TIMER);
-  REFRESH_TIMER = setInterval(() => loadData(true), REFRESH_INTERVAL);
+  if (refreshTimer) clearTimeout(refreshTimer);
+  refreshTimer = setTimeout(() => { fetchData(); }, REFRESH_INTERVAL);
 }
 
-async function init() {
-  document.getElementById('loadingState').classList.add('visible');
-  await loadData(false);
-  document.getElementById('loadingState').classList.remove('visible');
-  document.getElementById('appContent').style.display = 'block';
-  scheduleRefresh();
+function startProgressBar() {
+  const bar = document.getElementById('progress-bar');
+  progressStart = Date.now();
+  if (progressTimer) clearInterval(progressTimer);
+  bar.style.transition = 'none';
+  bar.style.width = '100%';
+  progressTimer = setInterval(() => {
+    const elapsed = Date.now() - progressStart;
+    const remaining = Math.max(0, 1 - elapsed / REFRESH_INTERVAL);
+    bar.style.transition = 'width 1s linear';
+    bar.style.width = (remaining * 100) + '%';
+    if (remaining <= 0) clearInterval(progressTimer);
+  }, 1000);
 }
 
-init();
+// ============================================================
+// REFRESH BUTTON
+// ============================================================
+document.getElementById('btn-refresh').addEventListener('click', () => {
+  const icon = document.getElementById('refresh-icon');
+  icon.outerHTML = '<span class="spinner" id="refresh-icon"></span>';
+  if (refreshTimer) clearTimeout(refreshTimer);
+  if (progressTimer) clearInterval(progressTimer);
+  fetchData().finally(() => {
+    const spinner = document.getElementById('refresh-icon');
+    if (spinner) spinner.outerHTML = '<span id="refresh-icon">&#128260;</span>';
+  });
+});
+
+document.getElementById('btn-retry').addEventListener('click', fetchData);
+
+// ============================================================
+// FILTERS & SEARCH
+// ============================================================
+let searchDebounce = null;
+document.getElementById('search-input').addEventListener('input', () => {
+  clearTimeout(searchDebounce);
+  searchDebounce = setTimeout(() => { if (appData.rows.length > 0) renderCurrentView(); }, 300);
+});
+document.getElementById('filter-uf').addEventListener('change', () => { if (appData.rows.length>0) renderCurrentView(); });
+document.getElementById('filter-func').addEventListener('change', () => { if (appData.rows.length>0) renderCurrentView(); });
+document.getElementById('filter-region').addEventListener('change', () => { if (appData.rows.length>0) renderCurrentView(); });
+document.getElementById('btn-clear').addEventListener('click', () => {
+  document.getElementById('search-input').value = '';
+  document.getElementById('filter-uf').value = '';
+  document.getElementById('filter-func').value = '';
+  document.getElementById('filter-region').value = '';
+  if (appData.rows.length > 0) goHome();
+});
+
+// ============================================================
+// UTILS
+// ============================================================
+function escapeAttr(str) {
+  return (str||'').replace(/\\/g,'\\\\').replace(/'/g,"\\'").replace(/"/g,'&quot;').replace(/\n/g,' ');
+}
+
+// ============================================================
+// INIT
+// ============================================================
+fetchData();
 </script>
-
 </body>
 </html>
