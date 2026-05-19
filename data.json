@@ -1,13 +1,13 @@
 {
-  "generated_at": "2026-05-19T19:27:45.014752",
+  "generated_at": "2026-05-19T19:38:25.928968",
   "total_rows": 109,
   "total_groups": 18,
   "states": [
     "SC",
     "RS",
     "PR",
-    "SP",
     "MT",
+    "SP",
     "MS",
     "DF",
     "GO"
@@ -798,8 +798,8 @@
       "division": null,
       "displayRegion": "Oeste SC/Noroeste RS",
       "states": [
-        "SC",
-        "RS"
+        "RS",
+        "SC"
       ]
     },
     "600": {
@@ -1154,8 +1154,8 @@
       "division": "EXPANSÃO",
       "displayRegion": "Centro Oeste e Sudeste",
       "states": [
-        "SP",
         "MT",
+        "SP",
         "MS"
       ]
     },
@@ -1451,8 +1451,8 @@
       "displayRegion": "SUL — PR / RS / SC",
       "states": [
         "SC",
-        "PR",
-        "RS"
+        "RS",
+        "PR"
       ]
     },
     "CLIENT_1201": {
