@@ -1339,4 +1339,305 @@ function renderTeam(group, fromState) {
   }
 
   // When viewing from a state, filter members by that state's UF (all group types)
-  let members = (fromState && STATE_NAMES[fromSt
+  let members = (fromState && STATE_NAMES[fromState] && group.states && group.states.length > 1) 
+    ? group.members.filter(m => getUF(m) === fromState)
+    : group.members;
+  const showingFiltered = members.length !== group.members.length;
+
+  html += `
+    <div class="section-title" style="color:${color}">
+      &#128101; Equipe${group.leader ? ' de ' + getName(group.leader) : ''}
+      <span class="count-badge" style="background:${color}">${members.length} membro${members.length!==1?'s':''}</span>
+    </div>
+    <p class="section-sub">${group.distKey !== 'PROJ_ESP' ? 'Distrito ' + group.distKey : 'Projetos Especiais — SUL'}${showingFiltered ? ' · Exibindo membros de ' + fromState : (group.states.length > 0 ? ' · ' + group.states.join(', ') : '')}</p>`;
+
+  if (members.length === 0) {
+    html += `<div class="empty-state"><div class="empty-icon">&#128100;</div><div class="empty-text">Nenhum membro na equipe.</div></div>`;
+  } else {
+    html += `
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Nome</th>
+              <th>Função</th>
+              <th>Contato Corporativo</th>
+              <th>E-mail</th>
+              <th>UF</th>
+              <th>Região</th>
+              <th>Cidades / Clientes</th>
+            </tr>
+          </thead>
+          <tbody>`;
+
+    members.forEach(m => {
+      const func = getFunc(m);
+      const badge = getFuncBadge(func);
+      const phone = getPhone(m);
+      const email = getEmail(m);
+      const region = getRegion(m);
+      const cities = getCities(m);
+      const nome = getName(m);
+      const uf = getUF(m);
+      const razao = getRazaoSocial(m);
+      const isRC = isRepComercial(m);
+      const isClient = isClientRole(m);
+
+      let citiesBtn = '<span class="no-data">—</span>';
+      if (cities && !isClient) {
+        citiesBtn = `<button class="btn-cities" onclick="openCitiesModal('${escapeAttr(nome)}','${escapeAttr(region)}','${escapeAttr(cities)}')">&#128205; Cidades</button>`;
+      }
+
+      html += `
+            <tr>
+              <td>
+                <div style="font-weight:700;margin-bottom:2px">${nome}</div>
+                ${isRC && razao && razao !== '-' && razao !== '' ? `<div class="razao-social">&#127970; ${razao}</div>` : ''}
+              </td>
+              <td><span class="func-badge ${badge.cls}">${badge.label}</span></td>
+              <td>${phone ? `<a class="contact-link" href="tel:${phone.replace(/\D/g,'')}">${phone}</a>` : '<span class="no-data">—</span>'}</td>
+              <td>${email ? `<a class="contact-link" href="mailto:${email}">${email}</a>` : '<span class="no-data">—</span>'}</td>
+              <td>${uf || '—'}</td>
+              <td>${region || '<span class="no-data">—</span>'}</td>
+              <td>${citiesBtn}</td>
+            </tr>`;
+    });
+    html += '</tbody></table></div>';
+  }
+  container.innerHTML = html;
+}
+
+function getFuncBadge(func) {
+  const f = func.toLowerCase();
+  if (f.includes('representante comercial')) return { cls:'badge-rep', label:'Representante Comercial' };
+  if (f.includes('consultor de vendas')) return { cls:'badge-cv', label:'Consultor de Vendas' };
+  if (f.includes('gerente de contas')) return { cls:'badge-ger', label:'Gerente de Contas' };
+  if (f.includes('medias redes') || f.includes('médias redes')) return { cls:'badge-coord-med', label:'Coordenador de Médias Redes' };
+  if (f.includes('dedicado')) return { cls:'badge-ded', label:'Dedicado' };
+  if (f.includes('coordenador')) return { cls:'badge-coord', label:'Coordenador' };
+  return { cls:'badge-default', label:func||'—' };
+}
+
+// ============================================================
+// SEARCH RESULTS
+// ============================================================
+function renderSearchResults(query, filterUF, filterFunc, filterRegion) {
+  hideAllViews();
+  updateBreadcrumb([
+    { label:'Início', action:'goHome' },
+    { label:'Resultados da busca' }
+  ]);
+  const container = document.getElementById('view-search');
+  container.style.display = 'block';
+
+  let results = appData.rows.filter(r => {
+    const nome = getName(r).toLowerCase();
+    const uf = getUF(r).toUpperCase();
+    const func = getFunc(r).toLowerCase();
+    const region = getRegion(r).toLowerCase();
+    const cities = getCities(r).toLowerCase();
+    const razao = getRazaoSocial(r).toLowerCase();
+    if (query && !nome.includes(query) && !cities.includes(query) && !region.includes(query) && !razao.includes(query)) return false;
+    if (filterUF) {
+      const rowUFs = getUFs(uf);
+      if (!rowUFs.includes(filterUF) && !uf.includes(filterUF)) return false;
+    }
+    if (filterFunc && !func.includes(filterFunc)) return false;
+    if (filterRegion && !region.includes(filterRegion)) return false;
+    return true;
+  });
+
+  let html = `
+    <div class="section-title">&#128269; Resultados <span class="count-badge">${results.length}</span></div>
+    <p class="section-sub">${results.length} resultado${results.length!==1?'s':''} encontrado${results.length!==1?'s':''}.</p>`;
+
+  if (results.length === 0) {
+    html += `<div class="empty-state"><div class="empty-icon">&#128269;</div><div class="empty-text">Nenhum resultado encontrado.</div></div>`;
+  } else {
+    html += `
+      <div class="table-wrapper">
+        <table>
+          <thead><tr><th>Nome</th><th>Função</th><th>UF</th><th>Região</th><th>Contato</th><th>E-mail</th><th>Cidades / Clientes</th></tr></thead>
+          <tbody>`;
+    results.forEach(r => {
+      const func = getFunc(r);
+      const badge = getFuncBadge(func);
+      const phone = getPhone(r);
+      const email = getEmail(r);
+      const region = getRegion(r);
+      const cities = getCities(r);
+      const uf = getUF(r);
+      const nome = getName(r);
+      const razao = getRazaoSocial(r);
+      const isRC = isRepComercial(r);
+      const isClient = isClientRole(r);
+      let citiesBtn = '<span class="no-data">—</span>';
+      if (cities && !isClient) {
+        citiesBtn = `<button class="btn-cities" onclick="openCitiesModal('${escapeAttr(nome)}','${escapeAttr(region)}','${escapeAttr(cities)}')">&#128205; Cidades</button>`;
+      }
+      html += `
+            <tr>
+              <td>
+                <strong>${nome}</strong>
+                ${isRC && razao && razao !== '-' && razao !== '' ? `<div class="razao-social">&#127970; ${razao}</div>` : ''}
+              </td>
+              <td><span class="func-badge ${badge.cls}">${badge.label}</span></td>
+              <td>${uf}</td>
+              <td>${region||'<span class="no-data">—</span>'}</td>
+              <td>${phone?`<a class="contact-link" href="tel:${phone.replace(/\D/g,'')}">${phone}</a>`:'<span class="no-data">—</span>'}</td>
+              <td>${email?`<a class="contact-link" href="mailto:${email}">${email}</a>`:'<span class="no-data">—</span>'}</td>
+              <td>${citiesBtn}</td>
+            </tr>`;
+    });
+    html += '</tbody></table></div>';
+  }
+  container.innerHTML = html;
+}
+
+// ============================================================
+// NAVIGATION
+// ============================================================
+function goHome() {
+  currentView = 'states'; currentState = null; currentGroup = null;
+  document.getElementById('filter-uf').value = '';
+  document.getElementById('filter-func').value = '';
+  document.getElementById('filter-region').value = '';
+  document.getElementById('search-input').value = '';
+  renderStates();
+}
+
+function hideAllViews() {
+  ['view-states','view-coordinators','view-team','view-search'].forEach(id => {
+    document.getElementById(id).style.display = 'none';
+  });
+}
+
+function updateBreadcrumb(items) {
+  const bc = document.getElementById('breadcrumb');
+  if (items.length <= 1 && items[0].label === 'Início') { bc.innerHTML = ''; return; }
+  let html = '';
+  items.forEach((item, i) => {
+    if (i > 0) html += '<span class="bc-sep">&#8250;</span>';
+    if (i === items.length - 1) {
+      html += `<span class="bc-current">${item.label}</span>`;
+    } else if (item.action === 'goHome') {
+      html += `<span class="bc-item" onclick="goHome()">${item.label}</span>`;
+    } else if (item.action && item.action.startsWith('navigateToState_bc_')) {
+      const st = item.action.replace('navigateToState_bc_','');
+      html += `<span class="bc-item" onclick="navigateToState('${escapeAttr(st)}')">${item.label}</span>`;
+    } else if (item.action && item.action.startsWith('navigateToDivision_bc_')) {
+      const dv = item.action.replace('navigateToDivision_bc_','');
+      html += `<span class="bc-item" onclick="navigateToDivision('${escapeAttr(dv)}')">${item.label}</span>`;
+    } else {
+      html += `<span class="bc-item" onclick="goHome()">${item.label}</span>`;
+    }
+  });
+  bc.innerHTML = html;
+}
+
+// ============================================================
+// MODALS
+// ============================================================
+function openCitiesModal(nome, region, citiesStr) {
+  document.getElementById('modal-title').textContent = nome;
+  document.getElementById('modal-subtitle').textContent = `Principais cidades${region?' — '+region:''}`;
+  const cities = citiesStr.split(/[,;]+/).map(c=>c.trim()).filter(c=>c&&c!=='-');
+  document.getElementById('modal-cities').innerHTML =
+    cities.length > 0
+      ? cities.map(c=>`<span class="city-tag">${c}</span>`).join('')
+      : '<span class="no-data">Nenhuma cidade cadastrada.</span>';
+  document.getElementById('modal-overlay').classList.add('open');
+}
+
+function openClientsModal(nome, region, clientsStr) {
+  document.getElementById('modal-title').textContent = nome;
+  document.getElementById('modal-subtitle').textContent = `Clientes atendidos${region?' — '+region:''}`;
+  const clients = (clientsStr||'').split(/[,;]+/).map(c=>c.trim()).filter(c=>c&&c!=='-');
+  document.getElementById('modal-cities').innerHTML =
+    clients.length > 0
+      ? clients.map(c=>`<span class="client-tag">${c}</span>`).join('')
+      : '<span class="no-data">Nenhum cliente cadastrado.</span>';
+  document.getElementById('modal-overlay').classList.add('open');
+}
+
+function closeModal() {
+  document.getElementById('modal-overlay').classList.remove('open');
+}
+document.getElementById('modal-close').addEventListener('click', closeModal);
+document.getElementById('modal-overlay').addEventListener('click', e => {
+  if (e.target === document.getElementById('modal-overlay')) closeModal();
+});
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+// ============================================================
+// AUTO-REFRESH & PROGRESS BAR
+// ============================================================
+function scheduleRefresh() {
+  if (refreshTimer) clearTimeout(refreshTimer);
+  refreshTimer = setTimeout(() => { fetchData(false); }, REFRESH_INTERVAL);
+}
+
+function startProgressBar() {
+  const bar = document.getElementById('progress-bar');
+  progressStart = Date.now();
+  if (progressTimer) clearInterval(progressTimer);
+  bar.style.transition = 'none';
+  bar.style.width = '100%';
+  progressTimer = setInterval(() => {
+    const elapsed = Date.now() - progressStart;
+    const remaining = Math.max(0, 1 - elapsed / REFRESH_INTERVAL);
+    bar.style.transition = 'width 1s linear';
+    bar.style.width = (remaining * 100) + '%';
+    if (remaining <= 0) clearInterval(progressTimer);
+  }, 1000);
+}
+
+// ============================================================
+// REFRESH BUTTON
+// ============================================================
+document.getElementById('btn-refresh').addEventListener('click', () => {
+  const icon = document.getElementById('refresh-icon');
+  icon.outerHTML = '<span class="spinner" id="refresh-icon"></span>';
+  if (refreshTimer) clearTimeout(refreshTimer);
+  if (progressTimer) clearInterval(progressTimer);
+  fetchData().finally(() => {
+    const spinner = document.getElementById('refresh-icon');
+    if (spinner) spinner.outerHTML = '<span id="refresh-icon">&#128260;</span>';
+  });
+});
+
+document.getElementById('btn-retry').addEventListener('click', () => fetchData(true));
+
+// ============================================================
+// FILTERS & SEARCH
+// ============================================================
+let searchDebounce = null;
+document.getElementById('search-input').addEventListener('input', () => {
+  clearTimeout(searchDebounce);
+  searchDebounce = setTimeout(() => { if (appData.rows.length > 0) renderCurrentView(); }, 300);
+});
+document.getElementById('filter-uf').addEventListener('change', () => { if (appData.rows.length>0) renderCurrentView(); });
+document.getElementById('filter-func').addEventListener('change', () => { if (appData.rows.length>0) renderCurrentView(); });
+document.getElementById('filter-region').addEventListener('change', () => { if (appData.rows.length>0) renderCurrentView(); });
+document.getElementById('btn-clear').addEventListener('click', () => {
+  document.getElementById('search-input').value = '';
+  document.getElementById('filter-uf').value = '';
+  document.getElementById('filter-func').value = '';
+  document.getElementById('filter-region').value = '';
+  if (appData.rows.length > 0) goHome();
+});
+
+// ============================================================
+// UTILS
+// ============================================================
+function escapeAttr(str) {
+  return (str||'').replace(/\\/g,'\\\\').replace(/'/g,"\\'").replace(/"/g,'&quot;').replace(/\n/g,' ');
+}
+
+// ============================================================
+// INIT
+// ============================================================
+fetchData(false);
+</script>
+</body>
+</html>
