@@ -8,12 +8,6 @@
 #   - Schedule: a cada 30 min (para capturar mudanças na planilha)
 #   - Manual (workflow_dispatch)
 #
-# O que faz:
-#   1. Checkout do repositório
-#   2. Executa script.py para validar e cachear dados
-#   3. Commit automático de data.json e changes.log (se houver mudanças)
-#   4. Deploy para GitHub Pages
-#
 # Arquivos esperados no repositório:
 #   /
 #   ├── index.html          ← Página principal (SPA)
@@ -29,7 +23,6 @@ on:
   push:
     branches: [main]
   schedule:
-    # Executa a cada 30 minutos para detectar mudanças na planilha
     - cron: '*/30 * * * *'
   workflow_dispatch:
     inputs:
@@ -84,7 +77,6 @@ jobs:
           fi
 
       - name: Commit updated data
-        if: steps.check.outputs.has_changes == 'true'
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
