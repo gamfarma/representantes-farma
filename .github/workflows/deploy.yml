@@ -5,63 +5,62 @@ on:
     branches:
       - main
   schedule:
-    # Auto-refresh a cada 5 minutos via Actions (executa script.py para validar + registrar mudanças)
-    - cron: "*/5 * * * *"
+    # Auto-atualiza a cada hora para pegar mudanças da planilha
+    - cron: "0 * * * *"
   workflow_dispatch:
-    inputs:
-      reason:
-        description: "Motivo do deploy manual"
-        required: false
-        default: "Atualização manual"
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
 
 jobs:
-  build-and-deploy:
-    name: Validar dados e publicar site
+  deploy:
+    name: Build & Deploy
     runs-on: ubuntu-latest
-    timeout-minutes: 10
-
-    permissions:
-      contents: write
-      pages: write
-      id-token: write
 
     steps:
-      # 1. Checkout do repositório
+      # 1) Checkout do repositório
       - name: Checkout
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      # 2. Configura Python
-      - name: Configurar Python
+      # 2) Configurar Python
+      - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: "3.11"
 
-      # 3. Executa script.py (valida estrutura do Google Sheets + detecta mudanças)
-      - name: Executar script.py
+      # 3) Executar script.py (processa planilha e valida index.html)
+      - name: Run script.py
         run: python script.py
 
-      # 4. Commit do snapshot de dados (para rastrear mudanças)
-      - name: Commit snapshot de dados
+      # 4) Verificar se houve mudanças
+      - name: Check for changes
+        id: changes
+        run: |
+          git diff --quiet data.json index.html || echo "changed=true" >> $GITHUB_OUTPUT
+
+      # 5) Commit e push se houver mudanças
+      - name: Commit updated files
+        if: steps.changes.outputs.changed == 'true'
         run: |
           git config --global user.name  "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git add data_snapshot.json || true
-          git diff --staged --quiet || git commit -m "chore: atualiza snapshot de dados [$(date -u +%Y-%m-%dT%H:%M:%SZ)]"
-          git push || true
+          git add data.json index.html
+          git commit -m "chore: auto-update from Google Sheets [$(date -u +\'%Y-%m-%d %H:%M UTC\')]"
+          git push
 
-      # 5. Publica via GitHub Pages
-      - name: Deploy para GitHub Pages
-        uses: peaceiris/actions-gh-pages@v4
+      # 6) Deploy para GitHub Pages
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./
           publish_branch: gh-pages
-          # Arquivos a publicar
-          include_files: |
-            index.html
-          # Força atualização mesmo sem mudanças de conteúdo (cache-busting)
+          keep_files: false
           force_orphan: false
-          enable_jekyll: false
-          commit_message: "deploy: atualiza site [${{ github.run_number }}] — $(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          user_name: "github-actions[bot]"
+          user_email: "github-actions[bot]@users.noreply.github.com"
+          commit_message: "deploy: update from Google Sheets [$(date -u)"
