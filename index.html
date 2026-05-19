@@ -1,546 +1,853 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Rede de Representantes GAM Farma</title>
   <style>
-    :root {
-      --primary: #003087;
-      --primary-light: #1a4fad;
-      --accent: #e8213c;
-      --bg: #f4f6fb;
-      --card-bg: #fff;
-      --text: #1a1a2e;
-      --muted: #6b7280;
-      --border: #e2e8f0;
-      --shadow: 0 2px 12px rgba(0,48,135,0.10);
-      --radius: 12px;
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
     }
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: 'Segoe UI', Arial, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+      min-height: 100vh;
+      color: #2c3e50;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+    }
 
     /* HEADER */
     header {
-      background: linear-gradient(135deg, var(--primary) 0%, #001a5e 100%);
-      color: #fff;
-      padding: 20px 32px 16px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 30px 40px;
+      border-radius: 15px;
+      margin-bottom: 30px;
+      box-shadow: 0 8px 32px rgba(102, 126, 234, 0.3);
       display: flex;
       align-items: center;
       justify-content: space-between;
       flex-wrap: wrap;
-      gap: 12px;
+      gap: 20px;
     }
-    .header-logo { display: flex; align-items: center; gap: 18px; }
-    .header-logo img { height: 48px; object-fit: contain; }
-    .header-title h1 { font-size: 1.5rem; font-weight: 700; letter-spacing: -0.5px; }
-    .header-title p { font-size: 0.85rem; opacity: 0.7; margin-top: 2px; }
-    .header-meta { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
-    .update-info { font-size: 0.78rem; opacity: 0.7; }
-    .btn-refresh {
-      background: rgba(255,255,255,0.15);
-      border: 1.5px solid rgba(255,255,255,0.4);
-      color: #fff;
-      padding: 7px 16px;
-      border-radius: 8px;
-      cursor: pointer;
-      font-size: 0.82rem;
-      font-weight: 600;
-      transition: background 0.2s;
-      display: flex; align-items: center; gap: 6px;
-    }
-    .btn-refresh:hover { background: rgba(255,255,255,0.28); }
 
-    /* SEARCH & FILTERS */
-    .controls {
-      background: #fff;
-      border-bottom: 1px solid var(--border);
-      padding: 16px 32px;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-      align-items: center;
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-    }
-    .search-box {
+    .header-left {
       display: flex;
       align-items: center;
-      background: var(--bg);
-      border: 1.5px solid var(--border);
-      border-radius: 8px;
-      padding: 8px 14px;
-      gap: 8px;
+      gap: 20px;
       flex: 1;
-      min-width: 220px;
     }
-    .search-box input {
-      border: none;
-      background: transparent;
-      font-size: 0.9rem;
-      color: var(--text);
-      width: 100%;
-      outline: none;
-    }
-    .search-box svg { color: var(--muted); flex-shrink: 0; }
-    .filters { display: flex; gap: 10px; flex-wrap: wrap; }
-    .filters select {
-      border: 1.5px solid var(--border);
-      border-radius: 8px;
-      padding: 8px 12px;
-      font-size: 0.85rem;
-      color: var(--text);
-      background: var(--bg);
-      cursor: pointer;
-      outline: none;
-      min-width: 140px;
-    }
-    .btn-clear {
-      background: none;
-      border: 1.5px solid var(--accent);
-      color: var(--accent);
-      padding: 7px 14px;
-      border-radius: 8px;
-      cursor: pointer;
-      font-size: 0.82rem;
-      font-weight: 600;
-      transition: all 0.2s;
-      white-space: nowrap;
-    }
-    .btn-clear:hover { background: var(--accent); color: #fff; }
 
-    /* MAIN */
-    main { padding: 28px 32px; max-width: 1400px; margin: 0 auto; }
+    .header-logo img {
+      height: 60px;
+      object-fit: contain;
+      filter: brightness(0) invert(1);
+    }
 
-    /* STATUS BAR */
-    .status-bar {
+    .header-title h1 {
+      font-size: 28px;
+      font-weight: 700;
+      margin-bottom: 5px;
+      letter-spacing: -0.5px;
+    }
+
+    .header-title p {
+      font-size: 14px;
+      opacity: 0.85;
+    }
+
+    .header-right {
       display: flex;
-      gap: 16px;
+      align-items: center;
+      gap: 15px;
       flex-wrap: wrap;
-      margin-bottom: 24px;
     }
-    .stat-badge {
-      background: var(--card-bg);
-      border: 1px solid var(--border);
-      border-radius: 8px;
+
+    .update-info {
+      background: rgba(255, 255, 255, 0.15);
       padding: 8px 16px;
-      font-size: 0.82rem;
+      border-radius: 8px;
+      font-size: 12px;
+      backdrop-filter: blur(10px);
+    }
+
+    .btn-refresh {
+      background: rgba(255, 255, 255, 0.2);
+      border: 2px solid rgba(255, 255, 255, 0.4);
+      color: white;
+      padding: 10px 20px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-refresh:hover {
+      background: rgba(255, 255, 255, 0.3);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    }
+
+    /* TOOLBAR */
+    .toolbar {
+      background: white;
+      padding: 25px 30px;
+      border-radius: 15px;
+      margin-bottom: 30px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+      display: flex;
+      gap: 15px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .search-container {
+      flex: 1;
+      min-width: 300px;
+      position: relative;
+    }
+
+    .search-container input {
+      width: 100%;
+      padding: 12px 40px 12px 16px;
+      border: 2px solid #e0e6ed;
+      border-radius: 10px;
+      font-size: 14px;
+      transition: all 0.3s ease;
+      background: #f8f9fa;
+    }
+
+    .search-container input:focus {
+      outline: none;
+      border-color: #667eea;
+      background: white;
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+
+    .search-container svg {
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #999;
+      width: 18px;
+      height: 18px;
+    }
+
+    .filters {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .filters select {
+      padding: 10px 14px;
+      border: 2px solid #e0e6ed;
+      border-radius: 8px;
+      font-size: 13px;
+      background: white;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      min-width: 150px;
+    }
+
+    .filters select:focus {
+      outline: none;
+      border-color: #667eea;
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+
+    .btn-clear {
+      padding: 10px 18px;
+      background: #ff6b6b;
+      border: none;
+      border-radius: 8px;
+      color: white;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
       display: flex;
       align-items: center;
       gap: 6px;
-      box-shadow: var(--shadow);
     }
-    .stat-badge strong { color: var(--primary); font-size: 1rem; }
+
+    .btn-clear:hover {
+      background: #ff5252;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(255, 107, 107, 0.3);
+    }
+
+    /* MAIN CONTENT */
+    main {
+      min-height: 400px;
+    }
+
+    .loading-state, .error-state {
+      text-align: center;
+      padding: 80px 40px;
+      background: white;
+      border-radius: 15px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+      display: none;
+    }
+
+    .loading-state.visible, .error-state.visible {
+      display: block;
+    }
+
+    .spinner {
+      width: 50px;
+      height: 50px;
+      border: 4px solid #e0e6ed;
+      border-top: 4px solid #667eea;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 20px;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .loading-state p {
+      font-size: 16px;
+      color: #7f8c8d;
+    }
+
+    .error-state {
+      display: none;
+    }
+
+    .error-state.visible {
+      display: block;
+    }
+
+    .error-icon {
+      font-size: 48px;
+      margin-bottom: 15px;
+    }
+
+    .error-title {
+      font-size: 20px;
+      font-weight: 600;
+      margin-bottom: 10px;
+      color: #e74c3c;
+    }
+
+    .error-description {
+      font-size: 14px;
+      color: #7f8c8d;
+      margin-bottom: 20px;
+    }
+
+    /* STATS BAR */
+    .stats-bar {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 15px;
+      margin-bottom: 30px;
+    }
+
+    .stat-card {
+      background: white;
+      padding: 20px 25px;
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+      border-left: 4px solid #667eea;
+    }
+
+    .stat-label {
+      font-size: 12px;
+      color: #7f8c8d;
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      font-weight: 600;
+    }
+
+    .stat-value {
+      font-size: 28px;
+      font-weight: 700;
+      color: #667eea;
+    }
 
     /* SECTION TITLE */
     .section-title {
-      font-size: 1rem;
+      font-size: 18px;
       font-weight: 700;
-      color: var(--primary);
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      margin: 28px 0 16px;
-      padding-bottom: 8px;
-      border-bottom: 2px solid var(--primary);
+      color: #2c3e50;
+      margin: 40px 0 20px;
+      padding-bottom: 10px;
+      border-bottom: 3px solid #667eea;
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 10px;
     }
 
-    /* STATE GRID */
+    .section-title.hidden {
+      display: none;
+    }
+
+    /* STATES GRID */
     .states-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-      gap: 16px;
-      margin-bottom: 12px;
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: 15px;
+      margin-bottom: 20px;
     }
+
     .state-card {
-      background: var(--card-bg);
-      border: 2px solid var(--border);
-      border-radius: var(--radius);
-      padding: 20px 16px 16px;
-      cursor: pointer;
+      background: white;
+      border: 3px solid #e0e6ed;
+      border-radius: 12px;
+      padding: 20px 15px;
       text-align: center;
-      transition: all 0.22s ease;
-      box-shadow: var(--shadow);
-      position: relative;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
     }
+
     .state-card:hover {
-      border-color: var(--primary-light);
-      transform: translateY(-3px);
-      box-shadow: 0 6px 20px rgba(0,48,135,0.18);
+      border-color: #667eea;
+      transform: translateY(-5px);
+      box-shadow: 0 8px 25px rgba(102, 126, 234, 0.25);
     }
+
     .state-card.active {
-      border-color: var(--primary);
-      background: linear-gradient(135deg, #e8eeff 0%, #f4f6ff 100%);
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border-color: #667eea;
+      color: white;
     }
-    .state-card.division-card { border-color: #f59e0b; }
-    .state-card.division-card:hover { border-color: #d97706; }
-    .state-card.division-card.active { background: linear-gradient(135deg, #fef3c7 0%, #fffbeb 100%); border-color: #d97706; }
-    .state-card .state-sigla {
-      font-size: 2rem;
+
+    .state-card.division-card {
+      border-color: #f39c12;
+    }
+
+    .state-card.division-card:hover {
+      border-color: #e67e22;
+      box-shadow: 0 8px 25px rgba(243, 156, 18, 0.25);
+    }
+
+    .state-card.division-card.active {
+      background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);
+      border-color: #f39c12;
+      color: white;
+    }
+
+    .state-sigla {
+      font-size: 32px;
       font-weight: 800;
-      color: var(--primary);
       line-height: 1;
-      margin-bottom: 6px;
+      margin-bottom: 8px;
     }
-    .state-card.division-card .state-sigla { color: #92400e; }
-    .state-card .state-name { font-size: 0.72rem; color: var(--muted); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px; }
+
+    .state-name {
+      font-size: 11px;
+      opacity: 0.6;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 8px;
+    }
+
     .state-badge {
-      background: var(--primary);
-      color: #fff;
-      border-radius: 20px;
-      font-size: 0.7rem;
-      padding: 2px 10px;
+      background: rgba(102, 126, 234, 0.15);
+      color: #667eea;
+      border-radius: 15px;
+      padding: 3px 12px;
+      font-size: 11px;
       font-weight: 600;
       display: inline-block;
     }
-    .state-card.division-card .state-badge { background: #92400e; }
 
-    /* COORDINATOR PANEL */
+    .state-card.active .state-badge {
+      background: rgba(255, 255, 255, 0.3);
+      color: white;
+    }
+
+    /* PANEL */
     .coord-panel {
-      background: var(--card-bg);
-      border: 1.5px solid var(--border);
-      border-radius: var(--radius);
-      margin: 8px 0 28px;
+      background: white;
+      border-radius: 15px;
+      margin-bottom: 30px;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
       overflow: hidden;
-      box-shadow: var(--shadow);
       display: none;
     }
-    .coord-panel.visible { display: block; }
-    .coord-panel-header {
-      background: linear-gradient(90deg, var(--primary) 0%, var(--primary-light) 100%);
-      color: #fff;
-      padding: 14px 20px;
+
+    .coord-panel.visible {
+      display: block;
+      animation: slideDown 0.3s ease;
+    }
+
+    @keyframes slideDown {
+      from {
+        opacity: 0;
+        transform: translateY(-10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .panel-header {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 20px 30px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      flex-wrap: wrap;
-      gap: 8px;
+      gap: 15px;
     }
-    .coord-panel-header h3 { font-size: 1rem; font-weight: 700; }
-    .coord-panel-close {
-      background: rgba(255,255,255,0.15);
+
+    .panel-header-content h3 {
+      font-size: 18px;
+      margin-bottom: 5px;
+    }
+
+    .panel-header-content p {
+      font-size: 12px;
+      opacity: 0.85;
+    }
+
+    .btn-close {
+      background: rgba(255, 255, 255, 0.2);
       border: none;
-      color: #fff;
-      width: 28px;
-      height: 28px;
-      border-radius: 50%;
+      color: white;
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
       cursor: pointer;
-      font-size: 1rem;
-      display: flex; align-items: center; justify-content: center;
+      font-size: 20px;
+      flex-shrink: 0;
+      transition: all 0.3s ease;
     }
-    .coord-list { padding: 16px; display: flex; flex-direction: column; gap: 16px; }
+
+    .btn-close:hover {
+      background: rgba(255, 255, 255, 0.3);
+      transform: rotate(90deg);
+    }
+
+    .panel-content {
+      padding: 30px;
+      display: flex;
+      flex-direction: column;
+      gap: 25px;
+    }
 
     /* COORDINATOR CARD */
-    .coord-card {
-      border: 1.5px solid var(--border);
-      border-radius: var(--radius);
+    .coordinator-card {
+      border: 2px solid #e0e6ed;
+      border-radius: 12px;
       overflow: hidden;
-      transition: box-shadow 0.2s;
+      transition: all 0.3s ease;
     }
-    .coord-card:hover { box-shadow: 0 4px 16px rgba(0,48,135,0.12); }
-    .coord-card-header {
-      background: linear-gradient(90deg, #e8eeff 0%, #f4f6ff 100%);
-      border-bottom: 1.5px solid var(--border);
-      padding: 14px 18px;
+
+    .coordinator-card:hover {
+      border-color: #667eea;
+      box-shadow: 0 8px 20px rgba(102, 126, 234, 0.15);
+    }
+
+    .coordinator-header {
+      background: linear-gradient(135deg, #f5f7fa 0%, #e0e6ed 100%);
+      padding: 20px;
       cursor: pointer;
       display: flex;
       align-items: flex-start;
       justify-content: space-between;
-      gap: 12px;
+      gap: 15px;
     }
-    .coord-card-header .coord-region-label {
-      font-size: 1.05rem;
-      font-weight: 800;
-      color: var(--primary);
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      margin-bottom: 4px;
-    }
-    .coord-card-header .coord-name {
-      font-size: 0.92rem;
-      font-weight: 600;
-      color: var(--text);
-    }
-    .coord-card-header .coord-meta {
-      display: flex;
-      gap: 14px;
-      flex-wrap: wrap;
-      margin-top: 6px;
-    }
-    .coord-meta-item {
-      display: flex;
-      align-items: center;
-      gap: 4px;
-      font-size: 0.78rem;
-      color: var(--muted);
-    }
-    .coord-meta-item a { color: var(--primary); text-decoration: none; }
-    .coord-meta-item a:hover { text-decoration: underline; }
-    .coord-expand-btn {
-      background: var(--primary);
-      color: #fff;
-      border: none;
-      border-radius: 8px;
-      padding: 6px 14px;
-      cursor: pointer;
-      font-size: 0.78rem;
-      font-weight: 600;
-      white-space: nowrap;
-      flex-shrink: 0;
-      transition: background 0.2s;
-    }
-    .coord-expand-btn:hover { background: var(--primary-light); }
-    .coord-func-badge {
-      font-size: 0.7rem;
-      padding: 2px 10px;
-      border-radius: 20px;
-      font-weight: 600;
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      margin-bottom: 4px;
-    }
-    .badge-coord { background: #dbeafe; color: #1e40af; }
-    .badge-gerente { background: #d1fae5; color: #065f46; }
-    .badge-coord-contas { background: #fef3c7; color: #92400e; }
-    .badge-gpe { background: #ede9fe; color: #5b21b6; }
-    .badge-dedicado { background: #fce7f3; color: #9d174d; }
-    .badge-rep { background: #dcfce7; color: #166534; }
-    .badge-consult { background: #e0f2fe; color: #0369a1; }
-    .badge-tlv { background: #fef9c3; color: #713f12; }
 
-    /* TEAM LIST */
-    .team-section { display: none; }
-    .team-section.visible { display: block; }
-    .team-header {
-      background: var(--primary);
-      color: #fff;
-      padding: 10px 18px;
-      font-size: 0.82rem;
-      font-weight: 600;
-      display: flex;
-      align-items: center;
-      gap: 8px;
+    .coordinator-info {
+      flex: 1;
     }
-    .team-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
-      gap: 12px;
-      padding: 14px;
-    }
-    .member-card {
-      background: var(--bg);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 14px;
-      transition: box-shadow 0.18s;
-    }
-    .member-card:hover { box-shadow: 0 3px 12px rgba(0,48,135,0.10); }
-    .member-region {
-      font-size: 0.95rem;
-      font-weight: 800;
-      color: var(--primary);
+
+    .coordinator-region {
+      font-size: 12px;
+      color: #667eea;
+      font-weight: 700;
       text-transform: uppercase;
-      margin-bottom: 6px;
-      letter-spacing: 0.3px;
+      letter-spacing: 1px;
+      margin-bottom: 5px;
     }
-    .member-name { font-size: 0.9rem; font-weight: 600; margin-bottom: 4px; }
-    .member-razao { font-size: 0.75rem; color: var(--muted); font-style: italic; margin-bottom: 6px; }
-    .member-contacts { display: flex; flex-direction: column; gap: 4px; margin-bottom: 8px; }
-    .member-contact-item {
+
+    .coordinator-name {
+      font-size: 16px;
+      font-weight: 700;
+      color: #2c3e50;
+      margin-bottom: 10px;
+    }
+
+    .coordinator-meta {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+      font-size: 13px;
+      color: #7f8c8d;
+    }
+
+    .meta-item {
       display: flex;
       align-items: center;
       gap: 6px;
-      font-size: 0.78rem;
-      color: var(--muted);
     }
-    .member-contact-item a { color: var(--primary); text-decoration: none; }
-    .member-contact-item a:hover { text-decoration: underline; }
-    .btn-cities {
-      background: none;
-      border: 1.5px solid var(--primary);
-      color: var(--primary);
-      border-radius: 7px;
+
+    .meta-item a {
+      color: #667eea;
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .meta-item a:hover {
+      text-decoration: underline;
+    }
+
+    .badge {
+      display: inline-block;
+      background: #667eea;
+      color: white;
       padding: 4px 12px;
-      font-size: 0.75rem;
+      border-radius: 15px;
+      font-size: 11px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .badge-gerente {
+      background: #27ae60;
+    }
+
+    .badge-coord-contas {
+      background: #f39c12;
+    }
+
+    .badge-dedicado {
+      background: #e74c3c;
+    }
+
+    .badge-rep {
+      background: #9b59b6;
+    }
+
+    .badge-consultor {
+      background: #3498db;
+    }
+
+    .team-toggle-btn {
+      background: #667eea;
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .team-toggle-btn:hover {
+      background: #764ba2;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+    }
+
+    /* TEAM SECTION */
+    .team-section {
+      display: none;
+      background: #f8f9fa;
+      border-top: 2px solid #e0e6ed;
+    }
+
+    .team-section.visible {
+      display: block;
+    }
+
+    .team-header {
+      background: #667eea;
+      color: white;
+      padding: 12px 20px;
+      font-size: 13px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .team-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 15px;
+      padding: 20px;
+    }
+
+    /* MEMBER CARD */
+    .member-card {
+      background: white;
+      border: 1px solid #e0e6ed;
+      border-radius: 10px;
+      padding: 16px;
+      transition: all 0.3s ease;
+    }
+
+    .member-card:hover {
+      border-color: #667eea;
+      box-shadow: 0 6px 15px rgba(102, 126, 234, 0.15);
+    }
+
+    .member-region {
+      font-size: 12px;
+      color: #667eea;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 6px;
+    }
+
+    .member-name {
+      font-size: 14px;
+      font-weight: 700;
+      color: #2c3e50;
+      margin-bottom: 6px;
+    }
+
+    .member-razao {
+      font-size: 12px;
+      color: #7f8c8d;
+      font-style: italic;
+      margin-bottom: 8px;
+      padding: 6px;
+      background: #f8f9fa;
+      border-radius: 5px;
+    }
+
+    .member-contacts {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      font-size: 12px;
+      margin-bottom: 10px;
+    }
+
+    .member-contact {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #7f8c8d;
+    }
+
+    .member-contact a {
+      color: #667eea;
+      text-decoration: none;
+    }
+
+    .member-contact a:hover {
+      text-decoration: underline;
+    }
+
+    .cities-btn {
+      background: none;
+      border: 2px solid #667eea;
+      color: #667eea;
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 11px;
       font-weight: 600;
       cursor: pointer;
-      transition: all 0.18s;
-      margin-top: 4px;
+      transition: all 0.3s ease;
+      margin-top: 8px;
     }
-    .btn-cities:hover { background: var(--primary); color: #fff; }
+
+    .cities-btn:hover {
+      background: #667eea;
+      color: white;
+    }
+
     .cities-list {
       display: none;
       margin-top: 8px;
-      padding: 10px 12px;
-      background: #fff;
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      font-size: 0.76rem;
-      color: var(--muted);
-      line-height: 1.7;
+      padding: 10px;
+      background: white;
+      border: 1px solid #e0e6ed;
+      border-radius: 6px;
+      font-size: 12px;
+      color: #7f8c8d;
+      line-height: 1.6;
     }
-    .cities-list.visible { display: block; }
 
-    /* INDIVIDUAL (Gerente/Coord Contas) */
+    .cities-list.visible {
+      display: block;
+    }
+
+    /* INDIVIDUAL CARD */
+    .individual-card {
+      background: white;
+      border: 2px solid #e0e6ed;
+      border-radius: 12px;
+      padding: 20px;
+      transition: all 0.3s ease;
+    }
+
+    .individual-card:hover {
+      border-color: #667eea;
+      box-shadow: 0 8px 20px rgba(102, 126, 234, 0.15);
+    }
+
     .individual-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-      gap: 14px;
+      gap: 15px;
     }
-    .individual-card {
-      background: var(--card-bg);
-      border: 1.5px solid var(--border);
-      border-radius: var(--radius);
-      padding: 16px;
-      box-shadow: var(--shadow);
-      transition: box-shadow 0.2s;
-    }
-    .individual-card:hover { box-shadow: 0 6px 20px rgba(0,48,135,0.12); }
-    .individual-region {
-      font-size: 1.1rem;
-      font-weight: 800;
-      color: var(--primary);
-      text-transform: uppercase;
-      margin-bottom: 8px;
-    }
-    .individual-name { font-size: 0.95rem; font-weight: 600; margin-bottom: 4px; }
-    .individual-contacts { display: flex; flex-direction: column; gap: 5px; margin-top: 8px; }
 
-    /* PROJETOS ESPECIAIS */
-    .pe-card {
-      background: linear-gradient(135deg, #ede9fe 0%, #f5f3ff 100%);
-      border: 2px solid #c4b5fd;
-      border-radius: var(--radius);
-      padding: 18px;
-      box-shadow: var(--shadow);
-    }
-    .pe-header {
-      display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      gap: 12px;
-      margin-bottom: 16px;
-      padding-bottom: 12px;
-      border-bottom: 1px solid #c4b5fd;
-      cursor: pointer;
-    }
-    .pe-region { font-size: 1.15rem; font-weight: 800; color: #5b21b6; text-transform: uppercase; margin-bottom: 4px; }
-    .pe-name { font-size: 0.95rem; font-weight: 600; color: var(--text); }
-
-    /* LOADING / ERROR */
-    .loading-state, .error-state {
+    .empty-state {
       text-align: center;
-      padding: 60px 24px;
+      padding: 60px 40px;
+      background: white;
+      border-radius: 15px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
       display: none;
     }
-    .loading-state.visible, .error-state.visible { display: block; }
-    .spinner {
-      width: 40px; height: 40px;
-      border: 4px solid var(--border);
-      border-top-color: var(--primary);
-      border-radius: 50%;
-      animation: spin 0.8s linear infinite;
-      margin: 0 auto 16px;
-    }
-    @keyframes spin { to { transform: rotate(360deg); } }
-    .empty-state { text-align: center; padding: 48px 24px; color: var(--muted); }
 
-    @media (max-width: 600px) {
-      main { padding: 16px; }
-      .controls { padding: 12px 16px; }
-      header { padding: 14px 16px; }
-      .states-grid { grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); }
+    .empty-state.visible {
+      display: block;
+    }
+
+    .empty-state-icon {
+      font-size: 48px;
+      margin-bottom: 15px;
+    }
+
+    .empty-state-text {
+      font-size: 14px;
+      color: #7f8c8d;
+    }
+
+    @media (max-width: 768px) {
+      .toolbar {
+        flex-direction: column;
+      }
+
+      .search-container {
+        min-width: 100%;
+      }
+
+      .states-grid {
+        grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+      }
+
+      .header {
+        flex-direction: column;
+        text-align: center;
+      }
+
+      .team-grid {
+        grid-template-columns: 1fr;
+      }
     }
   </style>
 </head>
 <body>
 
-<header>
-  <div class="header-logo">
-    <img src="https://raw.githubusercontent.com/gamfarma/imagem-site/2091104c3fa6efcc97594176ed36b38218ffa0f2/Logo%20GAM%20Nova%20Branca.png"
-         alt="GAM Farma" onerror="this.style.display='none'"/>
-    <div class="header-title">
-      <h1>Rede de Representantes</h1>
-      <p>Diretório comercial interativo</p>
+<div class="container">
+
+  <header>
+    <div class="header-left">
+      <div class="header-logo">
+        <img src="https://raw.githubusercontent.com/gamfarma/imagem-site/2091104c3fa6efcc97594176ed36b38218ffa0f2/Logo%20GAM%20Nova%20Branca.png" alt="GAM Farma">
+      </div>
+      <div class="header-title">
+        <h1>Rede de Representantes</h1>
+        <p>Diretório comercial interativo</p>
+      </div>
+    </div>
+    <div class="header-right">
+      <span class="update-info" id="updateInfo">Carregando...</span>
+      <button class="btn-refresh" onclick="forceRefresh()">
+        🔄 Atualizar
+      </button>
+    </div>
+  </header>
+
+  <div class="toolbar">
+    <div class="search-container">
+      <input type="text" id="searchInput" placeholder="🔍 Buscar por nome, região ou cidade..." oninput="applyFilters()">
+    </div>
+    <div class="filters">
+      <select id="filterUF" onchange="applyFilters()">
+        <option value="">Todos os estados</option>
+      </select>
+      <select id="filterFunc" onchange="applyFilters()">
+        <option value="">Todas as funções</option>
+        <option value="COORDENADOR_EQUIPE">Coordenador de Equipe</option>
+        <option value="REPRESENTANTE_COMERCIAL">Representante Comercial</option>
+        <option value="CONSULTOR_VENDAS">Consultor de Vendas</option>
+        <option value="GERENTE_CONTAS">Gerente de Contas</option>
+        <option value="COORDENADOR_CONTAS">Coord. Médias Redes</option>
+        <option value="GERENTE_PROJETOS_ESPECIAIS">Gerente Proj. Especiais</option>
+        <option value="DEDICADO">Dedicados</option>
+      </select>
+      <select id="filterRegiao" onchange="applyFilters()">
+        <option value="">Todas as regiões</option>
+      </select>
+      <button class="btn-clear" onclick="clearFilters()">✕ Limpar</button>
     </div>
   </div>
-  <div class="header-meta">
-    <span class="update-info" id="updateInfo">Carregando...</span>
-    <button class="btn-refresh" onclick="forceRefresh()">🔄 Atualizar</button>
-  </div>
-</header>
 
-<div class="controls">
-  <div class="search-box">
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-      <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
-    </svg>
-    <input type="text" id="searchInput" placeholder="Buscar por nome, região ou cidade..." oninput="applyFilters()"/>
-  </div>
-  <div class="filters">
-    <select id="filterUF" onchange="applyFilters()"><option value="">Todos os estados</option></select>
-    <select id="filterFunc" onchange="applyFilters()">
-      <option value="">Todas as funções</option>
-      <option value="COORDENADOR_EQUIPE">Coordenador de Equipe</option>
-      <option value="REPRESENTANTE_COMERCIAL">Representante Comercial</option>
-      <option value="CONSULTOR_VENDAS">Consultor de Vendas</option>
-      <option value="GERENTE_CONTAS">Gerente de Contas</option>
-      <option value="COORDENADOR_CONTAS">Coord. Médias Redes</option>
-      <option value="GERENTE_PROJETOS_ESPECIAIS">Gerente Proj. Especiais</option>
-      <option value="DEDICADO">Dedicados</option>
-    </select>
-    <select id="filterRegiao" onchange="applyFilters()"><option value="">Todas as regiões</option></select>
-    <button class="btn-clear" onclick="clearFilters()">✕ Limpar</button>
-  </div>
+  <main>
+    <div class="loading-state visible" id="loadingState">
+      <div class="spinner"></div>
+      <p>Carregando dados da planilha…</p>
+    </div>
+
+    <div class="error-state" id="errorState">
+      <div class="error-icon">⚠️</div>
+      <div class="error-title">Erro ao carregar dados</div>
+      <div class="error-description">Não foi possível carregar os dados. Tente novamente.</div>
+      <button class="btn-refresh" onclick="forceRefresh()">Tentar novamente</button>
+    </div>
+
+    <div id="appContent" style="display: none;">
+      <div class="stats-bar" id="statsBar"></div>
+
+      <div class="section-title" id="statesSectionTitle">📍 Estados</div>
+      <div class="states-grid" id="statesGrid"></div>
+      <div id="statesPanels"></div>
+
+      <div class="section-title hidden" id="divSectionTitle">🗂️ Divisões Especiais</div>
+      <div class="states-grid" id="divisionsGrid"></div>
+      <div id="divisionsPanels"></div>
+
+      <div class="section-title hidden" id="gcSectionTitle">🏢 Gerentes de Contas</div>
+      <div class="individual-grid" id="gerentesGrid"></div>
+
+      <div class="section-title hidden" id="ccSectionTitle">🔗 Coordenadores de Contas – Médias Redes</div>
+      <div class="individual-grid" id="coordContasGrid"></div>
+
+      <div class="section-title hidden" id="peSectionTitle">⭐ Projetos Especiais</div>
+      <div id="projetosGrid"></div>
+
+      <div class="empty-state" id="emptyState">
+        <div class="empty-state-icon">🔍</div>
+        <div class="empty-state-text">Nenhum resultado encontrado para sua busca.</div>
+      </div>
+    </div>
+  </main>
+
 </div>
-
-<main>
-  <div class="loading-state visible" id="loadingState">
-    <div class="spinner"></div>
-    <p>Carregando dados da planilha…</p>
-  </div>
-  <div class="error-state" id="errorState">
-    <p style="font-size:2rem">⚠️</p>
-    <p style="font-weight:600;margin:8px 0">Erro ao carregar dados</p>
-    <button class="btn-refresh" onclick="forceRefresh()" style="margin:0 auto;display:inline-flex">Tentar novamente</button>
-  </div>
-  <div id="appContent" style="display:none">
-    <div class="status-bar" id="statusBar"></div>
-
-    <!-- ESTADOS NORMAIS -->
-    <div class="section-title">📍 Estados</div>
-    <div class="states-grid" id="statesGrid"></div>
-    <div id="statesPanels"></div>
-
-    <!-- DIVISÕES ESPECIAIS (TLV / EXPANSÃO) -->
-    <div class="section-title" id="divSectionTitle" style="display:none">🗂️ Divisões Especiais</div>
-    <div class="states-grid" id="divisionsGrid"></div>
-    <div id="divisionsPanels"></div>
-
-    <!-- GERENTES DE CONTAS -->
-    <div class="section-title" id="gcSectionTitle" style="display:none">🏢 Gerentes de Contas</div>
-    <div class="individual-grid" id="gerentesGrid"></div>
-
-    <!-- COORDENADORES DE CONTAS MÉDIAS REDES -->
-    <div class="section-title" id="ccSectionTitle" style="display:none">🔗 Coordenadores de Contas – Médias Redes</div>
-    <div class="individual-grid" id="coordContasGrid"></div>
-
-    <!-- PROJETOS ESPECIAIS -->
-    <div class="section-title" id="peSectionTitle" style="display:none">⭐ Projetos Especiais</div>
-    <div id="projetosGrid"></div>
-
-    <div class="empty-state" id="emptyState" style="display:none">
-      <p style="font-size:2rem">🔍</p>
-      <p>Nenhum resultado encontrado para sua busca.</p>
-    </div>
-  </div>
-</main>
 
 <script>
 const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQJRPejEYUGjqFiruPTGJuS2Itk6qjvyk6moB4_ChCe5_z4_CW0jYcYXJFimYYw4kGcbP2fpdRccLkq/pub?output=csv";
@@ -549,619 +856,739 @@ let REFRESH_TIMER = null;
 const REFRESH_INTERVAL = 5 * 60 * 1000;
 
 const STATE_NAMES = {
-  SC:'Santa Catarina',RS:'Rio Grande do Sul',PR:'Paraná',SP:'São Paulo',
-  MS:'Mato Grosso do Sul',MT:'Mato Grosso',GO:'Goiás',DF:'Distrito Federal',
-  MG:'Minas Gerais',RJ:'Rio de Janeiro',BA:'Bahia',ES:'Espírito Santo',
-  TLV:'Televendas',EXPANSÃO:'Expansão'
+  SC: 'Santa Catarina', RS: 'Rio Grande do Sul', PR: 'Paraná', SP: 'São Paulo',
+  MS: 'Mato Grosso do Sul', MT: 'Mato Grosso', GO: 'Goiás', DF: 'Distrito Federal',
+  MG: 'Minas Gerais', RJ: 'Rio de Janeiro', BA: 'Bahia', ES: 'Espírito Santo'
 };
 
-function getBadgeClass(cat){
+function getBadgeClass(cat) {
   const m = {
-    COORDENADOR_EQUIPE:'badge-coord',GERENTE_CONTAS:'badge-gerente',
-    COORDENADOR_CONTAS:'badge-coord-contas',GERENTE_PROJETOS_ESPECIAIS:'badge-gpe',
-    DEDICADO:'badge-dedicado',REPRESENTANTE_COMERCIAL:'badge-rep',
-    CONSULTOR_VENDAS:'badge-consult',OUTRO:'badge-consult'
+    COORDENADOR_EQUIPE: 'badge',
+    GERENTE_CONTAS: 'badge-gerente',
+    COORDENADOR_CONTAS: 'badge-coord-contas',
+    GERENTE_PROJETOS_ESPECIAIS: 'badge-dedicado',
+    DEDICADO: 'badge-dedicado',
+    REPRESENTANTE_COMERCIAL: 'badge-rep',
+    CONSULTOR_VENDAS: 'badge-consultor'
   };
-  return m[cat]||'badge-consult';
-}
-function getFuncLabel(cat){
-  const m = {
-    COORDENADOR_EQUIPE:'Coord. Equipe',GERENTE_CONTAS:'Gerente de Contas',
-    COORDENADOR_CONTAS:'Coord. Médias Redes',GERENTE_PROJETOS_ESPECIAIS:'Ger. Proj. Especiais',
-    DEDICADO:'Dedicado',REPRESENTANTE_COMERCIAL:'Rep. Comercial',
-    CONSULTOR_VENDAS:'Consultor de Vendas',OUTRO:'Outro'
-  };
-  return m[cat]||cat;
-}
-function classifyFunc(funcao){
-  const f=funcao.toUpperCase().trim();
-  if(f.includes('COORDENADOR EQUIPE')||f.includes('COORDENADOR DE EQUIPE'))return'COORDENADOR_EQUIPE';
-  if(f.includes('CONSULTOR DE VENDAS'))return'CONSULTOR_VENDAS';
-  if(f.includes('REPRESENTANTE COMERCIAL'))return'REPRESENTANTE_COMERCIAL';
-  if(f.includes('GERENTE DE CONTAS'))return'GERENTE_CONTAS';
-  if(f.includes('COORDENADOR DE CONTAS')||f.includes('MÉDIAS REDES')||f.includes('MEDIAS REDES'))return'COORDENADOR_CONTAS';
-  if(f.includes('GERENTE DE PROJETOS ESPECIAIS'))return'GERENTE_PROJETOS_ESPECIAIS';
-  if(f.includes('DEDICADO'))return'DEDICADO';
-  return'OUTRO';
+  return m[cat] || 'badge-consultor';
 }
 
-function contactLink(tel){
-  if(!tel||tel==='-')return'—';
-  const clean=tel.replace(/\D/g,'');
+function getFuncLabel(cat) {
+  const m = {
+    COORDENADOR_EQUIPE: 'Coord. Equipe',
+    GERENTE_CONTAS: 'Gerente de Contas',
+    COORDENADOR_CONTAS: 'Coord. Médias Redes',
+    GERENTE_PROJETOS_ESPECIAIS: 'Ger. Proj. Especiais',
+    DEDICADO: 'Dedicado',
+    REPRESENTANTE_COMERCIAL: 'Rep. Comercial',
+    CONSULTOR_VENDAS: 'Consultor de Vendas'
+  };
+  return m[cat] || cat;
+}
+
+function classifyFunc(funcao) {
+  const f = funcao.toUpperCase().trim();
+  if (f.includes('COORDENADOR EQUIPE') || f.includes('COORDENADOR DE EQUIPE')) return 'COORDENADOR_EQUIPE';
+  if (f.includes('CONSULTOR DE VENDAS')) return 'CONSULTOR_VENDAS';
+  if (f.includes('REPRESENTANTE COMERCIAL')) return 'REPRESENTANTE_COMERCIAL';
+  if (f.includes('GERENTE DE CONTAS')) return 'GERENTE_CONTAS';
+  if (f.includes('COORDENADOR DE CONTAS') || f.includes('MÉDIAS REDES') || f.includes('MEDIAS REDES')) return 'COORDENADOR_CONTAS';
+  if (f.includes('GERENTE DE PROJETOS ESPECIAIS')) return 'GERENTE_PROJETOS_ESPECIAIS';
+  if (f.includes('DEDICADO')) return 'DEDICADO';
+  return 'OUTRO';
+}
+
+function contactLink(tel) {
+  if (!tel || tel === '-') return '—';
+  const clean = tel.replace(/\D/g, '');
   return `<a href="tel:+55${clean}">${tel}</a>`;
 }
-function emailLink(email){
-  if(!email||email==='-')return'—';
+
+function emailLink(email) {
+  if (!email || email === '-') return '—';
   return `<a href="mailto:${email}">${email}</a>`;
 }
 
-// ─── PARSE CSV ───────────────────────────────────────────────
-function parseCSV(text){
-  const lines=text.split('\n');
-  let headerIdx=-1;
-  let updateDate='';
-  for(let i=0;i<lines.length;i++){
-    const up=lines[i].toUpperCase();
-    if(up.includes('DISTRITO')&&(up.includes('NOME')||up.includes('REPRESENTANTE'))){headerIdx=i;break;}
-    const dm=lines[i].match(/\d{2}\/\d{2}\/\d{4}/);
-    if(dm)updateDate=dm[0];
-  }
-  if(headerIdx===-1)throw new Error('Cabeçalho não encontrado');
+// ─── PARSE CSV ─────────────────────────────────────────────────
+function parseCSV(text) {
+  const lines = text.split('\n');
+  let headerIdx = -1;
+  let updateDate = '';
 
-  function parseRow(line){
-    const res=[];let cur='';let inQ=false;
-    for(let i=0;i<line.length;i++){
-      const c=line[i];
-      if(c==='"'){inQ=!inQ;}
-      else if(c===','&&!inQ){res.push(cur.trim());cur='';}
-      else{cur+=c;}
+  for (let i = 0; i < lines.length; i++) {
+    const up = lines[i].toUpperCase();
+    if (up.includes('DISTRITO') && (up.includes('NOME') || up.includes('REPRESENTANTE'))) {
+      headerIdx = i;
+      break;
+    }
+    const dm = lines[i].match(/\d{2}\/\d{2}\/\d{4}/);
+    if (dm) updateDate = dm[0];
+  }
+
+  if (headerIdx === -1) throw new Error('Cabeçalho não encontrado');
+
+  function parseRow(line) {
+    const res = [];
+    let cur = '';
+    let inQ = false;
+    for (let i = 0; i < line.length; i++) {
+      const c = line[i];
+      if (c === '"') {
+        inQ = !inQ;
+      } else if (c === ',' && !inQ) {
+        res.push(cur.trim());
+        cur = '';
+      } else {
+        cur += c;
+      }
     }
     res.push(cur.trim());
     return res;
   }
 
-  const rawHeaders=parseRow(lines[headerIdx]);
-  const headers=rawHeaders.map(h=>h.replace(/['"]/g,'').trim().toUpperCase()
-    .replace('COORPORATIVO','CORPORATIVO').replace('COODENADOR','COORDENADOR')
-    .normalize('NFD').replace(/[\u0300-\u036f]/g,''));
+  const rawHeaders = parseRow(lines[headerIdx]);
+  const headers = rawHeaders.map(h =>
+    h.replace(/['"]/g, '').trim().toUpperCase()
+      .replace('COORPORATIVO', 'CORPORATIVO')
+      .replace('COODENADOR', 'COORDENADOR')
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+  );
 
-  const colMap={};
-  headers.forEach((h,i)=>{
-    if(h.includes('DISTRITO')&&!h.includes('SETOR'))colMap.DISTRITO=i;
-    else if(h==='SETOR')colMap.SETOR=i;
-    else if(h.includes('REGI')&&!h.includes('COORD'))colMap.REGIAO=i;
-    else if(h==='UF')colMap.UF=i;
-    else if(h.includes('PRINCIPAIS')||h.includes('CIDADES'))colMap.CIDADES=i;
-    else if(h.includes('FUNC'))colMap.FUNCAO=i;
-    else if(h.includes('NOME')&&!h.includes('RAZAO'))colMap.NOME=i;
-    else if(h.includes('RAZAO')||h.includes('SOCIAL'))colMap.RAZAO_SOCIAL=i;
-    else if(h.includes('CONTATO'))colMap.CONTATO=i;
-    else if(h.includes('EMAIL')&&!h.includes('COORD'))colMap.EMAIL=i;
-    else if(h.includes('COORDENADOR')||h.includes('COODENADOR'))colMap.COORDENADOR_COL=i;
+  const colMap = {};
+  headers.forEach((h, i) => {
+    if (h.includes('DISTRITO') && !h.includes('SETOR')) colMap.DISTRITO = i;
+    else if (h === 'SETOR') colMap.SETOR = i;
+    else if (h.includes('REGI') && !h.includes('COORD')) colMap.REGIAO = i;
+    else if (h === 'UF') colMap.UF = i;
+    else if (h.includes('PRINCIPAIS') || h.includes('CIDADES')) colMap.CIDADES = i;
+    else if (h.includes('FUNC')) colMap.FUNCAO = i;
+    else if (h.includes('NOME') && !h.includes('RAZAO')) colMap.NOME = i;
+    else if (h.includes('RAZAO') || h.includes('SOCIAL')) colMap.RAZAO_SOCIAL = i;
+    else if (h.includes('CONTATO')) colMap.CONTATO = i;
+    else if (h.includes('EMAIL') && !h.includes('COORD')) colMap.EMAIL = i;
+    else if (h.includes('COORDENADOR') || h.includes('COODENADOR')) colMap.COORDENADOR_COL = i;
   });
 
-  const rows=[];
-  for(let i=headerIdx+1;i<lines.length;i++){
-    const cells=parseRow(lines[i]);
-    if(!cells||cells.length<3)continue;
-    const get=(k)=>(colMap[k]!==undefined&&colMap[k]<cells.length)?cells[colMap[k]].replace(/^["']|["']$/g,'').trim():'';
-    const nome=get('NOME');
-    if(!nome)continue;
+  const rows = [];
+  for (let i = headerIdx + 1; i < lines.length; i++) {
+    const cells = parseRow(lines[i]);
+    if (!cells || cells.length < 3) continue;
+    const get = (k) => (colMap[k] !== undefined && colMap[k] < cells.length) ? cells[colMap[k]].replace(/^["']|["']$/g, '').trim() : '';
+    const nome = get('NOME');
+    if (!nome) continue;
     rows.push({
-      DISTRITO:get('DISTRITO'),SETOR:get('SETOR'),REGIAO:get('REGIAO'),UF:get('UF'),
-      CIDADES:get('CIDADES'),FUNCAO:get('FUNCAO'),NOME:nome,
-      RAZAO_SOCIAL:get('RAZAO_SOCIAL'),CONTATO:get('CONTATO'),EMAIL:get('EMAIL'),
-      COORDENADOR_COL:get('COORDENADOR_COL')
+      DISTRITO: get('DISTRITO'),
+      SETOR: get('SETOR'),
+      REGIAO: get('REGIAO'),
+      UF: get('UF'),
+      CIDADES: get('CIDADES'),
+      FUNCAO: get('FUNCAO'),
+      NOME: nome,
+      RAZAO_SOCIAL: get('RAZAO_SOCIAL'),
+      CONTATO: get('CONTATO'),
+      EMAIL: get('EMAIL'),
+      COORDENADOR_COL: get('COORDENADOR_COL')
     });
   }
-  return{rows,updateDate};
+  return { rows, updateDate };
 }
 
-// ─── PROCESS DATA ─────────────────────────────────────────────
-function processData(rows){
-  const result={
-    coordenadoresEquipe:[],gerentesContas:[],coordContas:[],projetosEspeciais:null,
-    estados:new Set(),divisoes:new Set()
+// ─── PROCESS DATA ──────────────────────────────────────────────
+function processData(rows) {
+  const result = {
+    coordenadoresEquipe: [],
+    gerentesContas: [],
+    coordContas: [],
+    projetosEspeciais: null,
+    estados: new Set(),
+    divisoes: new Set()
   };
 
-  // Classify all
-  rows.forEach(r=>r._cat=classifyFunc(r.FUNCAO));
+  rows.forEach(r => r._cat = classifyFunc(r.FUNCAO));
 
-  // Coord equipe groups
-  const coords=rows.filter(r=>r._cat==='COORDENADOR_EQUIPE');
-  const assigned=new Set();
-  coords.forEach(ldr=>{assigned.add(ldr);});
+  const coords = rows.filter(r => r._cat === 'COORDENADOR_EQUIPE');
+  const assigned = new Set();
+  coords.forEach(ldr => { assigned.add(ldr); });
 
-  const teams=new Map();
-  coords.forEach(ldr=>{
-    const dist=ldr.DISTRITO||'';
-    teams.set(ldr,{leader:ldr,members:[]});
-    const bases=[];
-    dist.split('/').concat(dist.split(',')).forEach(p=>{
-      const n=parseInt(p.trim(),10);
-      if(!isNaN(n))bases.push(Math.floor(n/100)*100);
+  const teams = new Map();
+  coords.forEach(ldr => {
+    const dist = ldr.DISTRITO || '';
+    teams.set(ldr, { leader: ldr, members: [] });
+    const bases = [];
+    dist.split('/').concat(dist.split(',')).forEach(p => {
+      const n = parseInt(p.trim(), 10);
+      if (!isNaN(n)) bases.push(Math.floor(n / 100) * 100);
     });
 
-    rows.forEach(r=>{
-      if(assigned.has(r))return;
-      const cat=r._cat;
-      if(['COORDENADOR_EQUIPE','GERENTE_CONTAS','COORDENADOR_CONTAS','GERENTE_PROJETOS_ESPECIAIS','DEDICADO'].includes(cat))return;
-      const rd=r.DISTRITO||'';
-      if(!rd||rd==='-')return;
-      const rn=parseInt(rd,10);
-      if(!isNaN(rn)&&bases.includes(Math.floor(rn/100)*100)){
-        teams.get(ldr).members.push(r);assigned.add(r);
+    rows.forEach(r => {
+      if (assigned.has(r)) return;
+      const cat = r._cat;
+      if (['COORDENADOR_EQUIPE', 'GERENTE_CONTAS', 'COORDENADOR_CONTAS', 'GERENTE_PROJETOS_ESPECIAIS', 'DEDICADO'].includes(cat)) return;
+      const rd = r.DISTRITO || '';
+      if (!rd || rd === '-') return;
+      const rn = parseInt(rd, 10);
+      if (!isNaN(rn) && bases.includes(Math.floor(rn / 100) * 100)) {
+        teams.get(ldr).members.push(r);
+        assigned.add(r);
       }
     });
   });
 
-  // Fallback by COORDENADOR_COL
-  coords.forEach(ldr=>{
-    const lName=ldr.NOME.toUpperCase().trim();
-    const lFirst=lName.split(' ')[0];
-    rows.forEach(r=>{
-      if(assigned.has(r))return;
-      const cat=r._cat;
-      if(['COORDENADOR_EQUIPE','GERENTE_CONTAS','COORDENADOR_CONTAS','GERENTE_PROJETOS_ESPECIAIS','DEDICADO'].includes(cat))return;
-      const cc=(r.COORDENADOR_COL||'').toUpperCase().trim();
-      if(cc&&(cc===lName||cc===lFirst||lFirst&&cc.includes(lFirst))){
-        teams.get(ldr).members.push(r);assigned.add(r);
+  coords.forEach(ldr => {
+    const lName = ldr.NOME.toUpperCase().trim();
+    const lFirst = lName.split(' ')[0];
+    rows.forEach(r => {
+      if (assigned.has(r)) return;
+      const cat = r._cat;
+      if (['COORDENADOR_EQUIPE', 'GERENTE_CONTAS', 'COORDENADOR_CONTAS', 'GERENTE_PROJETOS_ESPECIAIS', 'DEDICADO'].includes(cat)) return;
+      const cc = (r.COORDENADOR_COL || '').toUpperCase().trim();
+      if (cc && (cc === lName || cc === lFirst || (lFirst && cc.includes(lFirst)))) {
+        teams.get(ldr).members.push(r);
+        assigned.add(r);
       }
     });
   });
 
-  teams.forEach(({leader:ldr,members})=>{
-    const ufVal=(ldr.UF||'').toUpperCase().trim();
-    const regVal=(ldr.REGIAO||'').toUpperCase().trim();
-    let division=null;
-    const allUFs=new Set();
+  teams.forEach(({ leader: ldr, members }) => {
+    const ufVal = (ldr.UF || '').toUpperCase().trim();
+    const regVal = (ldr.REGIAO || '').toUpperCase().trim();
+    let division = null;
+    const allUFs = new Set();
 
-    if(ufVal==='-'||regVal.includes('TLV')){
-      division='TLV';
-      members.forEach(m=>extractUFs(m.UF).forEach(u=>allUFs.add(u)));
-    } else if(ufVal.includes('EXPANS')||regVal.includes('EXPANS')){
-      division='EXPANSÃO';
-      members.forEach(m=>extractUFs(m.UF).forEach(u=>allUFs.add(u)));
+    if (ufVal === '-' || regVal.includes('TLV')) {
+      division = 'TLV';
+      members.forEach(m => extractUFs(m.UF).forEach(u => allUFs.add(u)));
+    } else if (ufVal.includes('EXPANS') || regVal.includes('EXPANS')) {
+      division = 'EXPANSÃO';
+      extractUFs(ldr.UF).forEach(u => allUFs.add(u));
+      members.forEach(m => extractUFs(m.UF).forEach(u => allUFs.add(u)));
     } else {
-      extractUFs(ldr.UF).forEach(u=>allUFs.add(u));
-      members.forEach(m=>extractUFs(m.UF).forEach(u=>allUFs.add(u)));
+      extractUFs(ldr.UF).forEach(u => allUFs.add(u));
+      members.forEach(m => extractUFs(m.UF).forEach(u => allUFs.add(u)));
     }
 
-    const group={
-      distrito:ldr.DISTRITO,division,estados:[...allUFs].sort(),
-      coordenador:{
-        nome:ldr.NOME,funcao:ldr.FUNCAO,regiao:ldr.REGIAO,uf:ldr.UF,
-        contato:ldr.CONTATO,email:ldr.EMAIL,razao:ldr.RAZAO_SOCIAL
+    const group = {
+      distrito: ldr.DISTRITO,
+      division,
+      estados: [...allUFs].sort(),
+      coordenador: {
+        nome: ldr.NOME,
+        funcao: ldr.FUNCAO,
+        regiao: ldr.REGIAO,
+        uf: ldr.UF,
+        contato: ldr.CONTATO,
+        email: ldr.EMAIL,
+        razao: ldr.RAZAO_SOCIAL
       },
-      equipe:members.map(m=>({
-        nome:m.NOME,funcao:m.FUNCAO,categoria:m._cat,regiao:m.REGIAO,
-        uf:m.UF,cidades:m.CIDADES,contato:m.CONTATO,email:m.EMAIL,
-        razao:m.RAZAO_SOCIAL,setor:m.SETOR
+      equipe: members.map(m => ({
+        nome: m.NOME,
+        funcao: m.FUNCAO,
+        categoria: m._cat,
+        regiao: m.REGIAO,
+        uf: m.UF,
+        cidades: m.CIDADES,
+        contato: m.CONTATO,
+        email: m.EMAIL,
+        razao: m.RAZAO_SOCIAL,
+        setor: m.SETOR
       }))
     };
 
     result.coordenadoresEquipe.push(group);
-    if(division)result.divisoes.add(division);
-    else allUFs.forEach(u=>result.estados.add(u));
+    if (division) {
+      result.divisoes.add(division);
+    } else {
+      allUFs.forEach(u => result.estados.add(u));
+    }
   });
 
   // GPE + Dedicados
-  const gpe=rows.find(r=>r._cat==='GERENTE_PROJETOS_ESPECIAIS');
-  const ded=rows.filter(r=>r._cat==='DEDICADO');
-  if(gpe){
-    const allUFs=new Set(extractUFs(gpe.UF));
-    ded.forEach(d=>extractUFs(d.UF).forEach(u=>allUFs.add(u)));
-    result.projetosEspeciais={
-      lider:{nome:gpe.NOME,funcao:gpe.FUNCAO,regiao:gpe.REGIAO,uf:gpe.UF,contato:gpe.CONTATO,email:gpe.EMAIL},
-      dedicados:ded.map(d=>({nome:d.NOME,funcao:d.FUNCAO,regiao:d.REGIAO,uf:d.UF,cidades:d.CIDADES,contato:d.CONTATO,email:d.EMAIL})),
-      estados:[...allUFs].sort()
+  const gpe = rows.find(r => r._cat === 'GERENTE_PROJETOS_ESPECIAIS');
+  const ded = rows.filter(r => r._cat === 'DEDICADO');
+  if (gpe) {
+    const allUFs = new Set(extractUFs(gpe.UF));
+    ded.forEach(d => extractUFs(d.UF).forEach(u => allUFs.add(u)));
+    result.projetosEspeciais = {
+      lider: { nome: gpe.NOME, funcao: gpe.FUNCAO, regiao: gpe.REGIAO, uf: gpe.UF, contato: gpe.CONTATO, email: gpe.EMAIL },
+      dedicados: ded.map(d => ({ nome: d.NOME, funcao: d.FUNCAO, regiao: d.REGIAO, uf: d.UF, cidades: d.CIDADES, contato: d.CONTATO, email: d.EMAIL })),
+      estados: [...allUFs].sort()
     };
   }
 
-  rows.filter(r=>r._cat==='GERENTE_CONTAS').forEach(r=>{
-    const ufs=extractUFs(r.UF);
-    result.gerentesContas.push({nome:r.NOME,funcao:r.FUNCAO,regiao:r.REGIAO,uf:r.UF,ufs,contato:r.CONTATO,email:r.EMAIL,distrito:r.DISTRITO});
-    ufs.forEach(u=>result.estados.add(u));
+  rows.filter(r => r._cat === 'GERENTE_CONTAS').forEach(r => {
+    const ufs = extractUFs(r.UF);
+    result.gerentesContas.push({
+      nome: r.NOME,
+      funcao: r.FUNCAO,
+      regiao: r.REGIAO,
+      uf: r.UF,
+      ufs,
+      contato: r.CONTATO,
+      email: r.EMAIL,
+      distrito: r.DISTRITO
+    });
+    ufs.forEach(u => result.estados.add(u));
   });
 
-  rows.filter(r=>r._cat==='COORDENADOR_CONTAS').forEach(r=>{
-    const ufs=extractUFs(r.UF);
-    result.coordContas.push({nome:r.NOME,funcao:r.FUNCAO,regiao:r.REGIAO,uf:r.UF,ufs,contato:r.CONTATO,email:r.EMAIL,distrito:r.DISTRITO});
-    ufs.forEach(u=>result.estados.add(u));
+  rows.filter(r => r._cat === 'COORDENADOR_CONTAS').forEach(r => {
+    const ufs = extractUFs(r.UF);
+    result.coordContas.push({
+      nome: r.NOME,
+      funcao: r.FUNCAO,
+      regiao: r.REGIAO,
+      uf: r.UF,
+      ufs,
+      contato: r.CONTATO,
+      email: r.EMAIL,
+      distrito: r.DISTRITO
+    });
+    ufs.forEach(u => result.estados.add(u));
   });
 
   return result;
 }
 
-function extractUFs(str){
-  if(!str||['-','EXPANSÃO','EXPANSAO',''].includes(str.trim().toUpperCase()))return[];
-  return str.split(/[/\-,\s]+/).map(p=>p.trim().toUpperCase()).filter(p=>p.length===2&&/^[A-Z]+$/.test(p));
+function extractUFs(str) {
+  if (!str || ['-', 'EXPANSÃO', 'EXPANSAO', ''].includes(str.trim().toUpperCase())) return [];
+  return str.split(/[/\-,\s]+/).map(p => p.trim().toUpperCase()).filter(p => p.length === 2 && /^[A-Z]+$/.test(p));
 }
 
-// ─── RENDER ───────────────────────────────────────────────────
-function render(data){
-  const p=data.processed||data;
-  const groups=p.coordenadoresEquipe||p.coordenadores_equipe||[];
-  const gc=p.gerentesContas||p.gerentes_contas||[];
-  const cc=p.coordContas||p.coordenadores_contas||[];
-  const pe=p.projetosEspeciais||p.projetos_especiais||null;
+// ─── RENDER ────────────────────────────────────────────────────
+function render(data) {
+  const p = data.processed || data;
+  const groups = p.coordenadoresEquipe || p.coordenadores_equipe || [];
+  const gc = p.gerentesContas || p.gerentes_contas || [];
+  const cc = p.coordContas || p.coordenadores_contas || [];
+  const pe = p.projetosEspeciais || p.projetos_especiais || null;
 
-  // Status bar
-  const totalRep=groups.reduce((a,g)=>(g.equipe||[]).length+a,0);
-  document.getElementById('statusBar').innerHTML=`
-    <div class="stat-badge">📋 Atualizado: <strong>${data.update_date||data.generated_at?.substring(0,10)||'—'}</strong></div>
-    <div class="stat-badge">👥 Coord. Equipe: <strong>${groups.filter(g=>!g.division).length}</strong></div>
-    <div class="stat-badge">🗺️ Representantes: <strong>${totalRep}</strong></div>
-    <div class="stat-badge">🏢 Gerentes Contas: <strong>${gc.length}</strong></div>
+  // Stats
+  const totalRep = groups.reduce((a, g) => (g.equipe || []).length + a, 0);
+  document.getElementById('statsBar').innerHTML = `
+    <div class="stat-card">
+      <div class="stat-label">Atualizado</div>
+      <div class="stat-value">${data.update_date || data.generated_at?.substring(0, 10) || '—'}</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Coord. Equipe</div>
+      <div class="stat-value">${groups.filter(g => !g.division).length}</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Representantes</div>
+      <div class="stat-value">${totalRep}</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Gerentes Contas</div>
+      <div class="stat-value">${gc.length}</div>
+    </div>
   `;
 
   // Populate filters
-  const allUFs=new Set();
-  const allRegioes=new Set();
-  groups.forEach(g=>{
-    (g.estados||[]).forEach(u=>allUFs.add(u));
+  const allUFs = new Set();
+  const allRegioes = new Set();
+  groups.forEach(g => {
+    (g.estados || []).forEach(u => allUFs.add(u));
     allRegioes.add(g.coordenador.regiao);
-    (g.equipe||[]).forEach(m=>allRegioes.add(m.regiao));
+    (g.equipe || []).forEach(m => allRegioes.add(m.regiao));
   });
-  gc.forEach(x=>{(x.ufs||[]).forEach(u=>allUFs.add(u));allRegioes.add(x.regiao);});
-  cc.forEach(x=>{(x.ufs||[]).forEach(u=>allUFs.add(u));allRegioes.add(x.regiao);});
+  gc.forEach(x => { (x.ufs || []).forEach(u => allUFs.add(u)); allRegioes.add(x.regiao); });
+  cc.forEach(x => { (x.ufs || []).forEach(u => allUFs.add(u)); allRegioes.add(x.regiao); });
 
-  const ufSel=document.getElementById('filterUF');
-  const rSel=document.getElementById('filterRegiao');
-  [...allUFs].sort().forEach(u=>{const o=document.createElement('option');o.value=u;o.textContent=STATE_NAMES[u]||u;ufSel.appendChild(o);});
-  [...allRegioes].filter(Boolean).sort().forEach(r=>{const o=document.createElement('option');o.value=r;o.textContent=r;rSel.appendChild(o);});
+  const ufSel = document.getElementById('filterUF');
+  const rSel = document.getElementById('filterRegiao');
+  [...allUFs].sort().forEach(u => {
+    const o = document.createElement('option');
+    o.value = u;
+    o.textContent = STATE_NAMES[u] || u;
+    ufSel.appendChild(o);
+  });
+  [...allRegioes].filter(Boolean).sort().forEach(r => {
+    const o = document.createElement('option');
+    o.value = r;
+    o.textContent = r;
+    rSel.appendChild(o);
+  });
 
   // Build state groups
-  const byState={};
-  const byDiv={};
-  groups.forEach(g=>{
-    if(g.division){
-      if(!byDiv[g.division])byDiv[g.division]=[];
+  const byState = {};
+  const byDiv = {};
+  groups.forEach(g => {
+    if (g.division) {
+      if (!byDiv[g.division]) byDiv[g.division] = [];
       byDiv[g.division].push(g);
     } else {
-      (g.estados||[]).forEach(uf=>{
-        if(!byState[uf])byState[uf]=[];
-        if(!byState[uf].find(x=>x.coordenador.nome===g.coordenador.nome))
+      (g.estados || []).forEach(uf => {
+        if (!byState[uf]) byState[uf] = [];
+        if (!byState[uf].find(x => x.coordenador.nome === g.coordenador.nome))
           byState[uf].push(g);
       });
     }
   });
 
-  // Also add gc/cc to their states
-  gc.forEach(x=>(x.ufs||[]).forEach(u=>{if(!byState[u])byState[u]=[];}));
-  cc.forEach(x=>(x.ufs||[]).forEach(u=>{if(!byState[u])byState[u]=[];}));
+  gc.forEach(x => (x.ufs || []).forEach(u => { if (!byState[u]) byState[u] = []; }));
+  cc.forEach(x => (x.ufs || []).forEach(u => { if (!byState[u]) byState[u] = []; }));
 
   // Render state cards
-  const statesGrid=document.getElementById('statesGrid');
-  const statesPanels=document.getElementById('statesPanels');
-  statesGrid.innerHTML='';statesPanels.innerHTML='';
+  const statesGrid = document.getElementById('statesGrid');
+  const statesPanels = document.getElementById('statesPanels');
+  statesGrid.innerHTML = '';
+  statesPanels.innerHTML = '';
 
-  Object.keys(byState).sort().forEach(uf=>{
-    const coordsInState=byState[uf];
-    const gcInState=gc.filter(x=>(x.ufs||[]).includes(uf));
-    const ccInState=cc.filter(x=>(x.ufs||[]).includes(uf));
-    const total=coordsInState.length+gcInState.length+ccInState.length;
+  Object.keys(byState).sort().forEach(uf => {
+    const coordsInState = byState[uf];
+    const gcInState = gc.filter(x => (x.ufs || []).includes(uf));
+    const ccInState = cc.filter(x => (x.ufs || []).includes(uf));
+    const total = coordsInState.length + gcInState.length + ccInState.length;
 
-    const card=document.createElement('div');
-    card.className='state-card';
-    card.dataset.uf=uf;
-    card.innerHTML=`<div class="state-sigla">${uf}</div><div class="state-name">${STATE_NAMES[uf]||uf}</div><span class="state-badge">${total} lider${total!==1?'es':''}</span>`;
-    card.onclick=()=>toggleStatePanel(uf);
+    const card = document.createElement('div');
+    card.className = 'state-card';
+    card.dataset.uf = uf;
+    card.innerHTML = `
+      <div class="state-sigla">${uf}</div>
+      <div class="state-name">${STATE_NAMES[uf] || uf}</div>
+      <span class="state-badge">${total} lider${total !== 1 ? 'es' : ''}</span>
+    `;
+    card.onclick = () => toggleStatePanel(uf);
     statesGrid.appendChild(card);
 
     // Panel
-    const panel=document.createElement('div');
-    panel.className='coord-panel';
-    panel.id=`panel-${uf}`;
-    panel.innerHTML=`
-      <div class="coord-panel-header">
-        <h3>📍 ${STATE_NAMES[uf]||uf} — ${total} lider${total!==1?'es':''}</h3>
-        <button class="coord-panel-close" onclick="toggleStatePanel('${uf}')">✕</button>
+    const panel = document.createElement('div');
+    panel.className = 'coord-panel';
+    panel.id = `panel-${uf}`;
+    panel.innerHTML = `
+      <div class="panel-header">
+        <div class="panel-header-content">
+          <h3>📍 ${STATE_NAMES[uf] || uf}</h3>
+          <p>${total} lider${total !== 1 ? 'es' : ''} neste estado</p>
+        </div>
+        <button class="btn-close" onclick="toggleStatePanel('${uf}')">✕</button>
       </div>
-      <div class="coord-list" id="coordList-${uf}"></div>
+      <div class="panel-content" id="panelContent-${uf}"></div>
     `;
     statesPanels.appendChild(panel);
 
-    // Fill panel
-    const list=panel.querySelector(`#coordList-${uf}`);
-    coordsInState.forEach((g,gi)=>list.appendChild(buildCoordCard(g,`${uf}-${gi}`)));
-    gcInState.forEach((x,i)=>list.appendChild(buildIndividualCard(x,'GERENTE_CONTAS',`gc-${uf}-${i}`)));
-    ccInState.forEach((x,i)=>list.appendChild(buildIndividualCard(x,'COORDENADOR_CONTAS',`cc-${uf}-${i}`)));
+    const content = panel.querySelector(`#panelContent-${uf}`);
+    coordsInState.forEach((g, gi) => content.appendChild(buildCoordCard(g, `${uf}-${gi}`)));
+    gcInState.forEach((x, i) => content.appendChild(buildIndividualCard(x, 'GERENTE_CONTAS', `gc-${uf}-${i}`)));
+    ccInState.forEach((x, i) => content.appendChild(buildIndividualCard(x, 'COORDENADOR_CONTAS', `cc-${uf}-${i}`)));
   });
 
   // Divisions
-  const divGrid=document.getElementById('divisionsGrid');
-  const divPanels=document.getElementById('divisionsPanels');
-  divGrid.innerHTML='';divPanels.innerHTML='';
-  if(Object.keys(byDiv).length>0){
-    document.getElementById('divSectionTitle').style.display='flex';
-    Object.keys(byDiv).forEach(div=>{
-      const dGroups=byDiv[div];
-      const card=document.createElement('div');
-      card.className='state-card division-card';
-      card.dataset.div=div;
-      card.innerHTML=`<div class="state-sigla" style="font-size:1.4rem">${div==='TLV'?'📞':'🗺️'}</div><div class="state-name">${div}</div><span class="state-badge">${dGroups.length} coord.</span>`;
-      card.onclick=()=>toggleDivPanel(div);
+  const divGrid = document.getElementById('divisionsGrid');
+  const divPanels = document.getElementById('divisionsPanels');
+  divGrid.innerHTML = '';
+  divPanels.innerHTML = '';
+  if (Object.keys(byDiv).length > 0) {
+    document.getElementById('divSectionTitle').classList.remove('hidden');
+    Object.keys(byDiv).forEach(div => {
+      const dGroups = byDiv[div];
+      const card = document.createElement('div');
+      card.className = 'state-card division-card';
+      card.dataset.div = div;
+      card.innerHTML = `
+        <div class="state-sigla" style="font-size: 24px;">${div === 'TLV' ? '📞' : '🗺️'}</div>
+        <div class="state-name">${div}</div>
+        <span class="state-badge">${dGroups.length} coord.</span>
+      `;
+      card.onclick = () => toggleDivPanel(div);
       divGrid.appendChild(card);
 
-      const panel=document.createElement('div');
-      panel.className='coord-panel';
-      panel.id=`divpanel-${div}`;
-      panel.innerHTML=`
-        <div class="coord-panel-header" style="background:linear-gradient(90deg,#92400e,#b45309)">
-          <h3>${div==='TLV'?'📞':'🗺️'} Divisão ${div}</h3>
-          <button class="coord-panel-close" onclick="toggleDivPanel('${div}')">✕</button>
+      const panel = document.createElement('div');
+      panel.className = 'coord-panel';
+      panel.id = `divpanel-${div}`;
+      panel.innerHTML = `
+        <div class="panel-header" style="background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);">
+          <div class="panel-header-content">
+            <h3>${div === 'TLV' ? '📞' : '🗺️'} Divisão ${div}</h3>
+            <p>${dGroups.length} coordenador${dGroups.length !== 1 ? 'es' : ''}</p>
+          </div>
+          <button class="btn-close" onclick="toggleDivPanel('${div}')">✕</button>
         </div>
-        <div class="coord-list" id="divList-${div}"></div>
+        <div class="panel-content" id="divPanelContent-${div}"></div>
       `;
       divPanels.appendChild(panel);
-      const list=panel.querySelector(`#divList-${div}`);
-      dGroups.forEach((g,gi)=>list.appendChild(buildCoordCard(g,`div-${div}-${gi}`)));
+      const content = panel.querySelector(`#divPanelContent-${div}`);
+      dGroups.forEach((g, gi) => content.appendChild(buildCoordCard(g, `div-${div}-${gi}`)));
     });
   }
 
-  // Gerentes Contas (individual section — filtered out from states already shown per-state)
-  // Show all in dedicated section
-  const gcGrid=document.getElementById('gerentesGrid');
-  gcGrid.innerHTML='';
-  if(gc.length>0){
-    document.getElementById('gcSectionTitle').style.display='flex';
-    gc.forEach((x,i)=>gcGrid.appendChild(buildIndividualCard(x,'GERENTE_CONTAS',`gc-all-${i}`)));
+  // Gerentes Contas
+  const gcGrid = document.getElementById('gerentesGrid');
+  gcGrid.innerHTML = '';
+  if (gc.length > 0) {
+    document.getElementById('gcSectionTitle').classList.remove('hidden');
+    gc.forEach((x, i) => gcGrid.appendChild(buildIndividualCard(x, 'GERENTE_CONTAS', `gc-all-${i}`)));
   }
 
-  const ccGrid=document.getElementById('coordContasGrid');
-  ccGrid.innerHTML='';
-  if(cc.length>0){
-    document.getElementById('ccSectionTitle').style.display='flex';
-    cc.forEach((x,i)=>ccGrid.appendChild(buildIndividualCard(x,'COORDENADOR_CONTAS',`cc-all-${i}`)));
+  // Coord Contas
+  const ccGrid = document.getElementById('coordContasGrid');
+  ccGrid.innerHTML = '';
+  if (cc.length > 0) {
+    document.getElementById('ccSectionTitle').classList.remove('hidden');
+    cc.forEach((x, i) => ccGrid.appendChild(buildIndividualCard(x, 'COORDENADOR_CONTAS', `cc-all-${i}`)));
   }
 
   // Projetos Especiais
-  const peGrid=document.getElementById('projetosGrid');
-  peGrid.innerHTML='';
-  if(pe){
-    document.getElementById('peSectionTitle').style.display='flex';
+  const peGrid = document.getElementById('projetosGrid');
+  peGrid.innerHTML = '';
+  if (pe) {
+    document.getElementById('peSectionTitle').classList.remove('hidden');
     peGrid.appendChild(buildPECard(pe));
   }
 }
 
-function buildCoordCard(g,uid){
-  const c=g.coordenador;
-  const cat=classifyFunc(c.funcao||'');
-  const div=document.createElement('div');
-  div.className='coord-card';
-  div.dataset.searchData=JSON.stringify({nome:c.nome,regiao:c.regiao,uf:c.uf,funcao:c.funcao,equipe:g.equipe||[]}).toLowerCase();
+function buildCoordCard(g, uid) {
+  const c = g.coordenador;
+  const cat = classifyFunc(c.funcao || '');
+  const div = document.createElement('div');
+  div.className = 'coordinator-card';
 
-  const hasTeam=(g.equipe||[]).length>0;
-  div.innerHTML=`
-    <div class="coord-card-header" onclick="toggleTeam('team-${uid}',this)">
-      <div>
-        <span class="coord-func-badge ${getBadgeClass(cat)}">${getFuncLabel(cat)}</span>
-        <div class="coord-region-label">${c.regiao||'—'}</div>
-        <div class="coord-name">${c.nome}</div>
-        <div class="coord-meta">
-          <span class="coord-meta-item">📞 ${contactLink(c.contato)}</span>
-          <span class="coord-meta-item">✉️ ${emailLink(c.email)}</span>
-          ${c.razao&&c.razao!=='-'?`<span class="coord-meta-item">🏢 ${c.razao}</span>`:''}
+  const hasTeam = (g.equipe || []).length > 0;
+  div.innerHTML = `
+    <div class="coordinator-header" onclick="${hasTeam ? `toggleTeam('team-${uid}')` : ''}">
+      <div class="coordinator-info">
+        <span class="badge ${getBadgeClass(cat)}">${getFuncLabel(cat)}</span>
+        <div class="coordinator-region">${c.regiao || '—'}</div>
+        <div class="coordinator-name">${c.nome}</div>
+        <div class="coordinator-meta">
+          <span class="meta-item">📞 ${contactLink(c.contato)}</span>
+          <span class="meta-item">✉️ ${emailLink(c.email)}</span>
+          ${c.razao && c.razao !== '-' ? `<span class="meta-item">🏢 ${c.razao}</span>` : ''}
         </div>
       </div>
-      ${hasTeam?`<button class="coord-expand-btn">Ver equipe (${g.equipe.length})</button>`:''}
+      ${hasTeam ? `<button class="team-toggle-btn" onclick="toggleTeam('team-${uid}'); event.stopPropagation();">Ver equipe (${g.equipe.length})</button>` : ''}
     </div>
-    ${hasTeam?`
+    ${hasTeam ? `
     <div class="team-section" id="team-${uid}">
       <div class="team-header">👥 Equipe de ${c.nome} — ${c.regiao}</div>
       <div class="team-grid">
-        ${(g.equipe||[]).map((m,mi)=>buildMemberCard(m,`m-${uid}-${mi}`)).join('')}
+        ${(g.equipe || []).map((m, mi) => buildMemberCard(m, `m-${uid}-${mi}`)).join('')}
       </div>
-    </div>`:''}
+    </div>` : ''}
   `;
   return div;
 }
 
-function buildMemberCard(m,uid){
-  const isRep=m.categoria==='REPRESENTANTE_COMERCIAL';
-  const hasCities=m.cidades&&m.cidades!=='-'&&m.cidades.length>2;
+function buildMemberCard(m, uid) {
+  const isRep = m.categoria === 'REPRESENTANTE_COMERCIAL';
+  const hasCities = m.cidades && m.cidades !== '-' && m.cidades.length > 2;
   return `
-    <div class="member-card" data-member='${JSON.stringify({nome:m.nome,regiao:m.regiao,cidades:m.cidades,funcao:m.funcao}).replace(/'/g,"&#39;")}'>
-      <div class="member-region">${m.regiao||'—'}</div>
-      <span class="coord-func-badge ${getBadgeClass(m.categoria)}" style="margin-bottom:6px">${getFuncLabel(m.categoria)}</span>
-      <div class="member-name">${m.nome}</div>
-      ${isRep&&m.razao&&m.razao!=='-'?`<div class="member-razao">🏢 ${m.razao}</div>`:''}
-      <div class="member-contacts">
-        <span class="member-contact-item">📞 ${contactLink(m.contato)}</span>
-        <span class="member-contact-item">✉️ ${emailLink(m.email)}</span>
-      </div>
-      ${hasCities?`<button class="btn-cities" onclick="toggleCities('cities-${uid}',this)">🏙️ Principais cidades</button>
-      <div class="cities-list" id="cities-${uid}">${m.cidades}</div>`:''}
-    </div>
-  `;
-}
-
-function buildIndividualCard(x,cat,uid){
-  const div=document.createElement('div');
-  div.className='coord-card';
-  const badge=getBadgeClass(cat);
-  const label=getFuncLabel(cat);
-  div.innerHTML=`
-    <div class="coord-card-header" style="cursor:default">
-      <div>
-        <span class="coord-func-badge ${badge}">${label}</span>
-        <div class="coord-region-label">${x.regiao||x.uf||'—'}</div>
-        <div class="coord-name">${x.nome}</div>
-        <div class="coord-meta">
-          <span class="coord-meta-item">📞 ${contactLink(x.contato)}</span>
-          <span class="coord-meta-item">✉️ ${emailLink(x.email)}</span>
-        </div>
-      </div>
-    </div>
-  `;
-  return div;
-}
-
-function buildPECard(pe){
-  const ldr=pe.lider;
-  const div=document.createElement('div');
-  div.className='pe-card';
-  const dedicadosHtml=(pe.dedicados||[]).map((d,i)=>`
     <div class="member-card">
-      <div class="member-region">${d.regiao||'—'}</div>
-      <span class="coord-func-badge badge-dedicado" style="margin-bottom:6px">Dedicado</span>
-      <div class="member-name">${d.nome}</div>
+      <div class="member-region">${m.regiao || '—'}</div>
+      <span class="badge ${getBadgeClass(m.categoria)}" style="margin-bottom: 6px;">${getFuncLabel(m.categoria)}</span>
+      <div class="member-name">${m.nome}</div>
+      ${isRep && m.razao && m.razao !== '-' ? `<div class="member-razao">🏢 ${m.razao}</div>` : ''}
       <div class="member-contacts">
-        <span class="member-contact-item">📞 ${contactLink(d.contato)}</span>
-        <span class="member-contact-item">✉️ ${emailLink(d.email)}</span>
+        <span class="member-contact">📞 ${contactLink(m.contato)}</span>
+        <span class="member-contact">✉️ ${emailLink(m.email)}</span>
       </div>
+      ${hasCities ? `<button class="cities-btn" onclick="toggleCities('cities-${uid}', this)">🏙️ Principais cidades</button>
+      <div class="cities-list" id="cities-${uid}">${m.cidades}</div>` : ''}
     </div>
-  `).join('');
+  `;
+}
 
-  div.innerHTML=`
-    <div class="pe-header" onclick="toggleTeam('pe-team',this)">
-      <div>
-        <span class="coord-func-badge badge-gpe">Ger. Projetos Especiais</span>
-        <div class="pe-region">${ldr.regiao||'SUL'} — ${ldr.uf||'PR/RS/SC'}</div>
-        <div class="pe-name">${ldr.nome}</div>
-        <div class="coord-meta">
-          <span class="coord-meta-item">📞 ${contactLink(ldr.contato)}</span>
-          <span class="coord-meta-item">✉️ ${emailLink(ldr.email)}</span>
-        </div>
-      </div>
-      <button class="coord-expand-btn" style="background:#5b21b6">Ver dedicados (${(pe.dedicados||[]).length})</button>
-    </div>
-    <div class="team-section" id="pe-team">
-      <div class="team-header" style="background:#5b21b6">⭐ Dedicados — ${ldr.nome}</div>
-      <div class="team-grid">${dedicadosHtml}</div>
+function buildIndividualCard(x, cat, uid) {
+  const div = document.createElement('div');
+  div.className = 'individual-card';
+  div.innerHTML = `
+    <span class="badge ${getBadgeClass(cat)}">${getFuncLabel(cat)}</span>
+    <div class="coordinator-region" style="margin-top: 10px;">${x.regiao || x.uf || '—'}</div>
+    <div class="coordinator-name" style="margin-top: 8px;">${x.nome}</div>
+    <div class="coordinator-meta" style="margin-top: 12px;">
+      <span class="meta-item">📞 ${contactLink(x.contato)}</span>
+      <span class="meta-item">✉️ ${emailLink(x.email)}</span>
     </div>
   `;
   return div;
 }
 
-// ─── INTERACTIONS ─────────────────────────────────────────────
-function toggleStatePanel(uf){
-  const panel=document.getElementById(`panel-${uf}`);
-  const card=document.querySelector(`.state-card[data-uf="${uf}"]`);
-  if(!panel)return;
-  const open=panel.classList.contains('visible');
-  document.querySelectorAll('.coord-panel.visible').forEach(p=>p.classList.remove('visible'));
-  document.querySelectorAll('.state-card.active, .state-card.division-card.active').forEach(c=>c.classList.remove('active'));
-  if(!open){panel.classList.add('visible');card&&card.classList.add('active');panel.scrollIntoView({behavior:'smooth',block:'nearest'});}
+function buildPECard(pe) {
+  const ldr = pe.lider;
+  const div = document.createElement('div');
+  div.className = 'coord-panel';
+  div.innerHTML = `
+    <div class="panel-header" style="background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);">
+      <div class="panel-header-content">
+        <h3>⭐ Projetos Especiais</h3>
+        <p>Liderado por ${ldr.nome}</p>
+      </div>
+      <button class="btn-close" onclick="toggleTeam('pe-team')">✕</button>
+    </div>
+    <div class="panel-content" style="padding: 0;">
+      <div class="coordinator-card" style="border: none; margin: 20px;">
+        <div class="coordinator-header" onclick="toggleTeam('pe-team')" style="cursor: pointer;">
+          <div class="coordinator-info">
+            <span class="badge badge-dedicado">Ger. Proj. Especiais</span>
+            <div class="coordinator-region" style="margin-top: 8px;">${ldr.regiao || 'SUL'}</div>
+            <div class="coordinator-name">${ldr.nome}</div>
+            <div class="coordinator-meta">
+              <span class="meta-item">📞 ${contactLink(ldr.contato)}</span>
+              <span class="meta-item">✉️ ${emailLink(ldr.email)}</span>
+            </div>
+          </div>
+          <button class="team-toggle-btn" style="background: #e74c3c;" onclick="toggleTeam('pe-team'); event.stopPropagation();">Ver dedicados (${(pe.dedicados || []).length})</button>
+        </div>
+      </div>
+      <div class="team-section" id="pe-team" style="border-top: 2px solid #e0e6ed;">
+        <div class="team-header" style="background: #e74c3c;">⭐ Equipe de Dedicados</div>
+        <div class="team-grid">
+          ${(pe.dedicados || []).map((d, i) => `
+            <div class="member-card">
+              <div class="member-region">${d.regiao || '—'}</div>
+              <span class="badge badge-dedicado">Dedicado</span>
+              <div class="member-name" style="margin-top: 6px;">${d.nome}</div>
+              <div class="member-contacts" style="margin-top: 10px;">
+                <span class="member-contact">📞 ${contactLink(d.contato)}</span>
+                <span class="member-contact">✉️ ${emailLink(d.email)}</span>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    </div>
+  `;
+  return div;
 }
-function toggleDivPanel(div){
-  const panel=document.getElementById(`divpanel-${div}`);
-  const card=document.querySelector(`.state-card[data-div="${div}"]`);
-  if(!panel)return;
-  const open=panel.classList.contains('visible');
-  document.querySelectorAll('.coord-panel.visible').forEach(p=>p.classList.remove('visible'));
-  document.querySelectorAll('.state-card.active').forEach(c=>c.classList.remove('active'));
-  if(!open){panel.classList.add('visible');card&&card.classList.add('active');panel.scrollIntoView({behavior:'smooth',block:'nearest'});}
-}
-function toggleTeam(id,btn){
-  const el=document.getElementById(id);
-  if(!el)return;
-  el.classList.toggle('visible');
-  const b=btn.querySelector('.coord-expand-btn')||btn.closest('.coord-card-header').querySelector('.coord-expand-btn')||btn;
-  if(b.classList.contains('coord-expand-btn')){
-    b.textContent=el.classList.contains('visible')?b.textContent.replace('Ver','Fechar'):b.textContent.replace('Fechar','Ver');
+
+// ─── INTERACTIONS ──────────────────────────────────────────────
+function toggleStatePanel(uf) {
+  const panel = document.getElementById(`panel-${uf}`);
+  const card = document.querySelector(`.state-card[data-uf="${uf}"]`);
+  if (!panel) return;
+  const open = panel.classList.contains('visible');
+  document.querySelectorAll('.coord-panel.visible').forEach(p => p.classList.remove('visible'));
+  document.querySelectorAll('.state-card.active').forEach(c => c.classList.remove('active'));
+  if (!open) {
+    panel.classList.add('visible');
+    card && card.classList.add('active');
+    panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
   }
 }
-function toggleCities(id,btn){
-  const el=document.getElementById(id);
-  if(!el)return;
+
+function toggleDivPanel(div) {
+  const panel = document.getElementById(`divpanel-${div}`);
+  const card = document.querySelector(`.state-card[data-div="${div}"]`);
+  if (!panel) return;
+  const open = panel.classList.contains('visible');
+  document.querySelectorAll('.coord-panel.visible').forEach(p => p.classList.remove('visible'));
+  document.querySelectorAll('.state-card.active').forEach(c => c.classList.remove('active'));
+  if (!open) {
+    panel.classList.add('visible');
+    card && card.classList.add('active');
+    panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+}
+
+function toggleTeam(id) {
+  const el = document.getElementById(id);
+  if (!el) return;
   el.classList.toggle('visible');
-  btn.textContent=el.classList.contains('visible')?'🏙️ Ocultar cidades':'🏙️ Principais cidades';
 }
 
-// ─── FILTERS ──────────────────────────────────────────────────
-function applyFilters(){
-  const q=(document.getElementById('searchInput').value||'').toLowerCase();
-  const uf=(document.getElementById('filterUF').value||'').toLowerCase();
-  const func=(document.getElementById('filterFunc').value||'').toLowerCase();
-  const reg=(document.getElementById('filterRegiao').value||'').toLowerCase();
+function toggleCities(id, btn) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.classList.toggle('visible');
+  btn.textContent = el.classList.contains('visible') ? '🏙️ Ocultar cidades' : '🏙️ Principais cidades';
+}
 
-  const cards=document.querySelectorAll('.coord-card, .individual-card, .pe-card, .member-card');
-  let visible=0;
-  cards.forEach(card=>{
-    const text=(card.textContent||'').toLowerCase();
-    const ufMatch=!uf||text.includes(uf)||card.dataset.uf===uf.toUpperCase();
-    const qMatch=!q||text.includes(q);
-    const funcMatch=!func||text.includes(func.replace('_',' '))||card.innerHTML.toLowerCase().includes(func.toLowerCase());
-    const regMatch=!reg||text.includes(reg.toLowerCase());
-    const show=ufMatch&&qMatch&&funcMatch&&regMatch;
-    card.style.display=show?'':'none';
-    if(show)visible++;
+// ─── FILTERS ───────────────────────────────────────────────────
+function applyFilters() {
+  const q = (document.getElementById('searchInput').value || '').toLowerCase();
+  const uf = (document.getElementById('filterUF').value || '').toLowerCase();
+  const func = (document.getElementById('filterFunc').value || '').toLowerCase();
+  const reg = (document.getElementById('filterRegiao').value || '').toLowerCase();
+
+  const cards = document.querySelectorAll('.coordinator-card, .individual-card, .member-card');
+  let visible = 0;
+  cards.forEach(card => {
+    const text = (card.textContent || '').toLowerCase();
+    const ufMatch = !uf || text.includes(uf) || card.dataset.uf === uf.toUpperCase();
+    const qMatch = !q || text.includes(q);
+    const funcMatch = !func || text.includes(func.replace('_', ' ')) || card.innerHTML.toLowerCase().includes(func.toLowerCase());
+    const regMatch = !reg || text.includes(reg.toLowerCase());
+    const show = ufMatch && qMatch && funcMatch && regMatch;
+    card.style.display = show ? '' : 'none';
+    if (show) visible++;
   });
-  document.getElementById('emptyState').style.display=visible===0?'block':'none';
+  document.getElementById('emptyState').classList.toggle('visible', visible === 0);
 }
-function clearFilters(){
-  document.getElementById('searchInput').value='';
-  document.getElementById('filterUF').value='';
-  document.getElementById('filterFunc').value='';
-  document.getElementById('filterRegiao').value='';
+
+function clearFilters() {
+  document.getElementById('searchInput').value = '';
+  document.getElementById('filterUF').value = '';
+  document.getElementById('filterFunc').value = '';
+  document.getElementById('filterRegiao').value = '';
   applyFilters();
 }
 
-// ─── DATA LOADING ─────────────────────────────────────────────
-async function loadData(force=false){
-  const cb=force?`?cb=${Date.now()}`:`?cb=${Math.floor(Date.now()/300000)*300000}`;
-  try{
-    // Try data.json first (generated by script.py)
-    let resp=await fetch(`./data.json${cb}`);
-    if(resp.ok){
-      const json=await resp.json();
-      DATA=json;
-      document.getElementById('updateInfo').textContent=`Atualizado: ${json.update_date||json.generated_at?.substring(0,10)||'—'}`;
-      const p=json.processed||json;
-      render({processed:p,update_date:json.update_date,generated_at:json.generated_at});
+// ─── DATA LOADING ──────────────────────────────────────────────
+async function loadData(force = false) {
+  const cb = force ? `?cb=${Date.now()}` : `?cb=${Math.floor(Date.now() / 300000) * 300000}`;
+  try {
+    let resp = await fetch(`./data.json${cb}`);
+    if (resp.ok) {
+      const json = await resp.json();
+      DATA = json;
+      document.getElementById('updateInfo').textContent = `Atualizado: ${json.update_date || json.generated_at?.substring(0, 10) || '—'}`;
+      const p = json.processed || json;
+      render({ processed: p, update_date: json.update_date, generated_at: json.generated_at });
     } else {
-      // Fallback: load CSV directly
       await loadFromCSV(force);
     }
-  } catch(e){
-    try{await loadFromCSV(force);}
-    catch(e2){showError();}
+  } catch (e) {
+    try {
+      await loadFromCSV(force);
+    } catch (e2) {
+      showError();
+    }
   }
 }
 
-async function loadFromCSV(force=false){
-  const cb=force?Date.now():Math.floor(Date.now()/300000)*300000;
-  const url=`${CSV_URL}&cb=${cb}`;
-  const resp=await fetch(url);
-  if(!resp.ok)throw new Error('CSV not found');
-  const text=await resp.text();
-  const {rows,updateDate}=parseCSV(text);
-  const processed=processData(rows);
-  DATA={processed,update_date:updateDate,generated_at:new Date().toISOString()};
-  document.getElementById('updateInfo').textContent=`Atualizado: ${updateDate||'—'} (CSV direto)`;
+async function loadFromCSV(force = false) {
+  const cb = force ? Date.now() : Math.floor(Date.now() / 300000) * 300000;
+  const url = `${CSV_URL}&cb=${cb}`;
+  const resp = await fetch(url);
+  if (!resp.ok) throw new Error('CSV not found');
+  const text = await resp.text();
+  const { rows, updateDate } = parseCSV(text);
+  const processed = processData(rows);
+  DATA = { processed, update_date: updateDate, generated_at: new Date().toISOString() };
+  document.getElementById('updateInfo').textContent = `Atualizado: ${updateDate || '—'} (CSV direto)`;
   render(DATA);
 }
 
-function showError(){
+function showError() {
   document.getElementById('loadingState').classList.remove('visible');
   document.getElementById('errorState').classList.add('visible');
 }
 
-async function forceRefresh(){
-  document.getElementById('appContent').style.display='none';
+async function forceRefresh() {
+  document.getElementById('appContent').style.display = 'none';
   document.getElementById('loadingState').classList.add('visible');
   document.getElementById('errorState').classList.remove('visible');
-  document.getElementById('filterUF').innerHTML='<option value="">Todos os estados</option>';
-  document.getElementById('filterRegiao').innerHTML='<option value="">Todas as regiões</option>';
+  document.getElementById('filterUF').innerHTML = '<option value="">Todos os estados</option>';
+  document.getElementById('filterRegiao').innerHTML = '<option value="">Todas as regiões</option>';
   await loadData(true);
 }
 
-function scheduleRefresh(){
-  if(REFRESH_TIMER)clearInterval(REFRESH_TIMER);
-  REFRESH_TIMER=setInterval(()=>loadData(true),REFRESH_INTERVAL);
+function scheduleRefresh() {
+  if (REFRESH_TIMER) clearInterval(REFRESH_TIMER);
+  REFRESH_TIMER = setInterval(() => loadData(true), REFRESH_INTERVAL);
 }
 
-async function init(){
+async function init() {
   document.getElementById('loadingState').classList.add('visible');
   await loadData(false);
   document.getElementById('loadingState').classList.remove('visible');
-  document.getElementById('appContent').style.display='block';
+  document.getElementById('appContent').style.display = 'block';
   scheduleRefresh();
 }
 
 init();
 </script>
+
 </body>
 </html>
