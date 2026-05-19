@@ -1,16 +1,16 @@
 {
-  "generated_at": "2026-05-19T19:11:15.153460",
+  "generated_at": "2026-05-19T19:27:11.034010",
   "total_rows": 109,
   "total_groups": 18,
   "states": [
     "SC",
     "RS",
     "PR",
-    "SP",
     "MT",
+    "SP",
     "MS",
-    "DF",
-    "GO"
+    "GO",
+    "DF"
   ],
   "groups": {
     "100": {
@@ -798,8 +798,8 @@
       "division": null,
       "displayRegion": "Oeste SC/Noroeste RS",
       "states": [
-        "RS",
-        "SC"
+        "SC",
+        "RS"
       ]
     },
     "600": {
@@ -1154,8 +1154,8 @@
       "division": "EXPANSÃO",
       "displayRegion": "Centro Oeste e Sudeste",
       "states": [
-        "SP",
         "MT",
+        "SP",
         "MS"
       ]
     },
@@ -1309,8 +1309,8 @@
       "division": null,
       "displayRegion": "Goiânia",
       "states": [
-        "DF",
-        "GO"
+        "GO",
+        "DF"
       ]
     },
     "PROJ_ESP": {
@@ -1450,9 +1450,9 @@
       "division": "PROJ. ESPECIAIS",
       "displayRegion": "SUL — PR / RS / SC",
       "states": [
-        "SC",
+        "PR",
         "RS",
-        "PR"
+        "SC"
       ]
     },
     "CLIENT_1201": {
