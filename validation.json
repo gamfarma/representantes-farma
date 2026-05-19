@@ -1,0 +1,21 @@
+{
+  "timestamp": "2026-05-19T18:23:58.408753+00:00",
+  "status": "OK",
+  "total_rows": 109,
+  "total_columns": 11,
+  "headers_found": [
+    "DISTRITO",
+    "SETOR",
+    "REGIAO",
+    "UF",
+    "PRINCIPAIS CIDADES",
+    "FUNCAO",
+    "NOME REPRESENTANTE",
+    "RAZAO SOCIAL",
+    "CONTATO CORPORATIVO",
+    "EMAIL",
+    "COORDENADOR"
+  ],
+  "warnings": [],
+  "errors": []
+}
