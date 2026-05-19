@@ -785,8 +785,7 @@ function processData(rows) {
       division = 'Televendas';
     } else if (leaderUF.toUpperCase().includes('EXPANS') || leaderRegion.toUpperCase().includes('EXPANS')) {
       division = 'EXPANSÃO';
-      // Garantir que estados de atuação incluem MS, SP, GO, DF, MT
-      ['MS','SP','GO','DF','MT'].forEach(u => allUFs.add(u));
+      // States determined by actual member UFs only
     }
 
     const group = {
@@ -855,9 +854,12 @@ function processData(rows) {
     if (group.division) {
       if (!divisionMap[group.division]) divisionMap[group.division] = [];
       divisionMap[group.division].push(group);
-      // ALSO add division groups to their respective state tiles
+      // ALSO add division groups to their respective state tiles (only valid 2-letter UFs with members)
       group.states.forEach(uf => {
-        if (uf && uf !== '-' && uf !== 'EXPANSÃO') {
+        if (uf && /^[A-Z]{2}$/.test(uf)) {
+          // Only add to state if this group has members in that state
+          const hasMembers = group.members.length === 0 || group.members.some(m => getUF(m) === uf);
+          if (!hasMembers) return;
           if (!stateMap[uf]) stateMap[uf] = [];
           stateMap[uf].push(group);
         }
@@ -970,7 +972,7 @@ function renderStates() {
   updateBreadcrumb([{ label:'Início' }]);
   const container = document.getElementById('view-states');
   container.style.display = 'block';
-  const ufs = Object.keys(appData.stateMap).filter(uf => appData.stateMap[uf].length > 0).sort();
+  const ufs = Object.keys(appData.stateMap).filter(uf => /^[A-Z]{2}$/.test(uf) && appData.stateMap[uf].length > 0).sort();
   const totalTiles = ufs.length;
 
   let html = `
@@ -1079,8 +1081,9 @@ function renderCoordCard(group, uf) {
   const phone = getPhone(leader);
   const email = getEmail(leader);
   let region = getRegion(leader);
-  // Override region display for EXPANSÃO
+  // Override region display for divisions
   if (group.division === 'EXPANSÃO') region = 'Centro Oeste e Sudeste';
+  if (region === 'TLV' || region.toUpperCase() === 'TLV') region = 'Televendas';
   const headerColor = group.division ? (DIVISION_COLORS[group.division] || '#8B5CF6') : getHeaderColor(func, uf);
   const isClient = isClientRole(leader);
   // When viewing from a state, count only members matching that UF
@@ -1116,9 +1119,9 @@ function renderCoordCard(group, uf) {
     <div class="coord-footer">`;
 
   if (isClient) {
-    // Gerente de Contas / Coordenador de Médias Redes: show clients button
-    html += `<span class="members-count">&#127978; Portfólio de clientes</span>
-      <button class="btn-clients" onclick="openClientsModal('${escapeAttr(getName(leader))}','${escapeAttr(region)}','${escapeAttr(cities)}')">&#128203; Ver Clientes</button>`;
+    const clientsStr = getCities(leader);
+    const clientsList = (clientsStr||'').split(/[,;]+/).map(c=>c.trim()).filter(c=>c&&c!=='-');
+    html += `<span class="members-count">&#127978; ${clientsList.length > 0 ? clientsList.join(', ') : 'Portfólio de clientes'}</span>`;
   } else if (memberCount > 0) {
     html += `<span class="members-count">&#128101; ${memberCount} membro${memberCount!==1?'s':''}</span>
       <button class="btn-team" onclick="navigateToTeam('${escapeAttr(group.distKey)}','${escapeAttr(uf||currentState||'')}')">Ver equipe &#8594;</button>`;
@@ -1186,6 +1189,7 @@ function renderTeam(group, fromState) {
     const lEmail = getEmail(ldr);
     let lRegion = getRegion(ldr);
     if (group.division === 'EXPANSÃO') lRegion = 'Centro Oeste e Sudeste';
+    if (lRegion === 'TLV' || lRegion.toUpperCase() === 'TLV') lRegion = 'Televendas';
     const initials = getName(ldr).split(' ').filter(w=>w.length>0).slice(0,2).map(w=>w[0]).join('').toUpperCase();
     html += `
       <div class="team-leader-header" style="background:linear-gradient(135deg,${color} 0%,${color}cc 100%)">
@@ -1249,11 +1253,7 @@ function renderTeam(group, fromState) {
 
       let citiesBtn = '<span class="no-data">—</span>';
       if (cities) {
-        if (isClient) {
-          citiesBtn = `<button class="btn-clients-sm" onclick="openClientsModal('${escapeAttr(nome)}','${escapeAttr(region)}','${escapeAttr(cities)}')">&#127978; Clientes</button>`;
-        } else {
-          citiesBtn = `<button class="btn-cities" onclick="openCitiesModal('${escapeAttr(nome)}','${escapeAttr(region)}','${escapeAttr(cities)}')">&#128205; Cidades</button>`;
-        }
+        citiesBtn = `<button class="btn-cities" onclick="openCitiesModal('${escapeAttr(nome)}','${escapeAttr(region)}','${escapeAttr(cities)}')">&#128205; Cidades</button>`;
       }
 
       html += `
@@ -1341,9 +1341,12 @@ function renderSearchResults(query, filterUF, filterFunc, filterRegion) {
       const isClient = isClientRole(r);
       let citiesBtn = '<span class="no-data">—</span>';
       if (cities) {
-        citiesBtn = isClient
-          ? `<button class="btn-clients-sm" onclick="openClientsModal('${escapeAttr(nome)}','${escapeAttr(region)}','${escapeAttr(cities)}')">&#127978; Clientes</button>`
-          : `<button class="btn-cities" onclick="openCitiesModal('${escapeAttr(nome)}','${escapeAttr(region)}','${escapeAttr(cities)}')">&#128205; Cidades</button>`;
+        if (isClient) {
+          const cls = (cities||'').split(/[,;]+/).map(c=>c.trim()).filter(c=>c&&c!=='-').join(', ');
+          citiesBtn = `<span style="font-size:12px;color:#5a6a8a;">${cls||cities}</span>`;
+        } else {
+          citiesBtn = `<button class="btn-cities" onclick="openCitiesModal('${escapeAttr(nome)}','${escapeAttr(region)}','${escapeAttr(cities)}')">&#128205; Cidades</button>`;
+        }
       }
       html += `
             <tr>
