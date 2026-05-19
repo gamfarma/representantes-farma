@@ -1,1513 +1,1167 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate">
-<meta http-equiv="Pragma" content="no-cache">
-<meta http-equiv="Expires" content="0">
-<title>GAM Farma — Rede de Representantes</title>
-<style>
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-:root {
-  --primary: #0a2d6e;
-  --primary-light: #1a4a9e;
-  --accent: #FFB800;
-  --purple: #8B5CF6;
-  --bg: #f0f4f8;
-  --surface: #fff;
-  --border: #dde3ee;
-  --text: #1a2340;
-  --text-muted: #5a6a8a;
-  --radius: 12px;
-  --shadow: 0 2px 12px rgba(10,45,110,0.10);
-  --shadow-hover: 0 6px 24px rgba(10,45,110,0.18);
-}
-html { scroll-behavior: smooth; }
-body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Rede de Representantes GAM Farma</title>
+  <style>
+    :root {
+      --primary: #003087;
+      --primary-light: #1a4fad;
+      --accent: #e8213c;
+      --bg: #f4f6fb;
+      --card-bg: #fff;
+      --text: #1a1a2e;
+      --muted: #6b7280;
+      --border: #e2e8f0;
+      --shadow: 0 2px 12px rgba(0,48,135,0.10);
+      --radius: 12px;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Segoe UI', Arial, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
 
-/* HEADER */
-#app-header {
-  background: linear-gradient(135deg, #0a2d6e 0%, #1a4a9e 60%, #0d3b8e 100%);
-  color: #fff;
-  position: sticky;
-  top: 0;
-  z-index: 100;
-  box-shadow: 0 2px 16px rgba(10,45,110,0.25);
-}
-.header-inner {
-  max-width: 1400px;
-  margin: 0 auto;
-  padding: 10px 20px;
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  flex-wrap: wrap;
-}
-.logo-img {
-  height: 54px;
-  width: auto;
-  flex-shrink: 0;
-  filter: drop-shadow(0 2px 6px rgba(0,0,0,0.18));
-}
-.header-titles { flex: 1; min-width: 160px; }
-.header-titles h1 { font-size: 16px; font-weight: 700; letter-spacing: 0.5px; }
-.header-titles p { font-size: 11px; opacity: 0.8; margin-top: 2px; }
-.header-search {
-  flex: 2;
-  min-width: 200px;
-  max-width: 380px;
-  position: relative;
-}
-.header-search input {
-  width: 100%;
-  padding: 9px 16px 9px 38px;
-  border-radius: 24px;
-  border: none;
-  background: rgba(255,255,255,0.18);
-  color: #fff;
-  font-size: 14px;
-  outline: none;
-  transition: background 0.2s;
-}
-.header-search input::placeholder { color: rgba(255,255,255,0.7); }
-.header-search input:focus { background: rgba(255,255,255,0.28); }
-.search-icon { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); opacity: 0.7; font-size: 15px; pointer-events: none; }
-.header-actions { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
-.btn-refresh {
-  background: rgba(255,255,255,0.18);
-  border: 1px solid rgba(255,255,255,0.3);
-  color: #fff;
-  border-radius: 8px;
-  padding: 8px 14px;
-  cursor: pointer;
-  font-size: 13px;
-  font-weight: 600;
-  transition: background 0.2s;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-.btn-refresh:hover { background: rgba(255,255,255,0.28); }
-.spinner { display: inline-block; width: 14px; height: 14px; border: 2px solid rgba(255,255,255,0.4); border-top-color: #fff; border-radius: 50%; animation: spin 0.7s linear infinite; }
-@keyframes spin { to { transform: rotate(360deg); } }
-.timestamp { font-size: 11px; opacity: 0.75; white-space: nowrap; }
+    /* HEADER */
+    header {
+      background: linear-gradient(135deg, var(--primary) 0%, #001a5e 100%);
+      color: #fff;
+      padding: 20px 32px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .header-logo { display: flex; align-items: center; gap: 18px; }
+    .header-logo img { height: 48px; object-fit: contain; }
+    .header-title h1 { font-size: 1.5rem; font-weight: 700; letter-spacing: -0.5px; }
+    .header-title p { font-size: 0.85rem; opacity: 0.7; margin-top: 2px; }
+    .header-meta { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+    .update-info { font-size: 0.78rem; opacity: 0.7; }
+    .btn-refresh {
+      background: rgba(255,255,255,0.15);
+      border: 1.5px solid rgba(255,255,255,0.4);
+      color: #fff;
+      padding: 7px 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 0.82rem;
+      font-weight: 600;
+      transition: background 0.2s;
+      display: flex; align-items: center; gap: 6px;
+    }
+    .btn-refresh:hover { background: rgba(255,255,255,0.28); }
 
-/* FILTER BAR */
-#filter-bar {
-  background: var(--surface);
-  border-bottom: 1px solid var(--border);
-  padding: 10px 20px;
-}
-.filter-inner {
-  max-width: 1400px;
-  margin: 0 auto;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  flex-wrap: wrap;
-}
-.filter-label { font-size: 13px; font-weight: 700; color: var(--text-muted); }
-.filter-select {
-  padding: 7px 12px;
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  font-size: 13px;
-  background: var(--surface);
-  color: var(--text);
-  cursor: pointer;
-  min-width: 130px;
-}
-.btn-clear {
-  background: #fee;
-  color: #c62828;
-  border: 1px solid #fcc;
-  border-radius: 8px;
-  padding: 7px 14px;
-  font-size: 12px;
-  font-weight: 700;
-  cursor: pointer;
-  transition: background 0.2s;
-}
-.btn-clear:hover { background: #fdd; }
+    /* SEARCH & FILTERS */
+    .controls {
+      background: #fff;
+      border-bottom: 1px solid var(--border);
+      padding: 16px 32px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    }
+    .search-box {
+      display: flex;
+      align-items: center;
+      background: var(--bg);
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      padding: 8px 14px;
+      gap: 8px;
+      flex: 1;
+      min-width: 220px;
+    }
+    .search-box input {
+      border: none;
+      background: transparent;
+      font-size: 0.9rem;
+      color: var(--text);
+      width: 100%;
+      outline: none;
+    }
+    .search-box svg { color: var(--muted); flex-shrink: 0; }
+    .filters { display: flex; gap: 10px; flex-wrap: wrap; }
+    .filters select {
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      padding: 8px 12px;
+      font-size: 0.85rem;
+      color: var(--text);
+      background: var(--bg);
+      cursor: pointer;
+      outline: none;
+      min-width: 140px;
+    }
+    .btn-clear {
+      background: none;
+      border: 1.5px solid var(--accent);
+      color: var(--accent);
+      padding: 7px 14px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 0.82rem;
+      font-weight: 600;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+    .btn-clear:hover { background: var(--accent); color: #fff; }
 
-/* BREADCRUMB */
-#breadcrumb {
-  max-width: 1400px;
-  margin: 0 auto;
-  padding: 12px 20px 0;
-  font-size: 13px;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  flex-wrap: wrap;
-}
-.bc-item { color: var(--primary); cursor: pointer; font-weight: 600; }
-.bc-item:hover { text-decoration: underline; }
-.bc-sep { color: #bbb; }
-.bc-current { color: var(--text-muted); font-weight: 500; }
+    /* MAIN */
+    main { padding: 28px 32px; max-width: 1400px; margin: 0 auto; }
 
-/* MAIN CONTENT */
-#main-content {
-  max-width: 1400px;
-  margin: 0 auto;
-  padding: 16px 20px 60px;
-}
-.section-title { font-size: 1.15rem; font-weight: 800; margin-bottom: 6px; display: flex; align-items: center; gap: 10px; }
-.section-sub { font-size: 13px; color: var(--text-muted); margin-bottom: 18px; }
-.count-badge { background: var(--primary); color: #fff; font-size: 11px; padding: 3px 10px; border-radius: 20px; font-weight: 700; }
+    /* STATUS BAR */
+    .status-bar {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-bottom: 24px;
+    }
+    .stat-badge {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 8px 16px;
+      font-size: 0.82rem;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: var(--shadow);
+    }
+    .stat-badge strong { color: var(--primary); font-size: 1rem; }
 
-/* STATE GRID */
-#states-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-  gap: 14px;
-}
-.state-card {
-  background: var(--surface);
-  border-radius: var(--radius);
-  padding: 20px 16px;
-  text-align: center;
-  cursor: pointer;
-  transition: transform 0.18s, box-shadow 0.18s;
-  box-shadow: var(--shadow);
-  border-top: 4px solid var(--state-color);
-  position: relative;
-  overflow: hidden;
-}
-.state-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-hover); }
-.state-card::after {
-  content: '';
-  position: absolute;
-  right: -20px; top: -20px;
-  width: 80px; height: 80px;
-  background: var(--state-color);
-  opacity: 0.06;
-  border-radius: 50%;
-}
-.state-sigla { font-size: 28px; font-weight: 900; color: var(--state-color); line-height: 1; }
-.state-name { font-size: 12px; color: var(--text-muted); margin-top: 4px; font-weight: 600; }
-.state-count { font-size: 11px; color: var(--text-muted); margin-top: 6px; opacity: 0.7; }
-/* Division card variant */
-.state-card.division-card {
-  border-top: 4px solid var(--purple);
-  background: linear-gradient(135deg, #faf5ff 0%, #fff 100%);
-}
-.state-card.division-card .state-sigla { color: var(--purple); font-size: 20px; }
+    /* SECTION TITLE */
+    .section-title {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--primary);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin: 28px 0 16px;
+      padding-bottom: 8px;
+      border-bottom: 2px solid var(--primary);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
 
-/* COORDINATORS GRID */
-#coordinators-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-  gap: 16px;
-}
-.coord-card {
-  background: var(--surface);
-  border-radius: var(--radius);
-  box-shadow: var(--shadow);
-  overflow: hidden;
-  transition: box-shadow 0.2s;
-}
-.coord-card:hover { box-shadow: var(--shadow-hover); }
-.coord-header {
-  padding: 16px;
-  color: #fff;
-  position: relative;
-  overflow: hidden;
-}
-.coord-header::after {
-  content: '';
-  position: absolute;
-  right: -20px; top: -20px;
-  width: 100px; height: 100px;
-  background: rgba(255,255,255,0.08);
-  border-radius: 50%;
-}
-.coord-region-highlight {
-  font-size: 16px;
-  font-weight: 900;
-  margin-bottom: 4px;
-  text-shadow: 0 1px 3px rgba(0,0,0,0.15);
-  letter-spacing: 0.3px;
-}
-.coord-func { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.2px; opacity: 0.85; margin-bottom: 2px; }
-.coord-name { font-size: 15px; font-weight: 700; line-height: 1.3; }
-.coord-body { padding: 12px 16px; display: flex; flex-direction: column; gap: 6px; }
-.coord-contact { display: flex; align-items: center; gap: 8px; font-size: 13px; }
-.coord-contact a { color: var(--primary); text-decoration: none; font-weight: 500; transition: opacity 0.2s; }
-.coord-contact a:hover { opacity: 0.7; text-decoration: underline; }
-.contact-icon { font-size: 15px; flex-shrink: 0; }
-.coord-footer {
-  padding: 10px 16px;
-  border-top: 1px solid var(--border);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-.members-count { font-size: 12px; color: var(--text-muted); }
-.btn-team {
-  background: var(--primary);
-  color: #fff;
-  border: none;
-  border-radius: 8px;
-  padding: 7px 14px;
-  font-size: 12px;
-  font-weight: 700;
-  cursor: pointer;
-  transition: background 0.2s;
-}
-.btn-team:hover { background: var(--primary-light); }
-.btn-clients {
-  background: #fff3e0;
-  color: #bf360c;
-  border: 1px solid #ffcc80;
-  border-radius: 8px;
-  padding: 7px 14px;
-  font-size: 12px;
-  font-weight: 700;
-  cursor: pointer;
-  transition: background 0.2s, border-color 0.2s;
-}
-.btn-clients:hover { background: #ffe0b2; border-color: #ff9800; }
+    /* STATE GRID */
+    .states-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: 16px;
+      margin-bottom: 12px;
+    }
+    .state-card {
+      background: var(--card-bg);
+      border: 2px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px 16px 16px;
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.22s ease;
+      box-shadow: var(--shadow);
+      position: relative;
+    }
+    .state-card:hover {
+      border-color: var(--primary-light);
+      transform: translateY(-3px);
+      box-shadow: 0 6px 20px rgba(0,48,135,0.18);
+    }
+    .state-card.active {
+      border-color: var(--primary);
+      background: linear-gradient(135deg, #e8eeff 0%, #f4f6ff 100%);
+    }
+    .state-card.division-card { border-color: #f59e0b; }
+    .state-card.division-card:hover { border-color: #d97706; }
+    .state-card.division-card.active { background: linear-gradient(135deg, #fef3c7 0%, #fffbeb 100%); border-color: #d97706; }
+    .state-card .state-sigla {
+      font-size: 2rem;
+      font-weight: 800;
+      color: var(--primary);
+      line-height: 1;
+      margin-bottom: 6px;
+    }
+    .state-card.division-card .state-sigla { color: #92400e; }
+    .state-card .state-name { font-size: 0.72rem; color: var(--muted); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px; }
+    .state-badge {
+      background: var(--primary);
+      color: #fff;
+      border-radius: 20px;
+      font-size: 0.7rem;
+      padding: 2px 10px;
+      font-weight: 600;
+      display: inline-block;
+    }
+    .state-card.division-card .state-badge { background: #92400e; }
 
-/* TEAM LEADER HEADER */
-.team-leader-header {
-  border-radius: var(--radius);
-  padding: 20px 24px;
-  color: #fff;
-  margin-bottom: 20px;
-  display: flex;
-  flex-wrap: wrap;
-  align-items: flex-start;
-  gap: 16px;
-  box-shadow: var(--shadow-hover);
-  position: relative;
-  overflow: hidden;
-}
-.team-leader-header::after {
-  content: '';
-  position: absolute;
-  right: -30px; top: -30px;
-  width: 140px; height: 140px;
-  background: rgba(255,255,255,0.07);
-  border-radius: 50%;
-}
-.tlh-avatar {
-  width: 56px; height: 56px;
-  background: rgba(255,255,255,0.22);
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 24px;
-  font-weight: 900;
-  flex-shrink: 0;
-  border: 2px solid rgba(255,255,255,0.4);
-}
-.tlh-info-block { flex: 1; min-width: 200px; }
-.tlh-region-highlight { font-size: 18px; font-weight: 900; margin-bottom: 2px; text-shadow: 0 1px 3px rgba(0,0,0,0.15); }
-.tlh-func { font-size: 10px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; opacity: 0.8; margin-bottom: 4px; }
-.tlh-name { font-size: 22px; font-weight: 900; line-height: 1.2; margin-bottom: 4px; }
-.tlh-region { font-size: 13px; opacity: 0.9; margin-bottom: 10px; }
-.tlh-contacts { display: flex; flex-wrap: wrap; gap: 12px; }
-.tlh-contact-item { display: flex; align-items: center; gap: 6px; font-size: 13px; }
-.tlh-contact-item a { color: rgba(255,255,255,0.92); text-decoration: none; font-weight: 600; transition: opacity 0.2s; }
-.tlh-contact-item a:hover { opacity: 0.75; text-decoration: underline; }
+    /* COORDINATOR PANEL */
+    .coord-panel {
+      background: var(--card-bg);
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius);
+      margin: 8px 0 28px;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      display: none;
+    }
+    .coord-panel.visible { display: block; }
+    .coord-panel-header {
+      background: linear-gradient(90deg, var(--primary) 0%, var(--primary-light) 100%);
+      color: #fff;
+      padding: 14px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .coord-panel-header h3 { font-size: 1rem; font-weight: 700; }
+    .coord-panel-close {
+      background: rgba(255,255,255,0.15);
+      border: none;
+      color: #fff;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 1rem;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .coord-list { padding: 16px; display: flex; flex-direction: column; gap: 16px; }
 
-/* TABLE */
-.table-wrapper { overflow-x: auto; border-radius: var(--radius); box-shadow: var(--shadow); }
-table { width: 100%; border-collapse: collapse; background: var(--surface); font-size: 13px; }
-thead tr { background: var(--primary); color: #fff; }
-th { padding: 12px 14px; text-align: left; font-weight: 700; font-size: 12px; letter-spacing: 0.5px; white-space: nowrap; }
-td { padding: 11px 14px; border-bottom: 1px solid var(--border); vertical-align: middle; }
-tbody tr:last-child td { border-bottom: none; }
-tbody tr:hover { background: #f5f8ff; }
-.func-badge {
-  display: inline-block;
-  padding: 3px 10px;
-  border-radius: 20px;
-  font-size: 11px;
-  font-weight: 700;
-  white-space: nowrap;
-}
-.badge-rep { background: #e8f5e9; color: #1b5e20; }
-.badge-cv { background: #e3f2fd; color: #0d47a1; }
-.badge-tlv { background: #e3f2fd; color: #0d47a1; }
-.badge-ger { background: #fce4ec; color: #880e4f; }
-.badge-coord-med { background: #fff3e0; color: #bf360c; }
-.badge-ded { background: #f3e5f5; color: #4a148c; }
-.badge-coord { background: #e8eaf6; color: #1a237e; }
-.badge-default { background: #eceff1; color: #37474f; }
-.btn-cities {
-  background: #e8f0fe;
-  color: var(--primary);
-  border: none;
-  border-radius: 8px;
-  padding: 5px 10px;
-  font-size: 12px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background 0.2s;
-  white-space: nowrap;
-}
-.btn-cities:hover { background: #c5d8fc; }
-.btn-clients-sm {
-  background: #fff3e0;
-  color: #bf360c;
-  border: 1px solid #ffcc80;
-  border-radius: 8px;
-  padding: 5px 10px;
-  font-size: 12px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background 0.2s;
-  white-space: nowrap;
-}
-.btn-clients-sm:hover { background: #ffe0b2; }
-.contact-link { color: var(--primary); text-decoration: none; font-weight: 500; }
-.contact-link:hover { text-decoration: underline; }
+    /* COORDINATOR CARD */
+    .coord-card {
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      transition: box-shadow 0.2s;
+    }
+    .coord-card:hover { box-shadow: 0 4px 16px rgba(0,48,135,0.12); }
+    .coord-card-header {
+      background: linear-gradient(90deg, #e8eeff 0%, #f4f6ff 100%);
+      border-bottom: 1.5px solid var(--border);
+      padding: 14px 18px;
+      cursor: pointer;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .coord-card-header .coord-region-label {
+      font-size: 1.05rem;
+      font-weight: 800;
+      color: var(--primary);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 4px;
+    }
+    .coord-card-header .coord-name {
+      font-size: 0.92rem;
+      font-weight: 600;
+      color: var(--text);
+    }
+    .coord-card-header .coord-meta {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+      margin-top: 6px;
+    }
+    .coord-meta-item {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 0.78rem;
+      color: var(--muted);
+    }
+    .coord-meta-item a { color: var(--primary); text-decoration: none; }
+    .coord-meta-item a:hover { text-decoration: underline; }
+    .coord-expand-btn {
+      background: var(--primary);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 6px 14px;
+      cursor: pointer;
+      font-size: 0.78rem;
+      font-weight: 600;
+      white-space: nowrap;
+      flex-shrink: 0;
+      transition: background 0.2s;
+    }
+    .coord-expand-btn:hover { background: var(--primary-light); }
+    .coord-func-badge {
+      font-size: 0.7rem;
+      padding: 2px 10px;
+      border-radius: 20px;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      margin-bottom: 4px;
+    }
+    .badge-coord { background: #dbeafe; color: #1e40af; }
+    .badge-gerente { background: #d1fae5; color: #065f46; }
+    .badge-coord-contas { background: #fef3c7; color: #92400e; }
+    .badge-gpe { background: #ede9fe; color: #5b21b6; }
+    .badge-dedicado { background: #fce7f3; color: #9d174d; }
+    .badge-rep { background: #dcfce7; color: #166534; }
+    .badge-consult { background: #e0f2fe; color: #0369a1; }
+    .badge-tlv { background: #fef9c3; color: #713f12; }
 
-/* BACK BUTTON */
-.btn-back {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  color: var(--primary);
-  border-radius: 8px;
-  padding: 8px 16px;
-  font-size: 13px;
-  font-weight: 700;
-  cursor: pointer;
-  margin-bottom: 16px;
-  transition: background 0.2s, box-shadow 0.2s;
-  box-shadow: var(--shadow);
-}
-.btn-back:hover { background: #e8f0fe; box-shadow: var(--shadow-hover); }
+    /* TEAM LIST */
+    .team-section { display: none; }
+    .team-section.visible { display: block; }
+    .team-header {
+      background: var(--primary);
+      color: #fff;
+      padding: 10px 18px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .team-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
+      gap: 12px;
+      padding: 14px;
+    }
+    .member-card {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 14px;
+      transition: box-shadow 0.18s;
+    }
+    .member-card:hover { box-shadow: 0 3px 12px rgba(0,48,135,0.10); }
+    .member-region {
+      font-size: 0.95rem;
+      font-weight: 800;
+      color: var(--primary);
+      text-transform: uppercase;
+      margin-bottom: 6px;
+      letter-spacing: 0.3px;
+    }
+    .member-name { font-size: 0.9rem; font-weight: 600; margin-bottom: 4px; }
+    .member-razao { font-size: 0.75rem; color: var(--muted); font-style: italic; margin-bottom: 6px; }
+    .member-contacts { display: flex; flex-direction: column; gap: 4px; margin-bottom: 8px; }
+    .member-contact-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.78rem;
+      color: var(--muted);
+    }
+    .member-contact-item a { color: var(--primary); text-decoration: none; }
+    .member-contact-item a:hover { text-decoration: underline; }
+    .btn-cities {
+      background: none;
+      border: 1.5px solid var(--primary);
+      color: var(--primary);
+      border-radius: 7px;
+      padding: 4px 12px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.18s;
+      margin-top: 4px;
+    }
+    .btn-cities:hover { background: var(--primary); color: #fff; }
+    .cities-list {
+      display: none;
+      margin-top: 8px;
+      padding: 10px 12px;
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 0.76rem;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+    .cities-list.visible { display: block; }
 
-/* MODAL */
-#modal-overlay {
-  display: none;
-  position: fixed;
-  inset: 0;
-  background: rgba(10,20,50,0.55);
-  z-index: 1000;
-  align-items: center;
-  justify-content: center;
-  padding: 20px;
-}
-#modal-overlay.open { display: flex; }
-.modal-box {
-  background: var(--surface);
-  border-radius: 14px;
-  padding: 28px;
-  max-width: 520px;
-  width: 100%;
-  max-height: 80vh;
-  overflow-y: auto;
-  position: relative;
-  box-shadow: 0 12px 48px rgba(10,45,110,0.25);
-  animation: modalIn 0.22s ease;
-}
-@keyframes modalIn { from { transform: scale(0.92); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-.modal-close {
-  position: absolute;
-  top: 14px; right: 16px;
-  background: none;
-  border: none;
-  font-size: 22px;
-  cursor: pointer;
-  color: var(--text-muted);
-  line-height: 1;
-  transition: color 0.2s;
-}
-.modal-close:hover { color: #c62828; }
-.modal-title { font-size: 18px; font-weight: 800; color: var(--primary); margin-bottom: 4px; padding-right: 30px; }
-.modal-subtitle { font-size: 13px; color: var(--text-muted); margin-bottom: 18px; }
-.cities-container { display: flex; flex-wrap: wrap; gap: 8px; }
-.city-tag {
-  background: #e8f0fe;
-  color: var(--primary);
-  border-radius: 20px;
-  padding: 5px 14px;
-  font-size: 13px;
-  font-weight: 600;
-}
-.client-tag {
-  background: #fff3e0;
-  color: #bf360c;
-  border-radius: 20px;
-  padding: 5px 14px;
-  font-size: 13px;
-  font-weight: 600;
-  border: 1px solid #ffcc80;
-}
+    /* INDIVIDUAL (Gerente/Coord Contas) */
+    .individual-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 14px;
+    }
+    .individual-card {
+      background: var(--card-bg);
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px;
+      box-shadow: var(--shadow);
+      transition: box-shadow 0.2s;
+    }
+    .individual-card:hover { box-shadow: 0 6px 20px rgba(0,48,135,0.12); }
+    .individual-region {
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: var(--primary);
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+    .individual-name { font-size: 0.95rem; font-weight: 600; margin-bottom: 4px; }
+    .individual-contacts { display: flex; flex-direction: column; gap: 5px; margin-top: 8px; }
 
-/* PROGRESS BAR */
-#progress-bar {
-  position: fixed;
-  bottom: 0; left: 0;
-  height: 3px;
-  background: #4caf50;
-  z-index: 9999;
-  transition: width 1s linear;
-  width: 100%;
-}
+    /* PROJETOS ESPECIAIS */
+    .pe-card {
+      background: linear-gradient(135deg, #ede9fe 0%, #f5f3ff 100%);
+      border: 2px solid #c4b5fd;
+      border-radius: var(--radius);
+      padding: 18px;
+      box-shadow: var(--shadow);
+    }
+    .pe-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 16px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid #c4b5fd;
+      cursor: pointer;
+    }
+    .pe-region { font-size: 1.15rem; font-weight: 800; color: #5b21b6; text-transform: uppercase; margin-bottom: 4px; }
+    .pe-name { font-size: 0.95rem; font-weight: 600; color: var(--text); }
 
-/* EMPTY & LOADING */
-.empty-state { text-align: center; padding: 60px 20px; color: var(--text-muted); }
-.empty-icon { font-size: 48px; margin-bottom: 12px; }
-.empty-text { font-size: 16px; font-weight: 600; }
-#loading-state { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 80px 20px; gap: 14px; }
-#loading-state .spinner { width: 36px; height: 36px; border-width: 3px; border-color: #ccc; border-top-color: var(--primary); }
-#error-state { display: none; text-align: center; padding: 60px 20px; }
+    /* LOADING / ERROR */
+    .loading-state, .error-state {
+      text-align: center;
+      padding: 60px 24px;
+      display: none;
+    }
+    .loading-state.visible, .error-state.visible { display: block; }
+    .spinner {
+      width: 40px; height: 40px;
+      border: 4px solid var(--border);
+      border-top-color: var(--primary);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin: 0 auto 16px;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .empty-state { text-align: center; padding: 48px 24px; color: var(--muted); }
 
-.district-label {
-  font-size: 10px;
-  background: rgba(255,255,255,0.22);
-  border-radius: 6px;
-  padding: 2px 7px;
-  display: inline-block;
-  margin-top: 4px;
-  font-weight: 600;
-  letter-spacing: 0.5px;
-}
-.no-data { color: #bbb; font-style: italic; font-size: 12px; }
-.razao-social { font-size: 0.78em; color: #5a6a8a; font-style: italic; margin-top: 2px; }
-
-/* RESPONSIVE */
-@media (max-width: 600px) {
-  .header-inner { padding: 10px 14px; gap: 10px; }
-  .header-search { min-width: 100%; order: 3; }
-  .logo-img { height: 40px; }
-  #main-content { padding: 14px; }
-  #states-grid { grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 10px; }
-  #coordinators-grid { grid-template-columns: 1fr; }
-  th, td { padding: 9px 10px; }
-  .team-leader-header { padding: 16px; }
-  .tlh-name { font-size: 18px; }
-}
-</style>
+    @media (max-width: 600px) {
+      main { padding: 16px; }
+      .controls { padding: 12px 16px; }
+      header { padding: 14px 16px; }
+      .states-grid { grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); }
+    }
+  </style>
 </head>
 <body>
 
-<!-- HEADER -->
-<header id="app-header">
-  <div class="header-inner">
-    <img src="https://raw.githubusercontent.com/gamfarma/imagem-site/2091104c3fa6efcc97594176ed36b38218ffa0f2/Logo%20GAM%20Nova%20Branca.png" class="logo-img" alt="GAM Farma Logo" onerror="this.style.display='none'">
-    <div class="header-titles">
+<header>
+  <div class="header-logo">
+    <img src="https://raw.githubusercontent.com/gamfarma/imagem-site/2091104c3fa6efcc97594176ed36b38218ffa0f2/Logo%20GAM%20Nova%20Branca.png"
+         alt="GAM Farma" onerror="this.style.display='none'"/>
+    <div class="header-title">
       <h1>Rede de Representantes</h1>
       <p>Diretório comercial interativo</p>
     </div>
-    <div class="header-search">
-      <span class="search-icon">&#128269;</span>
-      <input type="text" id="search-input" placeholder="Buscar por nome, cidade, região…" autocomplete="off">
-    </div>
-    <div class="header-actions">
-      <button class="btn-refresh" id="btn-refresh">
-        <span id="refresh-icon">&#128260;</span>
-        Atualizar
-      </button>
-      <span class="timestamp" id="timestamp"></span>
-    </div>
+  </div>
+  <div class="header-meta">
+    <span class="update-info" id="updateInfo">Carregando...</span>
+    <button class="btn-refresh" onclick="forceRefresh()">🔄 Atualizar</button>
   </div>
 </header>
 
-<!-- FILTER BAR -->
-<div id="filter-bar">
-  <div class="filter-inner">
-    <span class="filter-label">Filtrar:</span>
-    <select class="filter-select" id="filter-uf"><option value="">Todos os estados</option></select>
-    <select class="filter-select" id="filter-func">
+<div class="controls">
+  <div class="search-box">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+    </svg>
+    <input type="text" id="searchInput" placeholder="Buscar por nome, região ou cidade..." oninput="applyFilters()"/>
+  </div>
+  <div class="filters">
+    <select id="filterUF" onchange="applyFilters()"><option value="">Todos os estados</option></select>
+    <select id="filterFunc" onchange="applyFilters()">
       <option value="">Todas as funções</option>
-      <option value="coordenador de equipe">Coordenadores de Equipe</option>
-      <option value="representante comercial">Representante Comercial</option>
-      <option value="consultor de vendas">Consultor de Vendas</option>
-      <option value="televendas">Televendas</option>
-      <option value="gerente de contas">Gerente de Contas</option>
-      <option value="médias redes">Coordenador de Médias Redes</option>
-      <option value="dedicados">Dedicados</option>
-      <option value="projetos especiais">Gerente de Projetos Especiais</option>
+      <option value="COORDENADOR_EQUIPE">Coordenador de Equipe</option>
+      <option value="REPRESENTANTE_COMERCIAL">Representante Comercial</option>
+      <option value="CONSULTOR_VENDAS">Consultor de Vendas</option>
+      <option value="GERENTE_CONTAS">Gerente de Contas</option>
+      <option value="COORDENADOR_CONTAS">Coord. Médias Redes</option>
+      <option value="GERENTE_PROJETOS_ESPECIAIS">Gerente Proj. Especiais</option>
+      <option value="DEDICADO">Dedicados</option>
     </select>
-    <select class="filter-select" id="filter-region"><option value="">Todas as regiões</option></select>
-    <button class="btn-clear" id="btn-clear">&#10005; Limpar</button>
+    <select id="filterRegiao" onchange="applyFilters()"><option value="">Todas as regiões</option></select>
+    <button class="btn-clear" onclick="clearFilters()">✕ Limpar</button>
   </div>
 </div>
 
-<!-- BREADCRUMB -->
-<div id="breadcrumb"></div>
-
-<!-- MAIN CONTENT -->
-<div id="main-content">
-  <div id="loading-state">
-    <span class="spinner"></span>
-    <span style="color:var(--text-muted);font-size:14px">Carregando dados da planilha…</span>
+<main>
+  <div class="loading-state visible" id="loadingState">
+    <div class="spinner"></div>
+    <p>Carregando dados da planilha…</p>
   </div>
-  <div id="error-state">
-    <div class="empty-icon">&#9888;&#65039;</div>
-    <div class="empty-text" id="error-msg">Erro ao carregar dados</div>
-    <button class="btn-team" id="btn-retry" style="margin-top:16px">Tentar novamente</button>
+  <div class="error-state" id="errorState">
+    <p style="font-size:2rem">⚠️</p>
+    <p style="font-weight:600;margin:8px 0">Erro ao carregar dados</p>
+    <button class="btn-refresh" onclick="forceRefresh()" style="margin:0 auto;display:inline-flex">Tentar novamente</button>
   </div>
-  <div id="view-states" style="display:none"></div>
-  <div id="view-coordinators" style="display:none"></div>
-  <div id="view-team" style="display:none"></div>
-  <div id="view-search" style="display:none"></div>
-</div>
+  <div id="appContent" style="display:none">
+    <div class="status-bar" id="statusBar"></div>
 
-<!-- MODAL -->
-<div id="modal-overlay">
-  <div class="modal-box">
-    <button class="modal-close" id="modal-close">&#10005;</button>
-    <div class="modal-title" id="modal-title"></div>
-    <div class="modal-subtitle" id="modal-subtitle"></div>
-    <div class="cities-container" id="modal-cities"></div>
+    <!-- ESTADOS NORMAIS -->
+    <div class="section-title">📍 Estados</div>
+    <div class="states-grid" id="statesGrid"></div>
+    <div id="statesPanels"></div>
+
+    <!-- DIVISÕES ESPECIAIS (TLV / EXPANSÃO) -->
+    <div class="section-title" id="divSectionTitle" style="display:none">🗂️ Divisões Especiais</div>
+    <div class="states-grid" id="divisionsGrid"></div>
+    <div id="divisionsPanels"></div>
+
+    <!-- GERENTES DE CONTAS -->
+    <div class="section-title" id="gcSectionTitle" style="display:none">🏢 Gerentes de Contas</div>
+    <div class="individual-grid" id="gerentesGrid"></div>
+
+    <!-- COORDENADORES DE CONTAS MÉDIAS REDES -->
+    <div class="section-title" id="ccSectionTitle" style="display:none">🔗 Coordenadores de Contas – Médias Redes</div>
+    <div class="individual-grid" id="coordContasGrid"></div>
+
+    <!-- PROJETOS ESPECIAIS -->
+    <div class="section-title" id="peSectionTitle" style="display:none">⭐ Projetos Especiais</div>
+    <div id="projetosGrid"></div>
+
+    <div class="empty-state" id="emptyState" style="display:none">
+      <p style="font-size:2rem">🔍</p>
+      <p>Nenhum resultado encontrado para sua busca.</p>
+    </div>
   </div>
-</div>
-
-<!-- PROGRESS BAR -->
-<div id="progress-bar"></div>
+</main>
 
 <script>
-// ============================================================
-// CONSTANTS & CONFIG
-// ============================================================
-const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQJRPejEYUGjqFiruPTGJuS2Itk6qjvyk6moB4_ChCe5_z4_CW0jYcYXJFimYYw4kGcbP2fpdRccLkq/pub?output=csv';
-const REFRESH_INTERVAL = 5 * 60 * 1000; // 5 minutes
+const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQJRPejEYUGjqFiruPTGJuS2Itk6qjvyk6moB4_ChCe5_z4_CW0jYcYXJFimYYw4kGcbP2fpdRccLkq/pub?output=csv";
+let DATA = null;
+let REFRESH_TIMER = null;
+const REFRESH_INTERVAL = 5 * 60 * 1000;
 
-const STATE_COLORS = {
-  SC:'#1565c0', RS:'#c62828', PR:'#2e7d32', MS:'#e65100',
-  SP:'#6a1b9a', GO:'#00838f', DF:'#4527a0', MT:'#827717',
-  MG:'#4e342e', RJ:'#00695c', BA:'#f57f17', DEFAULT:'#607d8b'
-};
-const DIVISION_COLORS = {
-  'Televendas':'#1565c0', 'EXPANSÃO':'#00838f', 'PROJ. ESPECIAIS':'#2e7d32'
-};
 const STATE_NAMES = {
-  AC:'Acre', AL:'Alagoas', AP:'Amapá', AM:'Amazonas', BA:'Bahia',
-  CE:'Ceará', DF:'Distrito Federal', ES:'Espírito Santo', GO:'Goiás',
-  MA:'Maranhão', MT:'Mato Grosso', MS:'Mato Grosso do Sul', MG:'Minas Gerais',
-  PA:'Pará', PB:'Paraíba', PR:'Paraná', PE:'Pernambuco', PI:'Piauí',
-  RJ:'Rio de Janeiro', RN:'Rio Grande do Norte', RS:'Rio Grande do Sul',
-  RO:'Rondônia', RR:'Roraima', SC:'Santa Catarina', SP:'São Paulo',
-  SE:'Sergipe', TO:'Tocantins'
+  SC:'Santa Catarina',RS:'Rio Grande do Sul',PR:'Paraná',SP:'São Paulo',
+  MS:'Mato Grosso do Sul',MT:'Mato Grosso',GO:'Goiás',DF:'Distrito Federal',
+  MG:'Minas Gerais',RJ:'Rio de Janeiro',BA:'Bahia',ES:'Espírito Santo',
+  TLV:'Televendas',EXPANSÃO:'Expansão'
 };
 
-// ============================================================
-// APP STATE
-// ============================================================
-let appData = { rows:[], groups:[], stateMap:{}, divisionMap:{}, updateDate:'' };
-let currentView = 'states';
-let currentState = null;
-let currentGroup = null;
-let refreshTimer = null;
-let progressTimer = null;
-let progressStart = null;
-
-// ============================================================
-// CSV PARSER
-// ============================================================
-function parseCSV(text) {
-  const lines = text.split(/\r?\n/);
-  let headerIdx = -1;
-  let updateDate = '';
-  for (let i = 0; i < lines.length; i++) {
-    const upper = lines[i].toUpperCase();
-    if (upper.includes('DISTRITO') && (upper.includes('NOME') || upper.includes('REPRESENTANTE'))) { headerIdx = i; break; }
-    const dateMatch = lines[i].match(/\d{2}\/\d{2}\/\d{4}/);
-    if (dateMatch) updateDate = dateMatch[0];
-  }
-  if (headerIdx === -1) return { rows:[], updateDate };
-  const rawHeaders = parseLine(lines[headerIdx]);
-  const headers = rawHeaders.map(h => normalizeHeader(h));
-  const rows = [];
-  for (let i = headerIdx + 1; i < lines.length; i++) {
-    const line = lines[i].trim();
-    if (!line) continue;
-    const cells = parseLine(lines[i]);
-    const row = {};
-    headers.forEach((h, idx) => { row[h] = (cells[idx] || '').trim(); });
-    if (!row['NOME'] || row['NOME'] === '') continue;
-    rows.push(row);
-  }
-  return { rows, updateDate };
+function getBadgeClass(cat){
+  const m = {
+    COORDENADOR_EQUIPE:'badge-coord',GERENTE_CONTAS:'badge-gerente',
+    COORDENADOR_CONTAS:'badge-coord-contas',GERENTE_PROJETOS_ESPECIAIS:'badge-gpe',
+    DEDICADO:'badge-dedicado',REPRESENTANTE_COMERCIAL:'badge-rep',
+    CONSULTOR_VENDAS:'badge-consult',OUTRO:'badge-consult'
+  };
+  return m[cat]||'badge-consult';
+}
+function getFuncLabel(cat){
+  const m = {
+    COORDENADOR_EQUIPE:'Coord. Equipe',GERENTE_CONTAS:'Gerente de Contas',
+    COORDENADOR_CONTAS:'Coord. Médias Redes',GERENTE_PROJETOS_ESPECIAIS:'Ger. Proj. Especiais',
+    DEDICADO:'Dedicado',REPRESENTANTE_COMERCIAL:'Rep. Comercial',
+    CONSULTOR_VENDAS:'Consultor de Vendas',OUTRO:'Outro'
+  };
+  return m[cat]||cat;
+}
+function classifyFunc(funcao){
+  const f=funcao.toUpperCase().trim();
+  if(f.includes('COORDENADOR EQUIPE')||f.includes('COORDENADOR DE EQUIPE'))return'COORDENADOR_EQUIPE';
+  if(f.includes('CONSULTOR DE VENDAS'))return'CONSULTOR_VENDAS';
+  if(f.includes('REPRESENTANTE COMERCIAL'))return'REPRESENTANTE_COMERCIAL';
+  if(f.includes('GERENTE DE CONTAS'))return'GERENTE_CONTAS';
+  if(f.includes('COORDENADOR DE CONTAS')||f.includes('MÉDIAS REDES')||f.includes('MEDIAS REDES'))return'COORDENADOR_CONTAS';
+  if(f.includes('GERENTE DE PROJETOS ESPECIAIS'))return'GERENTE_PROJETOS_ESPECIAIS';
+  if(f.includes('DEDICADO'))return'DEDICADO';
+  return'OUTRO';
 }
 
-function parseLine(line) {
-  const result = [];
-  let current = '';
-  let inQuotes = false;
-  for (let i = 0; i < line.length; i++) {
-    const ch = line[i];
-    if (ch === '"') {
-      if (inQuotes && line[i+1] === '"') { current += '"'; i++; }
-      else inQuotes = !inQuotes;
-    } else if (ch === ',' && !inQuotes) {
-      result.push(current); current = '';
-    } else { current += ch; }
+function contactLink(tel){
+  if(!tel||tel==='-')return'—';
+  const clean=tel.replace(/\D/g,'');
+  return `<a href="tel:+55${clean}">${tel}</a>`;
+}
+function emailLink(email){
+  if(!email||email==='-')return'—';
+  return `<a href="mailto:${email}">${email}</a>`;
+}
+
+// ─── PARSE CSV ───────────────────────────────────────────────
+function parseCSV(text){
+  const lines=text.split('\n');
+  let headerIdx=-1;
+  let updateDate='';
+  for(let i=0;i<lines.length;i++){
+    const up=lines[i].toUpperCase();
+    if(up.includes('DISTRITO')&&(up.includes('NOME')||up.includes('REPRESENTANTE'))){headerIdx=i;break;}
+    const dm=lines[i].match(/\d{2}\/\d{2}\/\d{4}/);
+    if(dm)updateDate=dm[0];
   }
-  result.push(current);
+  if(headerIdx===-1)throw new Error('Cabeçalho não encontrado');
+
+  function parseRow(line){
+    const res=[];let cur='';let inQ=false;
+    for(let i=0;i<line.length;i++){
+      const c=line[i];
+      if(c==='"'){inQ=!inQ;}
+      else if(c===','&&!inQ){res.push(cur.trim());cur='';}
+      else{cur+=c;}
+    }
+    res.push(cur.trim());
+    return res;
+  }
+
+  const rawHeaders=parseRow(lines[headerIdx]);
+  const headers=rawHeaders.map(h=>h.replace(/['"]/g,'').trim().toUpperCase()
+    .replace('COORPORATIVO','CORPORATIVO').replace('COODENADOR','COORDENADOR')
+    .normalize('NFD').replace(/[\u0300-\u036f]/g,''));
+
+  const colMap={};
+  headers.forEach((h,i)=>{
+    if(h.includes('DISTRITO')&&!h.includes('SETOR'))colMap.DISTRITO=i;
+    else if(h==='SETOR')colMap.SETOR=i;
+    else if(h.includes('REGI')&&!h.includes('COORD'))colMap.REGIAO=i;
+    else if(h==='UF')colMap.UF=i;
+    else if(h.includes('PRINCIPAIS')||h.includes('CIDADES'))colMap.CIDADES=i;
+    else if(h.includes('FUNC'))colMap.FUNCAO=i;
+    else if(h.includes('NOME')&&!h.includes('RAZAO'))colMap.NOME=i;
+    else if(h.includes('RAZAO')||h.includes('SOCIAL'))colMap.RAZAO_SOCIAL=i;
+    else if(h.includes('CONTATO'))colMap.CONTATO=i;
+    else if(h.includes('EMAIL')&&!h.includes('COORD'))colMap.EMAIL=i;
+    else if(h.includes('COORDENADOR')||h.includes('COODENADOR'))colMap.COORDENADOR_COL=i;
+  });
+
+  const rows=[];
+  for(let i=headerIdx+1;i<lines.length;i++){
+    const cells=parseRow(lines[i]);
+    if(!cells||cells.length<3)continue;
+    const get=(k)=>(colMap[k]!==undefined&&colMap[k]<cells.length)?cells[colMap[k]].replace(/^["']|["']$/g,'').trim():'';
+    const nome=get('NOME');
+    if(!nome)continue;
+    rows.push({
+      DISTRITO:get('DISTRITO'),SETOR:get('SETOR'),REGIAO:get('REGIAO'),UF:get('UF'),
+      CIDADES:get('CIDADES'),FUNCAO:get('FUNCAO'),NOME:nome,
+      RAZAO_SOCIAL:get('RAZAO_SOCIAL'),CONTATO:get('CONTATO'),EMAIL:get('EMAIL'),
+      COORDENADOR_COL:get('COORDENADOR_COL')
+    });
+  }
+  return{rows,updateDate};
+}
+
+// ─── PROCESS DATA ─────────────────────────────────────────────
+function processData(rows){
+  const result={
+    coordenadoresEquipe:[],gerentesContas:[],coordContas:[],projetosEspeciais:null,
+    estados:new Set(),divisoes:new Set()
+  };
+
+  // Classify all
+  rows.forEach(r=>r._cat=classifyFunc(r.FUNCAO));
+
+  // Coord equipe groups
+  const coords=rows.filter(r=>r._cat==='COORDENADOR_EQUIPE');
+  const assigned=new Set();
+  coords.forEach(ldr=>{assigned.add(ldr);});
+
+  const teams=new Map();
+  coords.forEach(ldr=>{
+    const dist=ldr.DISTRITO||'';
+    teams.set(ldr,{leader:ldr,members:[]});
+    const bases=[];
+    dist.split('/').concat(dist.split(',')).forEach(p=>{
+      const n=parseInt(p.trim(),10);
+      if(!isNaN(n))bases.push(Math.floor(n/100)*100);
+    });
+
+    rows.forEach(r=>{
+      if(assigned.has(r))return;
+      const cat=r._cat;
+      if(['COORDENADOR_EQUIPE','GERENTE_CONTAS','COORDENADOR_CONTAS','GERENTE_PROJETOS_ESPECIAIS','DEDICADO'].includes(cat))return;
+      const rd=r.DISTRITO||'';
+      if(!rd||rd==='-')return;
+      const rn=parseInt(rd,10);
+      if(!isNaN(rn)&&bases.includes(Math.floor(rn/100)*100)){
+        teams.get(ldr).members.push(r);assigned.add(r);
+      }
+    });
+  });
+
+  // Fallback by COORDENADOR_COL
+  coords.forEach(ldr=>{
+    const lName=ldr.NOME.toUpperCase().trim();
+    const lFirst=lName.split(' ')[0];
+    rows.forEach(r=>{
+      if(assigned.has(r))return;
+      const cat=r._cat;
+      if(['COORDENADOR_EQUIPE','GERENTE_CONTAS','COORDENADOR_CONTAS','GERENTE_PROJETOS_ESPECIAIS','DEDICADO'].includes(cat))return;
+      const cc=(r.COORDENADOR_COL||'').toUpperCase().trim();
+      if(cc&&(cc===lName||cc===lFirst||lFirst&&cc.includes(lFirst))){
+        teams.get(ldr).members.push(r);assigned.add(r);
+      }
+    });
+  });
+
+  teams.forEach(({leader:ldr,members})=>{
+    const ufVal=(ldr.UF||'').toUpperCase().trim();
+    const regVal=(ldr.REGIAO||'').toUpperCase().trim();
+    let division=null;
+    const allUFs=new Set();
+
+    if(ufVal==='-'||regVal.includes('TLV')){
+      division='TLV';
+      members.forEach(m=>extractUFs(m.UF).forEach(u=>allUFs.add(u)));
+    } else if(ufVal.includes('EXPANS')||regVal.includes('EXPANS')){
+      division='EXPANSÃO';
+      members.forEach(m=>extractUFs(m.UF).forEach(u=>allUFs.add(u)));
+    } else {
+      extractUFs(ldr.UF).forEach(u=>allUFs.add(u));
+      members.forEach(m=>extractUFs(m.UF).forEach(u=>allUFs.add(u)));
+    }
+
+    const group={
+      distrito:ldr.DISTRITO,division,estados:[...allUFs].sort(),
+      coordenador:{
+        nome:ldr.NOME,funcao:ldr.FUNCAO,regiao:ldr.REGIAO,uf:ldr.UF,
+        contato:ldr.CONTATO,email:ldr.EMAIL,razao:ldr.RAZAO_SOCIAL
+      },
+      equipe:members.map(m=>({
+        nome:m.NOME,funcao:m.FUNCAO,categoria:m._cat,regiao:m.REGIAO,
+        uf:m.UF,cidades:m.CIDADES,contato:m.CONTATO,email:m.EMAIL,
+        razao:m.RAZAO_SOCIAL,setor:m.SETOR
+      }))
+    };
+
+    result.coordenadoresEquipe.push(group);
+    if(division)result.divisoes.add(division);
+    else allUFs.forEach(u=>result.estados.add(u));
+  });
+
+  // GPE + Dedicados
+  const gpe=rows.find(r=>r._cat==='GERENTE_PROJETOS_ESPECIAIS');
+  const ded=rows.filter(r=>r._cat==='DEDICADO');
+  if(gpe){
+    const allUFs=new Set(extractUFs(gpe.UF));
+    ded.forEach(d=>extractUFs(d.UF).forEach(u=>allUFs.add(u)));
+    result.projetosEspeciais={
+      lider:{nome:gpe.NOME,funcao:gpe.FUNCAO,regiao:gpe.REGIAO,uf:gpe.UF,contato:gpe.CONTATO,email:gpe.EMAIL},
+      dedicados:ded.map(d=>({nome:d.NOME,funcao:d.FUNCAO,regiao:d.REGIAO,uf:d.UF,cidades:d.CIDADES,contato:d.CONTATO,email:d.EMAIL})),
+      estados:[...allUFs].sort()
+    };
+  }
+
+  rows.filter(r=>r._cat==='GERENTE_CONTAS').forEach(r=>{
+    const ufs=extractUFs(r.UF);
+    result.gerentesContas.push({nome:r.NOME,funcao:r.FUNCAO,regiao:r.REGIAO,uf:r.UF,ufs,contato:r.CONTATO,email:r.EMAIL,distrito:r.DISTRITO});
+    ufs.forEach(u=>result.estados.add(u));
+  });
+
+  rows.filter(r=>r._cat==='COORDENADOR_CONTAS').forEach(r=>{
+    const ufs=extractUFs(r.UF);
+    result.coordContas.push({nome:r.NOME,funcao:r.FUNCAO,regiao:r.REGIAO,uf:r.UF,ufs,contato:r.CONTATO,email:r.EMAIL,distrito:r.DISTRITO});
+    ufs.forEach(u=>result.estados.add(u));
+  });
+
   return result;
 }
 
-function normalizeHeader(h) {
-  let s = h.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toUpperCase().trim();
-  s = s.replace('COORPORATIVO','CORPORATIVO').replace('COODENADOR','COORDENADOR');
-  if (s === 'NOME REPRESENTANTE') s = 'NOME';
-  if (s === 'RAZAO SOCIAL') s = 'RAZAO SOCIAL';
-  return s;
+function extractUFs(str){
+  if(!str||['-','EXPANSÃO','EXPANSAO',''].includes(str.trim().toUpperCase()))return[];
+  return str.split(/[/\-,\s]+/).map(p=>p.trim().toUpperCase()).filter(p=>p.length===2&&/^[A-Z]+$/.test(p));
 }
 
-// ============================================================
-// FIELD HELPERS
-// ============================================================
-function getFunc(row) {
-  return row['FUNCAO'] || row['FUNÇÃO'] || row['FUNCAO'] || '';
-}
-function getRegion(row) {
-  return row['REGIAO'] || row['REGIÃO'] || '';
-}
-function getPhone(row) {
-  return row['CONTATO CORPORATIVO'] || row['CONTATO COORPORATIVO'] || '';
-}
-function getEmail(row) { return row['EMAIL'] || ''; }
-function getCities(row) { return row['PRINCIPAIS CIDADES'] || ''; }
-function getRazaoSocial(row) { return row['RAZAO SOCIAL'] || ''; }
-function getName(row) { return row['NOME'] || ''; }
-function getUF(row) { return (row['UF'] || '').trim(); }
-function getDistrito(row) { return (row['DISTRITO'] || '').trim(); }
-function getSetor(row) { return (row['SETOR'] || '').trim(); }
+// ─── RENDER ───────────────────────────────────────────────────
+function render(data){
+  const p=data.processed||data;
+  const groups=p.coordenadoresEquipe||p.coordenadores_equipe||[];
+  const gc=p.gerentesContas||p.gerentes_contas||[];
+  const cc=p.coordContas||p.coordenadores_contas||[];
+  const pe=p.projetosEspeciais||p.projetos_especiais||null;
 
-function isCoordEquipe(row) {
-  return getFunc(row).toUpperCase().includes('COORDENADOR EQUIPE') || getFunc(row).toUpperCase().includes('COORDENADOR DE EQUIPE');
-}
-function isGerenteProjetosEspeciais(row) {
-  return getFunc(row).toUpperCase().includes('GERENTE DE PROJETOS ESPECIAIS');
-}
-function isDedicado(row) {
-  return getFunc(row).toUpperCase().includes('DEDICADO');
-}
-function isGerenteContas(row) {
-  const f = getFunc(row).toLowerCase();
-  return f.includes('gerente de contas');
-}
-function isCoordContas(row) {
-  const f = getFunc(row).toLowerCase();
-  return f.includes('coordenador de contas') || f.includes('medias redes') || f.includes('médias redes');
-}
-function isClientRole(row) {
-  return isGerenteContas(row) || isCoordContas(row);
-}
-function isRepComercial(row) {
-  return getFunc(row).toLowerCase().includes('representante comercial');
-}
-function isConsultorVendas(row) {
-  return getFunc(row).toLowerCase().includes('consultor de vendas');
-}
+  // Status bar
+  const totalRep=groups.reduce((a,g)=>(g.equipe||[]).length+a,0);
+  document.getElementById('statusBar').innerHTML=`
+    <div class="stat-badge">📋 Atualizado: <strong>${data.update_date||data.generated_at?.substring(0,10)||'—'}</strong></div>
+    <div class="stat-badge">👥 Coord. Equipe: <strong>${groups.filter(g=>!g.division).length}</strong></div>
+    <div class="stat-badge">🗺️ Representantes: <strong>${totalRep}</strong></div>
+    <div class="stat-badge">🏢 Gerentes Contas: <strong>${gc.length}</strong></div>
+  `;
 
-function getUFs(ufStr) {
-  if (!ufStr || ufStr === '-' || ufStr.toUpperCase().includes('EXPANS')) return [];
-  return ufStr.split(/[\/\-,\s]+/).map(s => s.trim().toUpperCase()).filter(s => s.length === 2 && /^[A-Z]{2}$/.test(s));
-}
-
-// ============================================================
-// PROCESS DATA
-// ============================================================
-function processData(rows) {
-  const groups = [];
-  const stateMap = {};
-  const divisionMap = {};
-
-  // --- 1) IDENTIFY COORDENADORES DE EQUIPE by DISTRITO ---
-  const coordsByDist = {};
-  rows.forEach(r => {
-    if (isCoordEquipe(r)) {
-      const dist = getDistrito(r);
-      coordsByDist[dist] = r;
-    }
+  // Populate filters
+  const allUFs=new Set();
+  const allRegioes=new Set();
+  groups.forEach(g=>{
+    (g.estados||[]).forEach(u=>allUFs.add(u));
+    allRegioes.add(g.coordenador.regiao);
+    (g.equipe||[]).forEach(m=>allRegioes.add(m.regiao));
   });
+  gc.forEach(x=>{(x.ufs||[]).forEach(u=>allUFs.add(u));allRegioes.add(x.regiao);});
+  cc.forEach(x=>{(x.ufs||[]).forEach(u=>allUFs.add(u));allRegioes.add(x.regiao);});
 
-  // --- 2) BUILD GROUPS: Pass 1 - Match by district base ---
-  const assignedRows = new Set();
-  const groupMembers = {};
-  Object.keys(coordsByDist).forEach(dist => {
-    const leader = coordsByDist[dist];
-    assignedRows.add(leader);
-    groupMembers[dist] = [];
+  const ufSel=document.getElementById('filterUF');
+  const rSel=document.getElementById('filterRegiao');
+  [...allUFs].sort().forEach(u=>{const o=document.createElement('option');o.value=u;o.textContent=STATE_NAMES[u]||u;ufSel.appendChild(o);});
+  [...allRegioes].filter(Boolean).sort().forEach(r=>{const o=document.createElement('option');o.value=r;o.textContent=r;rSel.appendChild(o);});
 
-    const distParts = dist.split('/').map(p => p.trim());
-    const distBases = distParts.map(p => { const n = parseInt(p); return isNaN(n) ? null : Math.floor(n/100)*100; }).filter(b => b !== null);
-    rows.forEach(r => {
-      if (r === leader || assignedRows.has(r)) return;
-      if (isCoordEquipe(r) || isGerenteProjetosEspeciais(r) || isDedicado(r) || isGerenteContas(r) || isCoordContas(r)) return;
-      const rDist = getDistrito(r);
-      if (rDist === '-' || rDist === '') return;
-      const rDistNum = parseInt(rDist);
-      if (isNaN(rDistNum)) return;
-      const rBase = Math.floor(rDistNum/100)*100;
-      if (distBases.includes(rBase)) {
-        groupMembers[dist].push(r); assignedRows.add(r);
-      }
-    });
-  });
-
-  // --- Pass 2: Fallback - assign remaining by COORDENADOR column ---
-  Object.keys(coordsByDist).forEach(dist => {
-    const leader = coordsByDist[dist];
-    const leaderNameUp = getName(leader).toUpperCase().trim();
-    const leaderFirst = leaderNameUp.split(' ')[0];
-    rows.forEach(r => {
-      if (assignedRows.has(r)) return;
-      if (isCoordEquipe(r) || isGerenteProjetosEspeciais(r) || isDedicado(r) || isGerenteContas(r) || isCoordContas(r)) return;
-      const coordCol = (r['COORDENADOR'] || '').toUpperCase().trim();
-      if (coordCol && (coordCol === leaderNameUp || coordCol === leaderFirst)) {
-        groupMembers[dist].push(r); assignedRows.add(r);
-      }
-    });
-  });
-
-  // --- Build final group objects ---
-  Object.keys(coordsByDist).forEach(dist => {
-    const leader = coordsByDist[dist];
-    const members = groupMembers[dist];
-
-    const leaderUF = getUF(leader);
-    const leaderRegion = getRegion(leader);
-
-    // Determine which states this group covers
-    const allUFs = new Set();
-    getUFs(leaderUF).forEach(u => allUFs.add(u));
-    members.forEach(m => getUFs(getUF(m)).forEach(u => allUFs.add(u)));
-
-    // Determine display category
-    let division = null;
-    if (leaderUF === '-' || leaderRegion.toUpperCase().includes('TLV')) {
-      division = 'Televendas';
-    } else if (leaderUF.toUpperCase().includes('EXPANS') || leaderRegion.toUpperCase().includes('EXPANS')) {
-      division = 'EXPANSÃO';
-      // Garantir que estados de atuação incluem MS, SP, GO, DF, MT
-      ['MS','SP','GO','DF','MT'].forEach(u => allUFs.add(u));
-    }
-
-    const group = {
-      leader: leader,
-      members: members,
-      distKey: dist,
-      states: Array.from(allUFs),
-      division: division,
-      type: 'coordEquipe'
-    };
-    groups.push(group);
-  });
-
-  // --- 3) GERENTE DE PROJETOS ESPECIAIS + DEDICADOS ---
-  const gpeRow = rows.find(r => isGerenteProjetosEspeciais(r));
-  if (gpeRow) {
-    assignedRows.add(gpeRow);
-    const dedicados = rows.filter(r => isDedicado(r));
-    dedicados.forEach(d => assignedRows.add(d));
-    const allUFs = new Set();
-    getUFs(getUF(gpeRow)).forEach(u => allUFs.add(u));
-    dedicados.forEach(m => getUFs(getUF(m)).forEach(u => allUFs.add(u)));
-    const group = {
-      leader: gpeRow,
-      members: dedicados,
-      distKey: 'PROJ_ESP',
-      states: Array.from(allUFs),
-      division: 'PROJ. ESPECIAIS',
-      type: 'projetosEspeciais'
-    };
-    groups.push(group);
-  }
-
-  // --- 4) GERENTES DE CONTAS (individual, no team) ---
-  rows.filter(r => isGerenteContas(r)).forEach(r => {
-    assignedRows.add(r);
-    const ufs = getUFs(getUF(r));
-    const group = {
-      leader: r,
-      members: [],
-      distKey: getDistrito(r),
-      states: ufs,
-      division: null,
-      type: 'gerenteContas'
-    };
-    groups.push(group);
-  });
-
-  // --- 5) COORDENADORES DE CONTAS MÉDIAS REDES (individual, no team) ---
-  rows.filter(r => isCoordContas(r)).forEach(r => {
-    assignedRows.add(r);
-    const ufs = getUFs(getUF(r));
-    const group = {
-      leader: r,
-      members: [],
-      distKey: getDistrito(r),
-      states: ufs,
-      division: null,
-      type: 'coordContas'
-    };
-    groups.push(group);
-  });
-
-  // --- 6) BUILD STATE MAP & DIVISION MAP ---
-  groups.forEach(group => {
-    if (group.division) {
-      if (!divisionMap[group.division]) divisionMap[group.division] = [];
-      divisionMap[group.division].push(group);
-      // ALSO add division groups to their respective state tiles
-      group.states.forEach(uf => {
-        if (uf && uf !== '-' && uf !== 'EXPANSÃO') {
-          if (!stateMap[uf]) stateMap[uf] = [];
-          stateMap[uf].push(group);
-        }
-      });
+  // Build state groups
+  const byState={};
+  const byDiv={};
+  groups.forEach(g=>{
+    if(g.division){
+      if(!byDiv[g.division])byDiv[g.division]=[];
+      byDiv[g.division].push(g);
     } else {
-      group.states.forEach(uf => {
-        // For multi-state groups with members, only show in UFs that have team members
-        if (group.states.length > 1 && group.members.length > 0) {
-          const hasMembers = group.members.some(m => getUF(m) === uf);
-          if (!hasMembers) return; // Skip UFs with no members
-        }
-        if (!stateMap[uf]) stateMap[uf] = [];
-        stateMap[uf].push(group);
+      (g.estados||[]).forEach(uf=>{
+        if(!byState[uf])byState[uf]=[];
+        if(!byState[uf].find(x=>x.coordenador.nome===g.coordenador.nome))
+          byState[uf].push(g);
       });
     }
   });
 
-  return { groups, stateMap, divisionMap };
-}
+  // Also add gc/cc to their states
+  gc.forEach(x=>(x.ufs||[]).forEach(u=>{if(!byState[u])byState[u]=[];}));
+  cc.forEach(x=>(x.ufs||[]).forEach(u=>{if(!byState[u])byState[u]=[];}));
 
-// ============================================================
-// FETCH DATA
-// ============================================================
-async function fetchData() {
-  showLoading();
-  try {
-    const url = `${CSV_URL}&cb=${Date.now()}_${Math.random().toString(36).slice(2)}`;
-    const resp = await fetch(url, { cache:'no-store', headers:{'Cache-Control':'no-store','Pragma':'no-cache'} });
-    if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
-    const text = await resp.text();
-    const { rows, updateDate } = parseCSV(text);
-    if (rows.length === 0) throw new Error('Nenhum dado encontrado na planilha.');
-    const { groups, stateMap, divisionMap } = processData(rows);
-    appData = { rows, groups, stateMap, divisionMap, updateDate };
-    populateFilters();
-    const now = new Date();
-    document.getElementById('timestamp').textContent =
-      `Atualizado: ${now.getHours().toString().padStart(2,'0')}:${now.getMinutes().toString().padStart(2,'0')}`;
-    hideLoading();
-    renderCurrentView();
-    startProgressBar();
-    scheduleRefresh();
-  } catch(e) {
-    showError(e.message || 'Erro ao carregar dados');
-  }
-}
+  // Render state cards
+  const statesGrid=document.getElementById('statesGrid');
+  const statesPanels=document.getElementById('statesPanels');
+  statesGrid.innerHTML='';statesPanels.innerHTML='';
 
-function populateFilters() {
-  const ufSel = document.getElementById('filter-uf');
-  const regionSel = document.getElementById('filter-region');
-  const allUFs = new Set();
-  appData.rows.forEach(r => getUFs(getUF(r)).forEach(u => allUFs.add(u)));
-  const ufs = Array.from(allUFs).sort();
-  ufSel.innerHTML = '<option value="">Todos os estados</option>';
-  ufs.forEach(uf => {
-    const opt = document.createElement('option');
-    opt.value = uf;
-    opt.textContent = `${uf} — ${STATE_NAMES[uf]||uf}`;
-    ufSel.appendChild(opt);
-  });
-  const regions = new Set();
-  appData.rows.forEach(r => {
-    const reg = getRegion(r).trim();
-    if (reg && reg !== '-') regions.add(reg);
-  });
-  regionSel.innerHTML = '<option value="">Todas as regiões</option>';
-  Array.from(regions).sort().forEach(reg => {
-    const opt = document.createElement('option');
-    opt.value = reg.toLowerCase();
-    opt.textContent = reg;
-    regionSel.appendChild(opt);
-  });
-}
+  Object.keys(byState).sort().forEach(uf=>{
+    const coordsInState=byState[uf];
+    const gcInState=gc.filter(x=>(x.ufs||[]).includes(uf));
+    const ccInState=cc.filter(x=>(x.ufs||[]).includes(uf));
+    const total=coordsInState.length+gcInState.length+ccInState.length;
 
-// ============================================================
-// VIEWS — LOADING, ERROR
-// ============================================================
-function showLoading() {
-  document.getElementById('loading-state').style.display = 'flex';
-  document.getElementById('error-state').style.display = 'none';
-  hideAllViews();
-}
-function hideLoading() { document.getElementById('loading-state').style.display = 'none'; }
-function showError(msg) {
-  document.getElementById('loading-state').style.display = 'none';
-  document.getElementById('error-state').style.display = 'block';
-  document.getElementById('error-msg').textContent = msg || 'Erro desconhecido.';
-}
+    const card=document.createElement('div');
+    card.className='state-card';
+    card.dataset.uf=uf;
+    card.innerHTML=`<div class="state-sigla">${uf}</div><div class="state-name">${STATE_NAMES[uf]||uf}</div><span class="state-badge">${total} lider${total!==1?'es':''}</span>`;
+    card.onclick=()=>toggleStatePanel(uf);
+    statesGrid.appendChild(card);
 
-function renderCurrentView() {
-  const query = document.getElementById('search-input').value.trim().toLowerCase();
-  const filterUF = document.getElementById('filter-uf').value;
-  const filterFunc = document.getElementById('filter-func').value.toLowerCase();
-  const filterRegion = document.getElementById('filter-region').value.toLowerCase();
-  const hasFilter = query || filterFunc || filterRegion;
+    // Panel
+    const panel=document.createElement('div');
+    panel.className='coord-panel';
+    panel.id=`panel-${uf}`;
+    panel.innerHTML=`
+      <div class="coord-panel-header">
+        <h3>📍 ${STATE_NAMES[uf]||uf} — ${total} lider${total!==1?'es':''}</h3>
+        <button class="coord-panel-close" onclick="toggleStatePanel('${uf}')">✕</button>
+      </div>
+      <div class="coord-list" id="coordList-${uf}"></div>
+    `;
+    statesPanels.appendChild(panel);
 
-  if (hasFilter || (query && filterUF)) { renderSearchResults(query, filterUF, filterFunc, filterRegion); return; }
-  if (filterUF && !hasFilter) { navigateToState(filterUF); return; }
-  if (currentView === 'states') renderStates();
-  else if (currentView === 'coordinators') renderCoordinators(currentState);
-  else if (currentView === 'team') renderTeam(currentGroup, currentState);
-}
-
-// ============================================================
-// VIEW 1 — HOME (States + Divisions)
-// ============================================================
-function renderStates() {
-  currentView = 'states';
-  hideAllViews();
-  updateBreadcrumb([{ label:'Início' }]);
-  const container = document.getElementById('view-states');
-  container.style.display = 'block';
-  const ufs = Object.keys(appData.stateMap).filter(uf => appData.stateMap[uf].length > 0).sort();
-  const totalTiles = ufs.length;
-
-  let html = `
-    <div class="section-title">&#128506;&#65039; Cobertura Comercial <span class="count-badge">${totalTiles}</span></div>
-    <p class="section-sub">Selecione um estado para ver coordenadores e equipes.</p>
-    <div id="states-grid">`;
-
-  // State tiles (includes division groups that operate in each state)
-  ufs.forEach(uf => {
-    const groups = appData.stateMap[uf];
-    const total = groups.length;
-    const color = STATE_COLORS[uf] || STATE_COLORS.DEFAULT;
-    const name = STATE_NAMES[uf] || uf;
-    html += `
-      <div class="state-card" style="--state-color:${color}" onclick="navigateToState('${uf}')" title="${name}">
-        <div class="state-sigla">${uf}</div>
-        <div class="state-name">${name}</div>
-        <div class="state-count">${total} grupo${total!==1?'s':''}</div>
-      </div>`;
+    // Fill panel
+    const list=panel.querySelector(`#coordList-${uf}`);
+    coordsInState.forEach((g,gi)=>list.appendChild(buildCoordCard(g,`${uf}-${gi}`)));
+    gcInState.forEach((x,i)=>list.appendChild(buildIndividualCard(x,'GERENTE_CONTAS',`gc-${uf}-${i}`)));
+    ccInState.forEach((x,i)=>list.appendChild(buildIndividualCard(x,'COORDENADOR_CONTAS',`cc-${uf}-${i}`)));
   });
 
-  html += '</div>';
-  container.innerHTML = html;
-}
+  // Divisions
+  const divGrid=document.getElementById('divisionsGrid');
+  const divPanels=document.getElementById('divisionsPanels');
+  divGrid.innerHTML='';divPanels.innerHTML='';
+  if(Object.keys(byDiv).length>0){
+    document.getElementById('divSectionTitle').style.display='flex';
+    Object.keys(byDiv).forEach(div=>{
+      const dGroups=byDiv[div];
+      const card=document.createElement('div');
+      card.className='state-card division-card';
+      card.dataset.div=div;
+      card.innerHTML=`<div class="state-sigla" style="font-size:1.4rem">${div==='TLV'?'📞':'🗺️'}</div><div class="state-name">${div}</div><span class="state-badge">${dGroups.length} coord.</span>`;
+      card.onclick=()=>toggleDivPanel(div);
+      divGrid.appendChild(card);
 
-// ============================================================
-// VIEW 2 — COORDINATORS (State or Division)
-// ============================================================
-function navigateToState(uf) {
-  currentView = 'coordinators';
-  currentState = uf;
-  document.getElementById('filter-uf').value = uf;
-  renderCoordinators(uf);
-}
-
-function navigateToDivision(div) {
-  currentView = 'coordinators';
-  currentState = div;
-  renderDivisionCoordinators(div);
-}
-
-function renderCoordinators(uf) {
-  hideAllViews();
-  updateBreadcrumb([
-    { label:'Início', action:'goHome' },
-    { label:`${uf} — ${STATE_NAMES[uf]||uf}` }
-  ]);
-  const container = document.getElementById('view-coordinators');
-  container.style.display = 'block';
-  const groups = appData.stateMap[uf] || [];
-  const color = STATE_COLORS[uf] || STATE_COLORS.DEFAULT;
-
-  let html = `
-    <button class="btn-back" onclick="goHome()">&#8592; Voltar</button>
-    <div class="section-title" style="color:${color}">
-      ${uf} — ${STATE_NAMES[uf]||uf}
-      <span class="count-badge" style="background:${color}">${groups.length} grupo${groups.length!==1?'s':''}</span>
-    </div>
-    <p class="section-sub">Coordenadores, gerentes e representantes com atuação neste estado.</p>
-    <div id="coordinators-grid">`;
-
-  if (groups.length === 0) {
-    html += `<div class="empty-state"><div class="empty-icon">&#128269;</div><div class="empty-text">Nenhum grupo encontrado para este estado.</div></div>`;
-  } else {
-    groups.forEach(group => {
-      html += renderCoordCard(group, uf);
-    });
-  }
-
-  html += '</div>';
-  container.innerHTML = html;
-}
-
-function renderDivisionCoordinators(div) {
-  hideAllViews();
-  updateBreadcrumb([
-    { label:'Início', action:'goHome' },
-    { label:div }
-  ]);
-  const container = document.getElementById('view-coordinators');
-  container.style.display = 'block';
-  const groups = appData.divisionMap[div] || [];
-  const color = DIVISION_COLORS[div] || '#8B5CF6';
-
-  let html = `
-    <button class="btn-back" onclick="goHome()">&#8592; Voltar</button>
-    <div class="section-title" style="color:${color}">
-      ${div === 'PROJ. ESPECIAIS' ? 'Projetos Especiais — SUL' : div === 'EXPANSÃO' ? 'Expansão — Centro Oeste e Sudeste' : div}
-      <span class="count-badge" style="background:${color}">${groups.length}</span>
-    </div>
-    <p class="section-sub">Equipes e representantes desta divisão.</p>
-    <div id="coordinators-grid">`;
-
-  groups.forEach(group => {
-    html += renderCoordCard(group, null);
-  });
-
-  html += '</div>';
-  container.innerHTML = html;
-}
-
-function renderCoordCard(group, uf) {
-  const leader = group.leader;
-  if (!leader) return '';
-  const func = getFunc(leader);
-  const phone = getPhone(leader);
-  const email = getEmail(leader);
-  let region = getRegion(leader);
-  // Override region display for EXPANSÃO
-  if (group.division === 'EXPANSÃO') region = 'Centro Oeste e Sudeste';
-  const headerColor = group.division ? (DIVISION_COLORS[group.division] || '#8B5CF6') : getHeaderColor(func, uf);
-  const isClient = isClientRole(leader);
-  // When viewing from a state, count only members matching that UF
-  const memberCount = (uf && group.states && group.states.length > 1) 
-    ? group.members.filter(m => getUF(m) === uf).length 
-    : group.members.length;
-  const cities = getCities(leader);
-
-  let html = `<div class="coord-card">
-    <div class="coord-header" style="background:${headerColor}">`;
-
-  // Region HIGHLIGHTED above name
-  if (region && region !== '-') {
-    html += `<div class="coord-region-highlight">&#128205; ${region}</div>`;
-  }
-  // Division badge for special groups
-  if (group.division) {
-    const divLabel = group.division === 'PROJ. ESPECIAIS' ? 'Projetos Especiais' : group.division === 'EXPANSÃO' ? 'Expansão' : group.division;
-    html += `<div style="display:inline-block;background:rgba(255,255,255,0.25);color:#fff;font-size:11px;padding:2px 10px;border-radius:20px;margin-bottom:4px;font-weight:600;">${divLabel}</div>`;
-  }
-  html += `<div class="coord-func">${func}</div>
-      <div class="coord-name">${getName(leader)}</div>
-      <span class="district-label">Distrito ${group.distKey}</span>
-    </div>
-    <div class="coord-body">
-      ${phone
-        ? `<div class="coord-contact"><span class="contact-icon">&#128241;</span><a href="tel:${phone.replace(/\D/g,'')}">${phone}</a></div>`
-        : `<div class="coord-contact"><span class="contact-icon">&#128241;</span><span class="no-data">Sem contato</span></div>`}
-      ${email
-        ? `<div class="coord-contact"><span class="contact-icon">&#9993;&#65039;</span><a href="mailto:${email}">${email}</a></div>`
-        : `<div class="coord-contact"><span class="contact-icon">&#9993;&#65039;</span><span class="no-data">Sem e-mail</span></div>`}
-    </div>
-    <div class="coord-footer">`;
-
-  if (isClient) {
-    // Gerente de Contas / Coordenador de Médias Redes: show clients button
-    html += `<span class="members-count">&#127978; Portfólio de clientes</span>
-      <button class="btn-clients" onclick="openClientsModal('${escapeAttr(getName(leader))}','${escapeAttr(region)}','${escapeAttr(cities)}')">&#128203; Ver Clientes</button>`;
-  } else if (memberCount > 0) {
-    html += `<span class="members-count">&#128101; ${memberCount} membro${memberCount!==1?'s':''}</span>
-      <button class="btn-team" onclick="navigateToTeam('${escapeAttr(group.distKey)}','${escapeAttr(uf||currentState||'')}')">Ver equipe &#8594;</button>`;
-  } else {
-    html += `<span class="members-count">&#128101; Equipe</span>
-      <button class="btn-team" onclick="navigateToTeam('${escapeAttr(group.distKey)}','${escapeAttr(uf||currentState||'')}')">Ver equipe &#8594;</button>`;
-  }
-
-  html += `</div></div>`;
-  return html;
-}
-
-function getHeaderColor(func, uf) {
-  const f = func.toLowerCase();
-  if (f.includes('projetos especiais')) return '#2e7d32';
-  if (f.includes('gerente de contas')) return '#ad1457';
-  if (f.includes('medias redes') || f.includes('médias redes')) return '#e65100';
-  if (uf && (STATE_COLORS[uf])) return STATE_COLORS[uf];
-  return STATE_COLORS.DEFAULT;
-}
-
-// ============================================================
-// VIEW 3 — TEAM DETAIL
-// ============================================================
-function navigateToTeam(distKey, fromState) {
-  const group = appData.groups.find(g => g.distKey === distKey);
-  if (!group) return;
-  currentView = 'team';
-  currentGroup = group;
-  currentState = fromState;
-  renderTeam(group, fromState);
-}
-
-function renderTeam(group, fromState) {
-  if (!group) return;
-  hideAllViews();
-  const leaderName = group.leader ? getName(group.leader) : 'Equipe';
-  const isDivision = !!group.division;
-
-  // When a division group is accessed from a state view, show state breadcrumb
-  const showStateBreadcrumb = fromState && STATE_NAMES[fromState];
-  updateBreadcrumb([
-    { label:'Início', action:'goHome' },
-    showStateBreadcrumb
-      ? { label:`${fromState} — ${STATE_NAMES[fromState]}`, action:`navigateToState_bc_${fromState}` }
-      : (isDivision
-        ? { label:group.division, action:`navigateToDivision_bc_${group.division}` }
-        : { label:`${fromState} — ${STATE_NAMES[fromState]||fromState||''}`, action:`navigateToState_bc_${fromState}` }),
-    { label:leaderName }
-  ]);
-  const container = document.getElementById('view-team');
-  container.style.display = 'block';
-  const color = isDivision ? (DIVISION_COLORS[group.division] || '#8B5CF6') : (STATE_COLORS[fromState] || STATE_COLORS.DEFAULT);
-
-  const backAction = (fromState && STATE_NAMES[fromState]) 
-    ? `navigateToState('${escapeAttr(fromState)}')`
-    : (isDivision ? `navigateToDivision('${escapeAttr(group.division)}')` : `navigateToState('${escapeAttr(fromState||currentState||'')}')`);
-  let html = `<button class="btn-back" onclick="${backAction}">&#8592; Voltar</button>`;
-
-  // LEADER HEADER CARD
-  if (group.leader) {
-    const ldr = group.leader;
-    const lFunc = getFunc(ldr);
-    const lPhone = getPhone(ldr);
-    const lEmail = getEmail(ldr);
-    let lRegion = getRegion(ldr);
-    if (group.division === 'EXPANSÃO') lRegion = 'Centro Oeste e Sudeste';
-    const initials = getName(ldr).split(' ').filter(w=>w.length>0).slice(0,2).map(w=>w[0]).join('').toUpperCase();
-    html += `
-      <div class="team-leader-header" style="background:linear-gradient(135deg,${color} 0%,${color}cc 100%)">
-        <div class="tlh-avatar">${initials}</div>
-        <div class="tlh-info-block">
-          ${lRegion ? `<div class="tlh-region-highlight">&#128205; ${lRegion}</div>` : ''}
-          <div class="tlh-func">${lFunc}</div>
-          <div class="tlh-name">${getName(ldr)}</div>
-          <div class="tlh-contacts">
-            ${lPhone ? `<div class="tlh-contact-item"><span>&#128241;</span><a href="tel:${lPhone.replace(/\D/g,'')}">${lPhone}</a></div>` : ''}
-            ${lEmail ? `<div class="tlh-contact-item"><span>&#9993;&#65039;</span><a href="mailto:${lEmail}">${lEmail}</a></div>` : ''}
-          </div>
+      const panel=document.createElement('div');
+      panel.className='coord-panel';
+      panel.id=`divpanel-${div}`;
+      panel.innerHTML=`
+        <div class="coord-panel-header" style="background:linear-gradient(90deg,#92400e,#b45309)">
+          <h3>${div==='TLV'?'📞':'🗺️'} Divisão ${div}</h3>
+          <button class="coord-panel-close" onclick="toggleDivPanel('${div}')">✕</button>
         </div>
-      </div>`;
+        <div class="coord-list" id="divList-${div}"></div>
+      `;
+      divPanels.appendChild(panel);
+      const list=panel.querySelector(`#divList-${div}`);
+      dGroups.forEach((g,gi)=>list.appendChild(buildCoordCard(g,`div-${div}-${gi}`)));
+    });
   }
 
-  // When viewing from a state, filter members by that state's UF (all group types)
-  let members = (fromState && STATE_NAMES[fromState] && group.states && group.states.length > 1) 
-    ? group.members.filter(m => getUF(m) === fromState)
-    : group.members;
-  const showingFiltered = members.length !== group.members.length;
+  // Gerentes Contas (individual section — filtered out from states already shown per-state)
+  // Show all in dedicated section
+  const gcGrid=document.getElementById('gerentesGrid');
+  gcGrid.innerHTML='';
+  if(gc.length>0){
+    document.getElementById('gcSectionTitle').style.display='flex';
+    gc.forEach((x,i)=>gcGrid.appendChild(buildIndividualCard(x,'GERENTE_CONTAS',`gc-all-${i}`)));
+  }
 
-  html += `
-    <div class="section-title" style="color:${color}">
-      &#128101; Equipe${group.leader ? ' de ' + getName(group.leader) : ''}
-      <span class="count-badge" style="background:${color}">${members.length} membro${members.length!==1?'s':''}</span>
+  const ccGrid=document.getElementById('coordContasGrid');
+  ccGrid.innerHTML='';
+  if(cc.length>0){
+    document.getElementById('ccSectionTitle').style.display='flex';
+    cc.forEach((x,i)=>ccGrid.appendChild(buildIndividualCard(x,'COORDENADOR_CONTAS',`cc-all-${i}`)));
+  }
+
+  // Projetos Especiais
+  const peGrid=document.getElementById('projetosGrid');
+  peGrid.innerHTML='';
+  if(pe){
+    document.getElementById('peSectionTitle').style.display='flex';
+    peGrid.appendChild(buildPECard(pe));
+  }
+}
+
+function buildCoordCard(g,uid){
+  const c=g.coordenador;
+  const cat=classifyFunc(c.funcao||'');
+  const div=document.createElement('div');
+  div.className='coord-card';
+  div.dataset.searchData=JSON.stringify({nome:c.nome,regiao:c.regiao,uf:c.uf,funcao:c.funcao,equipe:g.equipe||[]}).toLowerCase();
+
+  const hasTeam=(g.equipe||[]).length>0;
+  div.innerHTML=`
+    <div class="coord-card-header" onclick="toggleTeam('team-${uid}',this)">
+      <div>
+        <span class="coord-func-badge ${getBadgeClass(cat)}">${getFuncLabel(cat)}</span>
+        <div class="coord-region-label">${c.regiao||'—'}</div>
+        <div class="coord-name">${c.nome}</div>
+        <div class="coord-meta">
+          <span class="coord-meta-item">📞 ${contactLink(c.contato)}</span>
+          <span class="coord-meta-item">✉️ ${emailLink(c.email)}</span>
+          ${c.razao&&c.razao!=='-'?`<span class="coord-meta-item">🏢 ${c.razao}</span>`:''}
+        </div>
+      </div>
+      ${hasTeam?`<button class="coord-expand-btn">Ver equipe (${g.equipe.length})</button>`:''}
     </div>
-    <p class="section-sub">${group.distKey !== 'PROJ_ESP' ? 'Distrito ' + group.distKey : 'Projetos Especiais — SUL'}${showingFiltered ? ' · Exibindo membros de ' + fromState : (group.states.length > 0 ? ' · ' + group.states.join(', ') : '')}</p>`;
+    ${hasTeam?`
+    <div class="team-section" id="team-${uid}">
+      <div class="team-header">👥 Equipe de ${c.nome} — ${c.regiao}</div>
+      <div class="team-grid">
+        ${(g.equipe||[]).map((m,mi)=>buildMemberCard(m,`m-${uid}-${mi}`)).join('')}
+      </div>
+    </div>`:''}
+  `;
+  return div;
+}
 
-  if (members.length === 0) {
-    html += `<div class="empty-state"><div class="empty-icon">&#128100;</div><div class="empty-text">Nenhum membro na equipe.</div></div>`;
-  } else {
-    html += `
-      <div class="table-wrapper">
-        <table>
-          <thead>
-            <tr>
-              <th>Nome</th>
-              <th>Função</th>
-              <th>Contato Corporativo</th>
-              <th>E-mail</th>
-              <th>UF</th>
-              <th>Região</th>
-              <th>Cidades / Clientes</th>
-            </tr>
-          </thead>
-          <tbody>`;
+function buildMemberCard(m,uid){
+  const isRep=m.categoria==='REPRESENTANTE_COMERCIAL';
+  const hasCities=m.cidades&&m.cidades!=='-'&&m.cidades.length>2;
+  return `
+    <div class="member-card" data-member='${JSON.stringify({nome:m.nome,regiao:m.regiao,cidades:m.cidades,funcao:m.funcao}).replace(/'/g,"&#39;")}'>
+      <div class="member-region">${m.regiao||'—'}</div>
+      <span class="coord-func-badge ${getBadgeClass(m.categoria)}" style="margin-bottom:6px">${getFuncLabel(m.categoria)}</span>
+      <div class="member-name">${m.nome}</div>
+      ${isRep&&m.razao&&m.razao!=='-'?`<div class="member-razao">🏢 ${m.razao}</div>`:''}
+      <div class="member-contacts">
+        <span class="member-contact-item">📞 ${contactLink(m.contato)}</span>
+        <span class="member-contact-item">✉️ ${emailLink(m.email)}</span>
+      </div>
+      ${hasCities?`<button class="btn-cities" onclick="toggleCities('cities-${uid}',this)">🏙️ Principais cidades</button>
+      <div class="cities-list" id="cities-${uid}">${m.cidades}</div>`:''}
+    </div>
+  `;
+}
 
-    members.forEach(m => {
-      const func = getFunc(m);
-      const badge = getFuncBadge(func);
-      const phone = getPhone(m);
-      const email = getEmail(m);
-      const region = getRegion(m);
-      const cities = getCities(m);
-      const nome = getName(m);
-      const uf = getUF(m);
-      const razao = getRazaoSocial(m);
-      const isRC = isRepComercial(m);
-      const isClient = isClientRole(m);
+function buildIndividualCard(x,cat,uid){
+  const div=document.createElement('div');
+  div.className='coord-card';
+  const badge=getBadgeClass(cat);
+  const label=getFuncLabel(cat);
+  div.innerHTML=`
+    <div class="coord-card-header" style="cursor:default">
+      <div>
+        <span class="coord-func-badge ${badge}">${label}</span>
+        <div class="coord-region-label">${x.regiao||x.uf||'—'}</div>
+        <div class="coord-name">${x.nome}</div>
+        <div class="coord-meta">
+          <span class="coord-meta-item">📞 ${contactLink(x.contato)}</span>
+          <span class="coord-meta-item">✉️ ${emailLink(x.email)}</span>
+        </div>
+      </div>
+    </div>
+  `;
+  return div;
+}
 
-      let citiesBtn = '<span class="no-data">—</span>';
-      if (cities) {
-        if (isClient) {
-          citiesBtn = `<button class="btn-clients-sm" onclick="openClientsModal('${escapeAttr(nome)}','${escapeAttr(region)}','${escapeAttr(cities)}')">&#127978; Clientes</button>`;
-        } else {
-          citiesBtn = `<button class="btn-cities" onclick="openCitiesModal('${escapeAttr(nome)}','${escapeAttr(region)}','${escapeAttr(cities)}')">&#128205; Cidades</button>`;
-        }
-      }
+function buildPECard(pe){
+  const ldr=pe.lider;
+  const div=document.createElement('div');
+  div.className='pe-card';
+  const dedicadosHtml=(pe.dedicados||[]).map((d,i)=>`
+    <div class="member-card">
+      <div class="member-region">${d.regiao||'—'}</div>
+      <span class="coord-func-badge badge-dedicado" style="margin-bottom:6px">Dedicado</span>
+      <div class="member-name">${d.nome}</div>
+      <div class="member-contacts">
+        <span class="member-contact-item">📞 ${contactLink(d.contato)}</span>
+        <span class="member-contact-item">✉️ ${emailLink(d.email)}</span>
+      </div>
+    </div>
+  `).join('');
 
-      html += `
-            <tr>
-              <td>
-                <div style="font-weight:700;margin-bottom:2px">${nome}</div>
-                ${isRC && razao && razao !== '-' && razao !== '' ? `<div class="razao-social">&#127970; ${razao}</div>` : ''}
-              </td>
-              <td><span class="func-badge ${badge.cls}">${badge.label}</span></td>
-              <td>${phone ? `<a class="contact-link" href="tel:${phone.replace(/\D/g,'')}">${phone}</a>` : '<span class="no-data">—</span>'}</td>
-              <td>${email ? `<a class="contact-link" href="mailto:${email}">${email}</a>` : '<span class="no-data">—</span>'}</td>
-              <td>${uf || '—'}</td>
-              <td>${region || '<span class="no-data">—</span>'}</td>
-              <td>${citiesBtn}</td>
-            </tr>`;
-    });
-    html += '</tbody></table></div>';
+  div.innerHTML=`
+    <div class="pe-header" onclick="toggleTeam('pe-team',this)">
+      <div>
+        <span class="coord-func-badge badge-gpe">Ger. Projetos Especiais</span>
+        <div class="pe-region">${ldr.regiao||'SUL'} — ${ldr.uf||'PR/RS/SC'}</div>
+        <div class="pe-name">${ldr.nome}</div>
+        <div class="coord-meta">
+          <span class="coord-meta-item">📞 ${contactLink(ldr.contato)}</span>
+          <span class="coord-meta-item">✉️ ${emailLink(ldr.email)}</span>
+        </div>
+      </div>
+      <button class="coord-expand-btn" style="background:#5b21b6">Ver dedicados (${(pe.dedicados||[]).length})</button>
+    </div>
+    <div class="team-section" id="pe-team">
+      <div class="team-header" style="background:#5b21b6">⭐ Dedicados — ${ldr.nome}</div>
+      <div class="team-grid">${dedicadosHtml}</div>
+    </div>
+  `;
+  return div;
+}
+
+// ─── INTERACTIONS ─────────────────────────────────────────────
+function toggleStatePanel(uf){
+  const panel=document.getElementById(`panel-${uf}`);
+  const card=document.querySelector(`.state-card[data-uf="${uf}"]`);
+  if(!panel)return;
+  const open=panel.classList.contains('visible');
+  document.querySelectorAll('.coord-panel.visible').forEach(p=>p.classList.remove('visible'));
+  document.querySelectorAll('.state-card.active, .state-card.division-card.active').forEach(c=>c.classList.remove('active'));
+  if(!open){panel.classList.add('visible');card&&card.classList.add('active');panel.scrollIntoView({behavior:'smooth',block:'nearest'});}
+}
+function toggleDivPanel(div){
+  const panel=document.getElementById(`divpanel-${div}`);
+  const card=document.querySelector(`.state-card[data-div="${div}"]`);
+  if(!panel)return;
+  const open=panel.classList.contains('visible');
+  document.querySelectorAll('.coord-panel.visible').forEach(p=>p.classList.remove('visible'));
+  document.querySelectorAll('.state-card.active').forEach(c=>c.classList.remove('active'));
+  if(!open){panel.classList.add('visible');card&&card.classList.add('active');panel.scrollIntoView({behavior:'smooth',block:'nearest'});}
+}
+function toggleTeam(id,btn){
+  const el=document.getElementById(id);
+  if(!el)return;
+  el.classList.toggle('visible');
+  const b=btn.querySelector('.coord-expand-btn')||btn.closest('.coord-card-header').querySelector('.coord-expand-btn')||btn;
+  if(b.classList.contains('coord-expand-btn')){
+    b.textContent=el.classList.contains('visible')?b.textContent.replace('Ver','Fechar'):b.textContent.replace('Fechar','Ver');
   }
-  container.innerHTML = html;
+}
+function toggleCities(id,btn){
+  const el=document.getElementById(id);
+  if(!el)return;
+  el.classList.toggle('visible');
+  btn.textContent=el.classList.contains('visible')?'🏙️ Ocultar cidades':'🏙️ Principais cidades';
 }
 
-function getFuncBadge(func) {
-  const f = func.toLowerCase();
-  if (f.includes('representante comercial')) return { cls:'badge-rep', label:'Representante Comercial' };
-  if (f.includes('consultor de vendas')) return { cls:'badge-cv', label:'Consultor de Vendas' };
-  if (f.includes('gerente de contas')) return { cls:'badge-ger', label:'Gerente de Contas' };
-  if (f.includes('medias redes') || f.includes('médias redes')) return { cls:'badge-coord-med', label:'Coordenador de Médias Redes' };
-  if (f.includes('dedicado')) return { cls:'badge-ded', label:'Dedicado' };
-  if (f.includes('coordenador')) return { cls:'badge-coord', label:'Coordenador' };
-  return { cls:'badge-default', label:func||'—' };
-}
+// ─── FILTERS ──────────────────────────────────────────────────
+function applyFilters(){
+  const q=(document.getElementById('searchInput').value||'').toLowerCase();
+  const uf=(document.getElementById('filterUF').value||'').toLowerCase();
+  const func=(document.getElementById('filterFunc').value||'').toLowerCase();
+  const reg=(document.getElementById('filterRegiao').value||'').toLowerCase();
 
-// ============================================================
-// SEARCH RESULTS
-// ============================================================
-function renderSearchResults(query, filterUF, filterFunc, filterRegion) {
-  hideAllViews();
-  updateBreadcrumb([
-    { label:'Início', action:'goHome' },
-    { label:'Resultados da busca' }
-  ]);
-  const container = document.getElementById('view-search');
-  container.style.display = 'block';
-
-  let results = appData.rows.filter(r => {
-    const nome = getName(r).toLowerCase();
-    const uf = getUF(r).toUpperCase();
-    const func = getFunc(r).toLowerCase();
-    const region = getRegion(r).toLowerCase();
-    const cities = getCities(r).toLowerCase();
-    const razao = getRazaoSocial(r).toLowerCase();
-    if (query && !nome.includes(query) && !cities.includes(query) && !region.includes(query) && !razao.includes(query)) return false;
-    if (filterUF) {
-      const rowUFs = getUFs(uf);
-      if (!rowUFs.includes(filterUF) && !uf.includes(filterUF)) return false;
-    }
-    if (filterFunc && !func.includes(filterFunc)) return false;
-    if (filterRegion && !region.includes(filterRegion)) return false;
-    return true;
+  const cards=document.querySelectorAll('.coord-card, .individual-card, .pe-card, .member-card');
+  let visible=0;
+  cards.forEach(card=>{
+    const text=(card.textContent||'').toLowerCase();
+    const ufMatch=!uf||text.includes(uf)||card.dataset.uf===uf.toUpperCase();
+    const qMatch=!q||text.includes(q);
+    const funcMatch=!func||text.includes(func.replace('_',' '))||card.innerHTML.toLowerCase().includes(func.toLowerCase());
+    const regMatch=!reg||text.includes(reg.toLowerCase());
+    const show=ufMatch&&qMatch&&funcMatch&&regMatch;
+    card.style.display=show?'':'none';
+    if(show)visible++;
   });
-
-  let html = `
-    <div class="section-title">&#128269; Resultados <span class="count-badge">${results.length}</span></div>
-    <p class="section-sub">${results.length} resultado${results.length!==1?'s':''} encontrado${results.length!==1?'s':''}.</p>`;
-
-  if (results.length === 0) {
-    html += `<div class="empty-state"><div class="empty-icon">&#128269;</div><div class="empty-text">Nenhum resultado encontrado.</div></div>`;
-  } else {
-    html += `
-      <div class="table-wrapper">
-        <table>
-          <thead><tr><th>Nome</th><th>Função</th><th>UF</th><th>Região</th><th>Contato</th><th>E-mail</th><th>Cidades / Clientes</th></tr></thead>
-          <tbody>`;
-    results.forEach(r => {
-      const func = getFunc(r);
-      const badge = getFuncBadge(func);
-      const phone = getPhone(r);
-      const email = getEmail(r);
-      const region = getRegion(r);
-      const cities = getCities(r);
-      const uf = getUF(r);
-      const nome = getName(r);
-      const razao = getRazaoSocial(r);
-      const isRC = isRepComercial(r);
-      const isClient = isClientRole(r);
-      let citiesBtn = '<span class="no-data">—</span>';
-      if (cities) {
-        citiesBtn = isClient
-          ? `<button class="btn-clients-sm" onclick="openClientsModal('${escapeAttr(nome)}','${escapeAttr(region)}','${escapeAttr(cities)}')">&#127978; Clientes</button>`
-          : `<button class="btn-cities" onclick="openCitiesModal('${escapeAttr(nome)}','${escapeAttr(region)}','${escapeAttr(cities)}')">&#128205; Cidades</button>`;
-      }
-      html += `
-            <tr>
-              <td>
-                <strong>${nome}</strong>
-                ${isRC && razao && razao !== '-' && razao !== '' ? `<div class="razao-social">&#127970; ${razao}</div>` : ''}
-              </td>
-              <td><span class="func-badge ${badge.cls}">${badge.label}</span></td>
-              <td>${uf}</td>
-              <td>${region||'<span class="no-data">—</span>'}</td>
-              <td>${phone?`<a class="contact-link" href="tel:${phone.replace(/\D/g,'')}">${phone}</a>`:'<span class="no-data">—</span>'}</td>
-              <td>${email?`<a class="contact-link" href="mailto:${email}">${email}</a>`:'<span class="no-data">—</span>'}</td>
-              <td>${citiesBtn}</td>
-            </tr>`;
-    });
-    html += '</tbody></table></div>';
-  }
-  container.innerHTML = html;
+  document.getElementById('emptyState').style.display=visible===0?'block':'none';
+}
+function clearFilters(){
+  document.getElementById('searchInput').value='';
+  document.getElementById('filterUF').value='';
+  document.getElementById('filterFunc').value='';
+  document.getElementById('filterRegiao').value='';
+  applyFilters();
 }
 
-// ============================================================
-// NAVIGATION
-// ============================================================
-function goHome() {
-  currentView = 'states'; currentState = null; currentGroup = null;
-  document.getElementById('filter-uf').value = '';
-  document.getElementById('filter-func').value = '';
-  document.getElementById('filter-region').value = '';
-  document.getElementById('search-input').value = '';
-  renderStates();
-}
-
-function hideAllViews() {
-  ['view-states','view-coordinators','view-team','view-search'].forEach(id => {
-    document.getElementById(id).style.display = 'none';
-  });
-}
-
-function updateBreadcrumb(items) {
-  const bc = document.getElementById('breadcrumb');
-  if (items.length <= 1 && items[0].label === 'Início') { bc.innerHTML = ''; return; }
-  let html = '';
-  items.forEach((item, i) => {
-    if (i > 0) html += '<span class="bc-sep">&#8250;</span>';
-    if (i === items.length - 1) {
-      html += `<span class="bc-current">${item.label}</span>`;
-    } else if (item.action === 'goHome') {
-      html += `<span class="bc-item" onclick="goHome()">${item.label}</span>`;
-    } else if (item.action && item.action.startsWith('navigateToState_bc_')) {
-      const st = item.action.replace('navigateToState_bc_','');
-      html += `<span class="bc-item" onclick="navigateToState('${escapeAttr(st)}')">${item.label}</span>`;
-    } else if (item.action && item.action.startsWith('navigateToDivision_bc_')) {
-      const dv = item.action.replace('navigateToDivision_bc_','');
-      html += `<span class="bc-item" onclick="navigateToDivision('${escapeAttr(dv)}')">${item.label}</span>`;
+// ─── DATA LOADING ─────────────────────────────────────────────
+async function loadData(force=false){
+  const cb=force?`?cb=${Date.now()}`:`?cb=${Math.floor(Date.now()/300000)*300000}`;
+  try{
+    // Try data.json first (generated by script.py)
+    let resp=await fetch(`./data.json${cb}`);
+    if(resp.ok){
+      const json=await resp.json();
+      DATA=json;
+      document.getElementById('updateInfo').textContent=`Atualizado: ${json.update_date||json.generated_at?.substring(0,10)||'—'}`;
+      const p=json.processed||json;
+      render({processed:p,update_date:json.update_date,generated_at:json.generated_at});
     } else {
-      html += `<span class="bc-item" onclick="goHome()">${item.label}</span>`;
+      // Fallback: load CSV directly
+      await loadFromCSV(force);
     }
-  });
-  bc.innerHTML = html;
+  } catch(e){
+    try{await loadFromCSV(force);}
+    catch(e2){showError();}
+  }
 }
 
-// ============================================================
-// MODALS
-// ============================================================
-function openCitiesModal(nome, region, citiesStr) {
-  document.getElementById('modal-title').textContent = nome;
-  document.getElementById('modal-subtitle').textContent = `Principais cidades${region?' — '+region:''}`;
-  const cities = citiesStr.split(/[,;]+/).map(c=>c.trim()).filter(c=>c&&c!=='-');
-  document.getElementById('modal-cities').innerHTML =
-    cities.length > 0
-      ? cities.map(c=>`<span class="city-tag">${c}</span>`).join('')
-      : '<span class="no-data">Nenhuma cidade cadastrada.</span>';
-  document.getElementById('modal-overlay').classList.add('open');
+async function loadFromCSV(force=false){
+  const cb=force?Date.now():Math.floor(Date.now()/300000)*300000;
+  const url=`${CSV_URL}&cb=${cb}`;
+  const resp=await fetch(url);
+  if(!resp.ok)throw new Error('CSV not found');
+  const text=await resp.text();
+  const {rows,updateDate}=parseCSV(text);
+  const processed=processData(rows);
+  DATA={processed,update_date:updateDate,generated_at:new Date().toISOString()};
+  document.getElementById('updateInfo').textContent=`Atualizado: ${updateDate||'—'} (CSV direto)`;
+  render(DATA);
 }
 
-function openClientsModal(nome, region, clientsStr) {
-  document.getElementById('modal-title').textContent = nome;
-  document.getElementById('modal-subtitle').textContent = `Clientes atendidos${region?' — '+region:''}`;
-  const clients = (clientsStr||'').split(/[,;]+/).map(c=>c.trim()).filter(c=>c&&c!=='-');
-  document.getElementById('modal-cities').innerHTML =
-    clients.length > 0
-      ? clients.map(c=>`<span class="client-tag">${c}</span>`).join('')
-      : '<span class="no-data">Nenhum cliente cadastrado.</span>';
-  document.getElementById('modal-overlay').classList.add('open');
+function showError(){
+  document.getElementById('loadingState').classList.remove('visible');
+  document.getElementById('errorState').classList.add('visible');
 }
 
-function closeModal() {
-  document.getElementById('modal-overlay').classList.remove('open');
-}
-document.getElementById('modal-close').addEventListener('click', closeModal);
-document.getElementById('modal-overlay').addEventListener('click', e => {
-  if (e.target === document.getElementById('modal-overlay')) closeModal();
-});
-document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
-
-// ============================================================
-// AUTO-REFRESH & PROGRESS BAR
-// ============================================================
-function scheduleRefresh() {
-  if (refreshTimer) clearTimeout(refreshTimer);
-  refreshTimer = setTimeout(() => { fetchData(); }, REFRESH_INTERVAL);
+async function forceRefresh(){
+  document.getElementById('appContent').style.display='none';
+  document.getElementById('loadingState').classList.add('visible');
+  document.getElementById('errorState').classList.remove('visible');
+  document.getElementById('filterUF').innerHTML='<option value="">Todos os estados</option>';
+  document.getElementById('filterRegiao').innerHTML='<option value="">Todas as regiões</option>';
+  await loadData(true);
 }
 
-function startProgressBar() {
-  const bar = document.getElementById('progress-bar');
-  progressStart = Date.now();
-  if (progressTimer) clearInterval(progressTimer);
-  bar.style.transition = 'none';
-  bar.style.width = '100%';
-  progressTimer = setInterval(() => {
-    const elapsed = Date.now() - progressStart;
-    const remaining = Math.max(0, 1 - elapsed / REFRESH_INTERVAL);
-    bar.style.transition = 'width 1s linear';
-    bar.style.width = (remaining * 100) + '%';
-    if (remaining <= 0) clearInterval(progressTimer);
-  }, 1000);
+function scheduleRefresh(){
+  if(REFRESH_TIMER)clearInterval(REFRESH_TIMER);
+  REFRESH_TIMER=setInterval(()=>loadData(true),REFRESH_INTERVAL);
 }
 
-// ============================================================
-// REFRESH BUTTON
-// ============================================================
-document.getElementById('btn-refresh').addEventListener('click', () => {
-  const icon = document.getElementById('refresh-icon');
-  icon.outerHTML = '<span class="spinner" id="refresh-icon"></span>';
-  if (refreshTimer) clearTimeout(refreshTimer);
-  if (progressTimer) clearInterval(progressTimer);
-  fetchData().finally(() => {
-    const spinner = document.getElementById('refresh-icon');
-    if (spinner) spinner.outerHTML = '<span id="refresh-icon">&#128260;</span>';
-  });
-});
-
-document.getElementById('btn-retry').addEventListener('click', fetchData);
-
-// ============================================================
-// FILTERS & SEARCH
-// ============================================================
-let searchDebounce = null;
-document.getElementById('search-input').addEventListener('input', () => {
-  clearTimeout(searchDebounce);
-  searchDebounce = setTimeout(() => { if (appData.rows.length > 0) renderCurrentView(); }, 300);
-});
-document.getElementById('filter-uf').addEventListener('change', () => { if (appData.rows.length>0) renderCurrentView(); });
-document.getElementById('filter-func').addEventListener('change', () => { if (appData.rows.length>0) renderCurrentView(); });
-document.getElementById('filter-region').addEventListener('change', () => { if (appData.rows.length>0) renderCurrentView(); });
-document.getElementById('btn-clear').addEventListener('click', () => {
-  document.getElementById('search-input').value = '';
-  document.getElementById('filter-uf').value = '';
-  document.getElementById('filter-func').value = '';
-  document.getElementById('filter-region').value = '';
-  if (appData.rows.length > 0) goHome();
-});
-
-// ============================================================
-// UTILS
-// ============================================================
-function escapeAttr(str) {
-  return (str||'').replace(/\\/g,'\\\\').replace(/'/g,"\\'").replace(/"/g,'&quot;').replace(/\n/g,' ');
+async function init(){
+  document.getElementById('loadingState').classList.add('visible');
+  await loadData(false);
+  document.getElementById('loadingState').classList.remove('visible');
+  document.getElementById('appContent').style.display='block';
+  scheduleRefresh();
 }
 
-// ============================================================
-// INIT
-// ============================================================
-fetchData();
+init();
 </script>
 </body>
 </html>
