@@ -1,62 +1,57 @@
-name: Atualizar Diretório GAM Farma
+name: Atualizar site GAM Farma
 
 on:
-  # Executa a cada 5 minutos para refletir mudanças na planilha
   schedule:
-    - cron: "*/5 * * * *"
-  # Executa em push na branch main
+    - cron: '0 * * * *'
   push:
     branches:
       - main
-  # Permite execução manual pelo GitHub Actions
   workflow_dispatch:
 
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     permissions:
-      contents: write   # necessário para fazer commit/push do index.html gerado
+      contents: write
 
     steps:
-      # 1) Checkout do repositório
-      - name: Checkout repositório
+      - name: Checkout repositorio
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
 
-      # 2) Configurar Python
       - name: Configurar Python 3.11
         uses: actions/setup-python@v5
         with:
-          python-version: "3.11"
+          python-version: '3.11'
 
-      # 3) Executar script.py — gera index.html a partir da planilha do Google Sheets
-      - name: Gerar index.html via script.py
+      - name: Executar script.py
         run: python script.py
 
-      # 4) Verificar se houve mudança no index.html
-      - name: Verificar mudanças
-        id: changes
+      - name: Verificar se index.html foi gerado
         run: |
-          git diff --exit-code index.html || echo "changed=true" >> $GITHUB_OUTPUT
+          if [ ! -f index.html ]; then
+            echo "ERRO: index.html nao foi gerado!"
+            exit 1
+          fi
+          echo "✅ index.html gerado com sucesso ($(wc -c < index.html) bytes)"
 
-      # 5) Commit e push se houver mudança
+      - name: Configurar Git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
       - name: Commit e push do index.html atualizado
-        if: steps.changes.outputs.changed == 'true'
         run: |
-          git config --global user.name  "github-actions[bot]"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git add index.html
-          git commit -m "chore: atualiza diretório GAM Farma [$(date -u +\'%Y-%m-%d %H:%M UTC\')]"
-          git push
+          if git diff --staged --quiet; then
+            echo "Nenhuma alteracao detectada no index.html"
+          else
+            git commit -m "chore: atualiza index.html [$(date '+%d/%m/%Y %H:%M')]"
+            git push
+          fi
 
-      # 6) Publicar no GitHub Pages (branch gh-pages)
-      - name: Publicar no GitHub Pages
+      - name: Deploy para GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./
+          publish_dir: .
           publish_branch: gh-pages
-          # Arquivos que serão publicados
-          include_files: |
-            index.html
