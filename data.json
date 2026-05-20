@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-20T12:43:40.707470",
+  "generated_at": "2026-05-20T13:37:48.623310",
   "total_rows": 109,
   "total_groups": 18,
   "states": [
@@ -7,8 +7,8 @@
     "RS",
     "PR",
     "SP",
-    "MS",
     "MT",
+    "MS",
     "DF",
     "GO"
   ],
@@ -1155,8 +1155,8 @@
       "displayRegion": "Centro Oeste e Sudeste",
       "states": [
         "SP",
-        "MS",
-        "MT"
+        "MT",
+        "MS"
       ]
     },
     "1500/1600": {
@@ -1451,8 +1451,8 @@
       "displayRegion": "SUL — PR / RS / SC",
       "states": [
         "RS",
-        "PR",
-        "SC"
+        "SC",
+        "PR"
       ]
     },
     "CLIENT_1201": {
