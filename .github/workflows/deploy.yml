@@ -1,57 +1,56 @@
-name: Atualizar site GAM Farma
+name: Atualizar Diretório GAM Farma
 
 on:
-  schedule:
-    - cron: '0 * * * *'
   push:
     branches:
       - main
+  schedule:
+    # Atualiza automaticamente a cada 30 minutos
+    - cron: "*/30 * * * *"
   workflow_dispatch:
+    # Permite atualização manual via interface do GitHub
+
+permissions:
+  contents: write
 
 jobs:
-  build-and-deploy:
+  atualizar-e-publicar:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
 
     steps:
-      - name: Checkout repositorio
+      # 1. Faz checkout do repositório
+      - name: Checkout do repositório
         uses: actions/checkout@v4
 
+      # 2. Configura o Python
       - name: Configurar Python 3.11
         uses: actions/setup-python@v5
         with:
-          python-version: '3.11'
+          python-version: "3.11"
 
-      - name: Executar script.py
+      # 3. Instala dependências do script.py
+      - name: Instalar dependências
+        run: pip install requests
+
+      # 4. Executa script.py para buscar planilha e atualizar index.html
+      - name: Atualizar index.html com dados do Google Sheets
         run: python script.py
 
-      - name: Verificar se index.html foi gerado
-        run: |
-          if [ ! -f index.html ]; then
-            echo "ERRO: index.html nao foi gerado!"
-            exit 1
-          fi
-          echo "✅ index.html gerado com sucesso ($(wc -c < index.html) bytes)"
-
-      - name: Configurar Git
+      # 5. Commita o index.html atualizado (com dados embutidos)
+      - name: Salvar index.html atualizado no repositório
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-
-      - name: Commit e push do index.html atualizado
-        run: |
           git add index.html
-          if git diff --staged --quiet; then
-            echo "Nenhuma alteracao detectada no index.html"
-          else
-            git commit -m "chore: atualiza index.html [$(date '+%d/%m/%Y %H:%M')]"
-            git push
-          fi
+          git diff --staged --quiet || git commit -m "Auto-update: index.html atualizado [$(date -u '+%d/%m/%Y %H:%M UTC')]"
+          git push
 
-      - name: Deploy para GitHub Pages
+      # 6. Publica no GitHub Pages (branch gh-pages)
+      - name: Publicar no GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: .
           publish_branch: gh-pages
+          include_files: index.html
+          force_orphan: false
