@@ -188,12 +188,6 @@ body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background
 .state-sigla { font-size: 28px; font-weight: 900; color: var(--state-color); line-height: 1; }
 .state-name { font-size: 12px; color: var(--text-muted); margin-top: 4px; font-weight: 600; }
 .state-count { font-size: 11px; color: var(--text-muted); margin-top: 6px; opacity: 0.7; }
-/* Division card variant */
-.state-card.division-card {
-  border-top: 4px solid var(--purple);
-  background: linear-gradient(135deg, #faf5ff 0%, #fff 100%);
-}
-.state-card.division-card .state-sigla { color: var(--purple); font-size: 20px; }
 
 /* COORDINATORS GRID */
 #coordinators-grid {
@@ -257,18 +251,6 @@ body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background
   transition: background 0.2s;
 }
 .btn-team:hover { background: var(--primary-light); }
-.btn-clients {
-  background: #fff3e0;
-  color: #bf360c;
-  border: 1px solid #ffcc80;
-  border-radius: 8px;
-  padding: 7px 14px;
-  font-size: 12px;
-  font-weight: 700;
-  cursor: pointer;
-  transition: background 0.2s, border-color 0.2s;
-}
-.btn-clients:hover { background: #ffe0b2; border-color: #ff9800; }
 
 /* TEAM LEADER HEADER */
 .team-leader-header {
@@ -351,19 +333,6 @@ tbody tr:hover { background: #f5f8ff; }
   white-space: nowrap;
 }
 .btn-cities:hover { background: #c5d8fc; }
-.btn-clients-sm {
-  background: #fff3e0;
-  color: #bf360c;
-  border: 1px solid #ffcc80;
-  border-radius: 8px;
-  padding: 5px 10px;
-  font-size: 12px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background 0.2s;
-  white-space: nowrap;
-}
-.btn-clients-sm:hover { background: #ffe0b2; }
 .contact-link { color: var(--primary); text-decoration: none; font-weight: 500; }
 .contact-link:hover { text-decoration: underline; }
 
@@ -433,15 +402,6 @@ tbody tr:hover { background: #f5f8ff; }
   padding: 5px 14px;
   font-size: 13px;
   font-weight: 600;
-}
-.client-tag {
-  background: #fff3e0;
-  color: #bf360c;
-  border-radius: 20px;
-  padding: 5px 14px;
-  font-size: 13px;
-  font-weight: 600;
-  border: 1px solid #ffcc80;
 }
 
 /* PROGRESS BAR */
@@ -572,128 +532,13 @@ tbody tr:hover { background: #f5f8ff; }
 // ============================================================
 // CONSTANTS & CONFIG
 // ============================================================
-const EMBEDDED_ROWS = [
-{'DISTRITO':'100','SETOR':'100','REGIAO':'Litoral SC','UF':'SC','PRINCIPAIS CIDADES':'Litoral SC','FUNCAO':'COORDENADOR EQUIPE (+BRAIR)','NOME':'Luiz Carlos Rampazzo','RAZAO SOCIAL':'-','CONTATO CORPORATIVO':'(48) 99210 9661','EMAIL':'setor100@gam.com.br','COORDENADOR':'GABRIELA FLOR'},
-{'DISTRITO':'100','SETOR':'108','REGIAO':'Joinville','UF':'SC','PRINCIPAIS CIDADES':'Joinvile, Jaraguá do Sul, Itapoá, Guaramirim, Barra do Sul, São Francisco do Sul, Corupá, Shoroeder, Massaranduba','FUNCAO':'Consultor de Vendas','NOME':'Alexandre Ribeiro Da Luz','RAZAO SOCIAL':'-','CONTATO CORPORATIVO':'(48) 98826-3940','EMAIL':'setor108@gam.com.br','COORDENADOR':'LUIZ CARLOS RAMPAZZO'},
-{'DISTRITO':'100','SETOR':'117','REGIAO':'Brusque','UF':'SC','PRINCIPAIS CIDADES':'Palhoça, São José, Biguaçu, Aguas Mornas, Governador Celso Ramos, Santo Amaro da Impoeratriz, Rancho Queimado, Anitápolis.','FUNCAO':'Consultor de Vendas','NOME':'Marcos Felipe Creutzberg','RAZAO SOCIAL':'-','CONTATO CORPORATIVO':'(48) 98843-3339','EMAIL':'setor117@gam.com.br','COORDENADOR':'LUIZ CARLOS RAMPAZZO'},
-{'DISTRITO':'100','SETOR':'122','REGIAO':'Itapema/SC','UF':'SC','PRINCIPAIS CIDADES':'Itapema, Balneário Camboriú, Navegantes, Bombinhas, Porto Belo, Tijucas','FUNCAO':'Representante Comercial','NOME':'Máximo Buzzi','RAZAO SOCIAL':'MAXIMO COM.E REPRES.LTDA','CONTATO CORPORATIVO':'(48) 98802 3562','EMAIL':'setor122@rep.gam.com.br','COORDENADOR':'LUIZ CARLOS RAMPAZZO'},
-{'DISTRITO':'100','SETOR':'126','REGIAO':'Rio do Sul','UF':'SC','PRINCIPAIS CIDADES':'Ibirama, Presidente Getúlio, Rio dos Cedros, Trombudo Central','FUNCAO':'Consultor de Vendas','NOME':'João Paulo Reinert','RAZAO SOCIAL':'-','CONTATO CORPORATIVO':'(48) 98844-3011','EMAIL':'setor126@gam.com.br','COORDENADOR':'LUIZ CARLOS RAMPAZZO'},
-{'DISTRITO':'100','SETOR':'127','REGIAO':'Blumenau','UF':'SC','PRINCIPAIS CIDADES':'Blumenau, Indaial, Pomerode, Gaspar, Timbó,','FUNCAO':'Consultor de Vendas','NOME':'Diego Cesar Da Rocha','RAZAO SOCIAL':'-','CONTATO CORPORATIVO':'(47) 98855-1317','EMAIL':'setor127@gam.com.br','COORDENADOR':'LUIZ CARLOS RAMPAZZO'},
-{'DISTRITO':'7000','SETOR':'7000','REGIAO':'Litoral SUL SC','UF':'SC','PRINCIPAIS CIDADES':'Litoral SUL SC','FUNCAO':'COORDENADOR EQUIPE (+ASSOCIATIVISMO SC)','NOME':'Carla Roberta Paduan Castillo Lapenta','RAZAO SOCIAL':'-','CONTATO CORPORATIVO':'(48) 9 8826-3940','EMAIL':'carla.lapenta@gam.com.br','COORDENADOR':'GABRIELA FLOR'},
-{'DISTRITO':'7000','SETOR':'7116','REGIAO':'Estreito/Floripa','UF':'SC','PRINCIPAIS CIDADES':'Palhoça, São José, Biguaçu, Aguas Mornas, Governador Celso Ramos, Santo Amaro da Impoeratriz, Rancho Queimado, Anitápolis.','FUNCAO':'Consultor de Vendas','NOME':'Jani Nienchert','RAZAO SOCIAL':'-','CONTATO CORPORATIVO':'(48) 99129-1742','EMAIL':'setor116@gam.com.br','COORDENADOR':'Carla Roberta Paduan Castillo Lapenta'},
-{'DISTRITO':'7000','SETOR':'7121','REGIAO':'Floripa Centro','UF':'SC','PRINCIPAIS CIDADES':'Florianópolis','FUNCAO':'Representante Comercial','NOME':'Joacir Rosset','RAZAO SOCIAL':'JOACIR ROSSET & CIA LTDA ME','CONTATO CORPORATIVO':'(48) 99104-4510','EMAIL':'setor121@rep.gam.com.br','COORDENADOR':'Carla Roberta Paduan Castillo Lapenta'},
-{'DISTRITO':'7000','SETOR':'7129','REGIAO':'Criciuma','UF':'SC','PRINCIPAIS CIDADES':'Criciuma, Içara, Urussanga, Morro da fumaça, Morro da Fumaça,','FUNCAO':'Consultor de Vendas','NOME':'Claudio Aparecido Neri','RAZAO SOCIAL':'-','CONTATO CORPORATIVO':'(48) 99603-1813','EMAIL':'setor129@gam.com.br','COORDENADOR':'Carla Roberta Paduan Castillo Lapenta'},
-{'DISTRITO':'7000','SETOR':'7130','REGIAO':'Ararangua','UF':'SC','PRINCIPAIS CIDADES':'Araranguá, Sombrio, Santa Rosa do Sul, Arrio do Silva, Forquilinha, Turvo, Jacinto Machado, Nova Veneza, Jacinto Machado, Turvo','FUNCAO':'Consultor de Vendas','NOME':'Rafael Melo Rocha','RAZAO SOCIAL':'-','CONTATO CORPORATIVO':'(48) 99114-7365','EMAIL':'setor130@gam.com.br','COORDENADOR':'Carla Roberta Paduan Castillo Lapenta'},
-{'DISTRITO':'7000','SETOR':'7132','REGIAO':'Braço do Norte/Tubarão','UF':'SC','PRINCIPAIS CIDADES':'Garopaba, Capivari de Baixo, Tubarão, Imbituba, Jaguaruna, Sangão, Gravatal, Lauto Muller, Orleans','FUNCAO':'Consultor de Vendas','NOME':'Elton Ribeiro Figueiredo','RAZAO SOCIAL':'-','CONTATO CORPORATIVO':'(48) 98825-0718','EMAIL':'setor132@gam.com.br','COORDENADOR':'GABRIELA FLOR'},
-{'DISTRITO':'200','SETOR':'200','REGIAO':'Litoral norte RS','UF':'RS','PRINCIPAIS CIDADES':'Litoral norte RS','FUNCAO':'COORDENADOR EQUIPE','NOME':'João Rene De Mello','RAZAO SOCIAL':'-','CONTATO CORPORATIVO':'(48) 98842-7539','EMAIL':'setor200@gam.com.br','COORDENADOR':'JOÃO RENE DE MELLO'},
-{'DISTRITO':'200','SETOR':'201','REGIAO':'Porto Alegre','UF':'RS','PRINCIPAIS CIDADES':'Porto Alegre','FUNCAO':'Representante Comercial','NOME':'Cassio Lenon Trindade Urban','RAZAO SOCIAL':'URBAN & URBAN REPRES.LTDA','CONTATO CORPORATIVO':'(48) 99192-0584','EMAIL':'setor201@rep.gam.com.br','COORDENADOR':'JOÃO RENE DE MELLO'},
-{'DISTRITO':'200','SETOR':'202','REGIAO':'POA Zona Norte','UF':'RS','PRINCIPAIS CIDADES':'Porto Alegre','FUNCAO':'Representante Comercial','NOME':'Claudio Praz Mirapalhete','RAZAO SOCIAL':'MIRAPALHETE COMERCIO E REPRESENTACOES LT','CONTATO CORPORATIVO':'(48) 99194-1794','EMAIL':'setor202@rep.gam.com.br','COORDENADOR':'JOÃO RENE DE MELLO'},
-{'DISTRITO':'200','SETOR':'205','REGIAO':'POA - Assis. Br','UF':'RS','PRINCIPAIS CIDADES':'Porto Alegre, Viamão, Alvorada, Aguas Claras, Capão da Porteira','FUNCAO':'Representante Comercial','NOME':'Niveraldo Trivisani  - Cazuza','RAZAO SOCIAL':'ARPEXIX W.T. REPRESENTACOES LTDA','CONTATO CORPORATIVO':'(48) 98842-8033','EMAIL':'setor205@rep.gam.com.br','COORDENADOR':'JOÃO RENE DE MELLO'},
-{'DISTRITO':'200','SETOR':'206','REGIAO':'Novo H. Periferia','UF':'RS','PRINCIPAIS CIDADES':'Ararica, Campo Bom, Canela, Estacia Velha, Gramado, Igrejinha , Lindolfo Color, Nova Hartz, Novo Hamburgo, Parobe, Portão, Riozinho, Rolante, Santa Maria do Herval, Taquara , Tres Coroas, São Francisco de Paula, Sapiranga ,','FUNCAO':'Consultor de Vendas','NOME':'Gilberto Rodrigues Cardoso','RAZAO SOCIAL':'-','CONTATO CORPORATIVO':'(48) 99114-7056','EMAIL':'setor206@gam.com.br','COORDENADOR':'JOÃO RENE DE MELLO'},
-{'DISTRITO':'200','SETOR':'212','REGIAO':'Sul de Pelotas','UF':'RS','PRINCIPAIS CIDADES':'Acegua, Arroio Grande, Candiota, Cerrito, Chuí, Herval, Ulha Negra, Jaguarão, Pedro Osorio, Pelotas , Pinheiro Machado, Piratini, Quinta do Sol, Rio Grande, São Jose do Norte, Santa Vitoria do Palmar.','FUNCAO':'Consultor de Vendas','NOME':'Everton Da Silva Espilma','RAZAO SOCIAL':'-','CONTATO CORPORATIVO':'(53) 8415-5003','EMAIL':'setor212@gam.com.br','COORDENADOR':'JOÃO RENE DE MELLO'},
-{'DISTRITO':'200','SETOR':'213','REGIAO':'Bto Gonçalves','UF':'RS','PRINCIPAIS CIDADES':'Barão, Bento Gonçalves, Caxias, Carlos Barbosa, Coronel Pilar, Farroupilha, Flores da Cunha, Garibaldi, Monte Belo do Sul, Nova Padua, Pinto Bandeira,','FUNCAO':'Representante Comercial','NOME':'Alex Marcelo Torbes','RAZAO SOCIAL':'ALEX M. TORBES E CIA LTDA','CONTATO CORPORATIVO':'(48) 98843-1453','EMAIL':'setor213@rep.gam.com.br','COORDENADOR':'JOÃO RENE DE MELLO'},
-{'DISTRITO':'200','SETOR':'214','REGIAO':'Canoas/RS','UF':'RS','PRINCIPAIS CIDADES':'Cachoeirinha, Canoas, Dois Irmãos, Esteio, Glorinha, Ga=ravataí, Morungava, Nova Santa Rita, Portão, São Leopoldo, Sapucaia.','FUNCAO':'Consultor de Vendas','NOME':'Rodrigo Adolpho Oliveira','RAZAO SOCIAL':'-','CONTATO CORPORATIVO':'(48) 99179-1832','EMAIL':'setor214@gam.com.br','COORDENADOR':'JOÃO RENE DE MELLO'},
-{'DISTRITO':'200','SETOR':'215','REGIAO':'Pelotas','UF':'RS','PRINCIPAIS CIDADES':'Canguçu, Capão do Leão, Pelotas, Rio Grande, Quilombo, Morro Redondo.','FUNCAO':'Representante Comercial','NOME':'Clovis Antonio Gomes Lombardi','RAZAO SOCIAL':'CLOVIS ANTONIO GOMES LOMBARDY E CIA LTDA','CONTATO CORPORATIVO':'(48) 98829-0819','EMAIL':'setor215@rep.gam.com.br','COORDENADOR':'JOÃO RENE DE MELLO'},
-{'DISTRITO':'200','SETOR':'219','REGIAO':'Tres Cachoeiras','UF':'RS','PRINCIPAIS CIDADES':'Arroio do Sal, Balneario Pinhal, Cambara, Capão da Canoa, Capivari do Sul, Caraa, Cidreira, Dom Pedro de Alcantara, Imbé, Itati, Mapituba, Maquine, Morrinhos do Sul, Osorio, Mostardas, Palmares do Sul, Passo de Torres, Praia Grande, Quintão, Santo Antonio da Patrulha, São João do Sul, Tavares, Terra de Areia, Torres, Tramandaì, Tres Cachoeiras, Tres Forquilhas, Xangrila.','FUNCAO':'Representante Comercial','NOME':'Gilbert Bitencourt Francisco','RAZAO SOCIAL':'GILBER BITTENCOURT FRANCISCO E CIA LTDA','CONTATO CORPORATIVO':'(48) 98842-4740','EMAIL':'setor219@rep.gam.com.br','COORDENADOR':'JOÃO RENE DE MELLO'},
-{'DISTRITO':'200','SETOR':'220','REGIAO':'Novo Hamburgo','UF':'RS','PRINCIPAIS CIDADES':'Alto Feli, Bom Principio, Brochier, Capela de Santana, Dois Irmãos, Estancia Velha, Feliz, Harmonia, Ivoti, Lindolfo Collor, Linha Nova, Marata, Montenegro, Morro Reuter, Nova Petropolis, Novo Hamburgo, Pareci Novo, Picada Café, Portão, Presidente Lucena, Salvador do Sul, Santa Maria do Herval, São Jose do Hortencio, São Jose do Sul, São Pedro da Serra, São Sebastião do Caí, São Vendelino, Tupandi, Vale Real','FUNCAO':'Representante Comercial','NOME':'Paulo Eduardo Gomes Marques','RAZAO SOCIAL':'PAULO EDUARDO GOMES E CIA. LTDA.','CONTATO CORPORATIVO':'(48) 98834-2633','EMAIL':'setor220@rep.gam.com.br','COORDENADOR':'JOÃO RENE DE MELLO'},
-{'DISTRITO':'200','SETOR':'222','REGIAO':'Guaíba','UF':'RS','PRINCIPAIS CIDADES':'Arroio dos Ratos, Barão do Triunfo, Barra do Ribeiro, Butia, Cerro Grande do Sul, Charqueadas, Eldorado do Sul, General Camara, Guaiba, Mariana Pimentel, Minas do Leão, São Jeronimo, Sentinela do Sul, Sertão Santana, Tapes, Triunfo.','FUNCAO':'Representante Comercial','NOME':'Felipe De Moura Ouriques','RAZAO SOCIAL':'FELIPE DE MOURA OURIQUES & CIA LTDA','CONTATO CORPORATIVO':'(48) 98842-8902','EMAIL':'setor222@rep.gam.com.br','COORDENADOR':'JOÃO RENE DE MELLO'},
-{'DISTRITO':'200','SETOR':'223','REGIAO':'Camacuã','UF':'RS','PRINCIPAIS CIDADES':'Amaral Ferrador, Arambaré, Arroio do Padre, Camaquã, Chuvisca, Cristal, Dom Feliciano, Pelotas, Rio Grande, São Lourenço do Sul, Turuçu.','FUNCAO':'Representante Comercial','NOME':'Antonio Henrique Viana Marins','RAZAO SOCIAL':'ANTONIO HENRIQUE MARIN E CIA. LTDA.','CONTATO CORPORATIVO':'(48) 98842-1441','EMAIL':'setor223@rep.gam.com.br','COORDENADOR':'GABRIELA FLOR'},
-{'DISTRITO':'300','SETOR':'300','REGIAO':'Centro e Sudoeste RS','UF':'RS','PRINCIPAIS CIDADES':'Centro e Sudoeste RS','FUNCAO':'COORDENADOR EQUIPE','NOME':'José Newton Rodrigues De Vargas','RAZAO SOCIAL':'JN REPRESENTACOES LTDA','CONTATO CORPORATIVO':'(48) 98824-6762','EMAIL':'setor300@gam.com.br','COORDENADOR':'JOSÉ NEWTON RODRIGUES DE VARGAS'},
-{'DISTRITO':'300','SETOR':'301','REGIAO':'Sta Cruz do Sul','UF':'RS','PRINCIPAIS CIDADES':'Venancio Aires, Taquari','FUNCAO':'Consultor de Vendas','NOME':'Clodoaldo De Souza','RAZAO SOCIAL':'-','CONTATO CORPORATIVO':'(51) 9 8408-7410','EMAIL':'setor301@gam.com.br','COORDENADOR':'JOSÉ NEWTON RODRIGUES DE VARGAS'},
-{'DISTRITO':'300','SETOR':'302','REGIAO':'Guapore','UF':'RS','PRINCIPAIS CIDADES':'Lageado, Teutônia','FUNCAO':'Consultor de Vendas','NOME':'Jandir Vanderlei Muller','RAZAO SOCIAL':'-','CONTATO CORPORATIVO':'(48) 98831-6339','EMAIL':'setor302@gam.com.br','COORDENADOR':'JOSÉ NEWTON RODRIGUES DE VARGAS'},
-{'DISTRITO':'300','SETOR':'305','REGIAO':'São Borja','UF':'RS','PRINCIPAIS CIDADES':'Itaqui, São Luiz Gonzaga','FUNCAO':'Representante Comercial','NOME':'Carlos Humberto Maronez Frota','RAZAO SOCIAL':'CARLOS HUMBERTO M FROTA & CIA LTDA','CONTATO CORPORATIVO':'(48) 98824-6586','EMAIL':'setor305@rep.gam.com.br','COORDENADOR':'JOSÉ NEWTON RODRIGUES DE VARGAS'},
-{'DISTRITO':'300','SETOR':'306','REGIAO':'Três Passos/Ijuí','UF':'RS','PRINCIPAIS CIDADES':'Cruz Alta, Panambi','FUNCAO':'Representante Comercial','NOME':'Rogério Bianchi','RAZAO SOCIAL':'ROGERIO BIANCHI E CIA LTDA','CONTATO CORPORATIVO':'(48) 99139-3029','EMAIL':'setor306@rep.gam.com.br','COORDENADOR':'JOSÉ NEWTON RODRIGUES DE VARGAS'},
-{'DISTRITO':'300','SETOR':'307','REGIAO':'São Sepe','UF':'RS','PRINCIPAIS CIDADES':'Restinga Seca, Agudo','FUNCAO':'Representante Comercial','NOME':'Luiz Gustavo De Leon Bastos','RAZAO SOCIAL':'LGL REPRESENTACOES LTDA ME','CONTATO CORPORATIVO':'(48) 98831-5092','EMAIL':'setor307@rep.gam.com.br','COORDENADOR':'JOSÉ NEWTON RODRIGUES DE VARGAS'},
-{'DISTRITO':'300','SETOR':'308','REGIAO':'Santiago','UF':'RS','PRINCIPAIS CIDADES':'Santiago, São Vicente','FUNCAO':'Representante Comercial','NOME':'Ivan Ilnicki','RAZAO SOCIAL':'IVAN ILNICKI E CIA LTDA.','CONTATO CORPORATIVO':'(48) 98824-6755','EMAIL':'setor308@rep.gam.com.br','COORDENADOR':'JOSÉ NEWTON RODRIGUES DE VARGAS'},
-{'DISTRITO':'300','SETOR':'309','REGIAO':'Livramento','UF':'RS','PRINCIPAIS CIDADES':'Quarai, Dom Pedrito,Alegrete, Rosário do Sul, Bagé','FUNCAO':'Consultor de Vendas','NOME':'João Alberto Suarez Gomez','RAZAO SOCIAL':'-','CONTATO CORPORATIVO':'(55) 99686-2838','EMAIL':'setor309@rep.gam.com.br','COORDENADOR':'JOSÉ NEWTON RODRIGUES DE VARGAS'},
-{'DISTRITO':'300','SETOR':'310','REGIAO':'Cruz Alta','UF':'RS','PRINCIPAIS CIDADES':'Frederico Westphalen, Rodeio Bonito','FUNCAO':'Representante Comercial','NOME':'Gelson Valmir Forster','RAZAO SOCIAL':'FORSTER E VIEIRA COM E REPRES LTDA ME','CONTATO CORPORATIVO':'(48) 99132-4454','EMAIL':'setor310@rep.gam.com.br','COORDENADOR':'JOSÉ NEWTON RODRIGUES DE VARGAS'},
-{'DISTRITO':'300','SETOR':'311','REGIAO':'Santo Ângelo','UF':'RS','PRINCIPAIS CIDADES':'Porto Xavier, Roque Gonzales','FUNCAO':'Consultor de Vendas','NOME':'Mateus Da Silva Gottardo','RAZAO SOCIAL':'-','CONTATO CORPORATIVO':'(48) 9 9187-9845','EMAIL':'setor311@gam.com.br','COORDENADOR':'JOSÉ NEWTON RODRIGUES DE VARGAS'},
-{'DISTRITO':'300','SETOR':'312','REGIAO':'Santa Rosa','UF':'RS','PRINCIPAIS CIDADES':'Santo Ângelo, Horizontina','FUNCAO':'Consultor de Vendas','NOME':'Geovani Mombach','RAZAO SOCIAL':'-','CONTATO CORPORATIVO':'(55) 99671-7297','EMAIL':'setor312@gam.com.br','COORDENADOR':'JOSÉ NEWTON RODRIGUES DE VARGAS'},
-{'DISTRITO':'300','SETOR':'318','REGIAO':'São Sepé','UF':'RS','PRINCIPAIS CIDADES':'São Gabriel, Rosário do Sul','FUNCAO':'Representante Comercial','NOME':'Cristiano Gaspar','RAZAO SOCIAL':'CHALMERENS REPRESENTACOES E TRANSPORTES','CONTATO CORPORATIVO':'(48) 9 8831-1038','EMAIL':'setor318@rep.gam.com.br','COORDENADOR':'GABRIELA FLOR'},
-{'DISTRITO':'400','SETOR':'400','REGIAO':'Parana','UF':'PR','PRINCIPAIS CIDADES':'Parana','FUNCAO':'COORDENADOR EQUIPE ( +ASSOCIATIVISMOS CURITIBA E REGIAO)','NOME':'Alessandro Ferreira','RAZAO SOCIAL':'-','CONTATO CORPORATIVO':'(48) 9 8834-4746','EMAIL':'setor400@gam.com.br','COORDENADOR':'ALESSANDRO FERREIRA'},
-{'DISTRITO':'400','SETOR':'401','REGIAO':'Londrina','UF':'PR','PRINCIPAIS CIDADES':'Londrina, Cambé, Primeiro de Maio, Ibipora,Sertanopolis, Porecatu, Bela Vista do Paraiso, Florestopolis','FUNCAO':'Consultor de Vendas','NOME':'Andre Henio Fernandes','RAZAO SOCIAL':'-','CONTATO CORPORATIVO':'(48) 9 8843-1481','EMAIL':'setor401@gam.com.br','COORDENADOR':'ALESSANDRO FERREIRA'},
-{'DISTRITO':'400','SETOR':'402','REGIAO':'Norte Velho','UF':'PR','PRINCIPAIS CIDADES':'Bandeirantes, Cornélio Procópio, Sto Antono da Platina, Cambara, Jcarezinho, Ibaiti','FUNCAO':'Consultor de Vendas','NOME':'Alcides Marcelino Da Silva','RAZAO SOCIAL':'-','CONTATO CORPORATIVO':'(48) 9 9104-3993','EMAIL':'setor402@gam.com.br','COORDENADOR':'ALESSANDRO FERREIRA'},
-{'DISTRITO':'400','SETOR':'404','REGIAO':'Curitiba Centro','UF':'PR','PRINCIPAIS CIDADES':'Curitiba Centro,Campo Largo, Balsa Nova, Campo do Tnente, Lapa, Quitandinha, Agudos do Sul','FUNCAO':'Consultor de Vendas','NOME':'Angela Helfeldt','RAZAO SOCIAL':'-','CONTATO CORPORATIVO':'(48) 9 8842-8224','EMAIL':'setor404@gam.com.br','COORDENADOR':'ALESSANDRO FERREIRA'},
-{'DISTRITO':'400','SETOR':'407','REGIAO':'Curitiba Sul','UF':'PR','PRINCIPAIS CIDADES':'Curitiba Oeste e Sul,Fazenda Rio Grande, Araucária','FUNCAO':'Consultor de Vendas','NOME':'Jociane De Fatima De Oliveira','RAZAO SOCIAL':'-','CONTATO CORPORATIVO':'(48) 99185-0978','EMAIL':'setor407@gam.com.br','COORDENADOR':'ALESSANDRO FERREIRA'},
-{'DISTRITO':'400','SETOR':'410','REGIAO':'Curitiba Leste/Colombo','UF':'PR','PRINCIPAIS CIDADES':'Pinhais, Piraquara, Pinhais, Almirante Tamandaré, Bocaiuva do Sul','FUNCAO':'Consultor de Vendas','NOME':'Kamila Perbiche Dos Santos','RAZAO SOCIAL':'-','CONTATO CORPORATIVO':'(48) 9 8831-2022','EMAIL':'setor410@gam.com.br','COORDENADOR':'ALESSANDRO FERREIRA'},
-{'DISTRITO':'400','SETOR':'412','REGIAO':'Ponta Grossa','UF':'PR','PRINCIPAIS CIDADES':'Castro, Arapoti, Jaguaraíva, Siqueira Campos, Wenceslau Braz, Palmeira','FUNCAO':'Consultor de Vendas','NOME':'Leticia De Moraes Bussi','RAZAO SOCIAL':'-','CONTATO CORPORATIVO':'(48) 9 9156-5682','EMAIL':'setor412@gam.com.br','COORDENADOR':'ALESSANDRO FERREIRA'},
-{'DISTRITO':'400','SETOR':'415','REGIAO':'Litoral PR','UF':'PR','PRINCIPAIS CIDADES':'Paranegué, Morretes,Antonina, São José dos Pinhais, Tijucas do Sul,','FUNCAO':'Consultor de Vendas','NOME':'Adriana Putrique Hybiak','RAZAO SOCIAL':'-','CONTATO CORPORATIVO':'(48) 9 8827 7581','EMAIL':'setor415@gam.com.br','COORDENADOR':'ALESSANDRO FERREIRA'},
-{'DISTRITO':'400','SETOR':'424','REGIAO':'Irati','UF':'PR','PRINCIPAIS CIDADES':'Irati, Rebouças, Guarapuava, Prudentópolis','FUNCAO':'Consultor de Vendas','NOME':'Marcelo Saczuck','RAZAO SOCIAL':'-','CONTATO CORPORATIVO':'(48) 9 8824-0842','EMAIL':'setor424@gam.com.br','COORDENADOR':'GABRIELA FLOR'},
-{'DISTRITO':'500','SETOR':'500','REGIAO':'Oeste SC/Noroeste RS','UF':'SC - RS','PRINCIPAIS CIDADES':'Oeste SC/Noroeste RS','FUNCAO':'COORDENADOR EQUIPE','NOME':'Rogerio Carlos Golembieski','RAZAO SOCIAL':'ROGERIO CARLOS GOLEMBIESKI E CIA LTDA','CONTATO CORPORATIVO':'(48) 9 9138-5186','EMAIL':'setor500@gam.com.br','COORDENADOR':'ROGERIO CARLOS GOLEMBIESKI'},
-{'DISTRITO':'500','SETOR':'502','REGIAO':'Chapecó','UF':'SC','PRINCIPAIS CIDADES':'Chapecó ,Coronel Freitas ,Irati ,Jardinópolis,Quilombo ,Santiago do Sul,Formosa do Sul ,Novo Horizonte ,São Lourenço do Oeste ,São Bernardino,Nova Itaberaba ,Águas Frias ,União do Oeste,Nova Erechim ,Modelo,Serra Alta ,Sul Brasil,Pinhalzinho ,Saudades ,Cunhatai ,Guatambu,Caxambu do Sul,Planalto Alegre ,Águas de Chapecó ,São Carlos','FUNCAO':'Representante Comercial','NOME':'Marcos Aurelio Moscato','RAZAO SOCIAL':'MOSCATO COMERCIO E REPRESENTACOES LTDA.','CONTATO CORPORATIVO':'(48) 9 8842-7767','EMAIL':'setor502@rep.gam.com.br','COORDENADOR':'ROGERIO CARLOS GOLEMBIESKI'},
-{'DISTRITO':'500','SETOR':'506','REGIAO':'Erechim','UF':'RS','PRINCIPAIS CIDADES':'Erechim, Três Arroios, Severiano de Almeida, Mariano Moro, Aratiba, Barra do Rio Azul, Itatiba do Sul, Barão de Cotegipe, São Valentim, Erval Grande, Faxinalzinho, Entre Rios do Sul, Cruzaltense, Campinas do Sul, Jacutinga, Quatro Irmãos, Ponte Preta, Paulo Bento, Áurea, Centenário, Carlos Gomes, São João da Urtiga, Sananduva, Ibiaçá, Santa Cecília do Sul, Tapejara, Água Santa, Vila Lângaro, Coxília, Sertão, Ipiranga do Sul, Erebango, Estação, Getúlio Vargas, Charrua, Floriano Peixoto, Santo Expedito do Sul, Tupanci do Sul, Barracão, São José do Ouro, Cacique Doble, Paim Filho, Maximiliano de Almeida, Machadinho, Marcelino Ramos, Viadutos, Gaurama.','FUNCAO':'Representante Comercial','NOME':'Aldo Candiotto Junior','RAZAO SOCIAL':'COML CANDIMEDICA MEDICAMENTOS HUMANOS LT','CONTATO CORPORATIVO':'(48) 99114-2192','EMAIL':'andressa.oliveira@gam.com.br','COORDENADOR':'ROGERIO CARLOS GOLEMBIESKI'},
-{'DISTRITO':'500','SETOR':'507','REGIAO':'Passo Fundo','UF':'RS','PRINCIPAIS CIDADES':'Carazinho,Passo Fundo ,Marau,Camargo,Nova Alvorada ,Vila Maria,Santo Antônio Palma,Gentil,Casca ,Parai,Nova Araçá ,Nova Bassano ,Nova prata ,Protasio Alves ,Vila flores ,Veranopolis ,Cotipora,Mato castelhano ,Ciriaco ,David Canabarro ,Vanini,São Domingos do Sul,Lagoa vermelha,Caseiros,Ibiraiaras,São Jorge,Guabiju','FUNCAO':'Representante Comercial','NOME':'Darci Orlando','RAZAO SOCIAL':'DARCI ORLANDO & CIA. LTDA','CONTATO CORPORATIVO':'(48) 9 8843-1289','EMAIL':'setor507@rep.gam.com.br','COORDENADOR':'ROGERIO CARLOS GOLEMBIESKI'},
-{'DISTRITO':'500','SETOR':'511','REGIAO':'Curitibanos','UF':'SC','PRINCIPAIS CIDADES':'Curitibanos ,Caçador ,Lebon Régis ,Calmon,Matos Costa ,Rio das Antas ,Videira ,Iomere,Arroio Trinta ,Salto Veloso,Pinheiro Preto,Tangará ,Ibian,Campos Novos ,Erval Velho ,Abdon Batista ,Anita Garibaldi ,Brunopolis ,São Cristóvão do Sul ,Ponte Alta do Norte ,Santa Cecília ,Timbo Grande','FUNCAO':'Representante Comercial','NOME':'José Osvaldo Bernardi','RAZAO SOCIAL':'JOSE OSVALDO BERNARDI E CIA LTDA','CONTATO CORPORATIVO':'(48) 9 8843-1365','EMAIL':'setor511@rep.gam.com.br','COORDENADOR':'ROGERIO CARLOS GOLEMBIESKI'},
-{'DISTRITO':'500','SETOR':'513','REGIAO':'Pinhalzinho','UF':'SC','PRINCIPAIS CIDADES':'Guatambu, Caxambú do Sul, Planalto Alegre, Águas de Chapecó, São Carlos, Palmitos, Caibi, Riqueza, Mondaí, Iporã do Oeste, São João do Oeste e Itapiranga, Maravilha, Cunha Porã, São Miguel, descanso, Santa Helena, Belmonte, Tunápolis, Flor do Sertão, Romelândia, Iraceminha, Paraíso, Guaraciaba, Barra Bonita, São José do Cedro, Guarujá do Sul, Dionísio Cerqueira, Palma Sola, Anchieta, Campo Erê, Saltinho, Bom Jesus do Oeste.','FUNCAO':'Representante Comercial','NOME':'Ildemar De Almeida Da Silva','RAZAO SOCIAL':'ILDEMAR ALMEIDA REPR. COMERCIAIS LTDA','CONTATO CORPORATIVO':'(48) 9 9131-1156','EMAIL':'setor513@rep.gam.com.br','COORDENADOR':'ROGERIO CARLOS GOLEMBIESKI'},
-{'DISTRITO':'500','SETOR':'515','REGIAO':'Taperá','UF':'RS','PRINCIPAIS CIDADES':'Ibiruba,XV novembro,Fortaleza vamos,Selbach,Colorado,Não me Toque,Tapera,Victor graf,Espumoso,Alto Alegre,Campos Borges,Jacuizinho,Tunas,Salto Jacui,Estrela Velha,Soledade,Barris Cassal ,Fontoura Xavier ,São José Herval ,Pouso Novo,Arvorezinha ,Putinga ,Ilopolis ,Anta Gorda,Mormaço,Ibiraiputa ,Nicolau vergueiro,Tio hugo,Santo Antônio Planalto,Ernestina,Almirante Tamandare,Coqueiros do Sul,Boa Vista,Sarandi,Pontão ,Ronda Alta,Rondinha,Liberado Salsano,Constantina ,Novo Xingu ,Sagrada Família ,Novo Barreiro,Barra funda','FUNCAO':'Consultor de Vendas','NOME':'Rubilar Antonio Calvett Da Silva','RAZAO SOCIAL':'-','CONTATO CORPORATIVO':'(55) 99108-3771','EMAIL':'setor515@gam.com.br','COORDENADOR':'ROGERIO CARLOS GOLEMBIESKI'},
-{'DISTRITO':'500','SETOR':'519','REGIAO':'Xaxim/Xanxere','UF':'SC','PRINCIPAIS CIDADES':'Xaxim ,Bom Jesus ,Xanxerê ,Ouro verde ,Abelardo ,Ipuaçu ,Entre rios,São Domingos ,Coronel Martins ,Galvão ,Xavantina ,Jupia ,Concórdia,Peritiba ,Ipira ,Piratuba ,Capinzal ,Jaborá ,Lacerdopolis ,Herval do Oeste ,Joaçaba ,Luzerna ,Ibicare ,Treze Tilias ,Água doce ,Catanduvas ,Vargem bonita ,Faxinal ,Vargeao ,Passos maia ,Ponte serrada ,Irani ,Lindóia ,Ipumirin ,Arabuta ,Ita ,Seara','FUNCAO':'Representante Comercial','NOME':'Ederson Junior De Almeida','RAZAO SOCIAL':'EDERSON JUNIOR DE ALMEIDA & CIA LTDA ME','CONTATO CORPORATIVO':'(48) 9 8834-3631','EMAIL':'setor519@rep.gam.com.br','COORDENADOR':'ROGERIO CARLOS GOLEMBIESKI'},
-{'DISTRITO':'500','SETOR':'522','REGIAO':'Lages','UF':'SC','PRINCIPAIS CIDADES':'Lages , Otacilio Costa , Correia Pinto , Ponte Alta , São José do cerrito , Palmeira, Bocaina do Sul , Campo belo do Sul , Capão alto , Cerro Negro , Rio Rufino , Painel , Urupema , pinhal da Serra , Antônio Prado , São José dos ausentes , Jaquirana , IPE , Nova Roma do Sul , são Marcos , Esmeralda , camprestre da serra ,, Bom Jesus , Vacaria , Rancho queimado , Angelina ,, Alfredo Wagner , Bom Jardim , Bom retiro , urubici','FUNCAO':'Representante Comercial','NOME':'Jeferson Carlos Golembieski','RAZAO SOCIAL':'JEFFERSON CARLOS REPRESENTACOES LTDA.','CONTATO CORPORATIVO':'(48) 98843-3307','EMAIL':'setor522@rep.gam.com.br','COORDENADOR':'ROGERIO CARLOS GOLEMBIESKI'},
-{'DISTRITO':'500','SETOR':'523','REGIAO':'Mafra','UF':'SC','PRINCIPAIS CIDADES':'Mafra, Canoinhas, São Bento do Sul, Papanduvas, Itaiópolis, Rio Negrinho, Porto União, Tres Barras','FUNCAO':'Consultor de Vendas','NOME':'Tarcio Suchara Do Prado','RAZAO SOCIAL':'-','CONTATO CORPORATIVO':'(48) 98827-7340','EMAIL':'setor523@gam.com.br','COORDENADOR':'ROGERIO CARLOS GOLEMBIESKI'},
-{'DISTRITO':'600','SETOR':'600','REGIAO':'TLV','UF':'-','PRINCIPAIS CIDADES':'TLV','FUNCAO':'COORDENADOR EQUIPE','NOME':'Paulo Roberto','RAZAO SOCIAL':'-','CONTATO CORPORATIVO':'(48) 9956-5972','EMAIL':'roberto@gam.com.br','COORDENADOR':'PAULO ROBERTO'},
-{'DISTRITO':'600','SETOR':'601','REGIAO':'Interior do PR (meio oeste)','UF':'PR','PRINCIPAIS CIDADES':'Rio Bonito Do Iguacu, Cidade Gaucha, Rondon, Douradina, Iguatu, Sao Jorge Do Patrocinio, Marilena, Guaraniacu, Ivate, Tres Barras Do Parana, Porto Barreiro, Anahy, Quedas Do Iguacu, Sao Jose Das Palmeiras, Sao Pedro Do Parana, Quarto Centenario, Porto Rico, Catanduvas, Indianopolis, Itauna Do Sul, Mariluz, Santo Antonio Do Caiua, General Carneiro, Alto Paraiso, Braganey, Nova Olimpia, Jaguapita, Novo Sarandi, Sao Manoel Do Parana, Maripa, Altamira Do Parana, Diamante Do Norte, Entre Rios Do Oeste, Campo Bonito, Toledo, Diamante Do Sul, Icaraima, Rancho Alegre D\'Oeste, Marechal Candido Rondon, Brasilandia Do Sul, Esperanca Nova, Ibema, Iracema Do Oeste, Querencia Do Norte, Pato Bragado, Sao Joao Do Caiua, Godoy Moreira, Espigao Alto Do Iguacu, Inaja, Rosario Do Ivai','FUNCAO':'Consultor de Vendas','NOME':'Sandra (Televendas)','RAZAO SOCIAL':'-','CONTATO CORPORATIVO':'(48) 9 9192-4355','EMAIL':'sandra@gam.com.br','COORDENADOR':'PAULO ROBERTO'},
-{'DISTRITO':'600','SETOR':'602','REGIAO':'Interior do PR (leste)','UF':'PR','PRINCIPAIS CIDADES':'Quatigua, Fernandes Pinheiro, Curiuva, Atalaia, Candido De Abreu, Pien, Paranapoema, Nossa Senhora Das Gracas, Santo Inacio, Salto Do Itarare, Andira, Pinhalao, Carlopolis, Virmond, Corumbatai Do Sul, Doutor Ulysses, Santana Do Itarare, Sertaneja, Diamante Do Sul, Joaquim Tavora, Telemaco Borba, Jardim Olinda, Nova Laranjeiras, Bituruna, Paula Freitas, Rio Azul, Fenix, Figueira, Mallet, Sapopema, Pinhao, Reserva Do Iguacu, Santa Maria Do Oeste, Irati, Cruzmaltina, Tomazina, Sao Jose Da Boa Vista, Ventania, Rosario Do Ivai, Senges, Antonina, Campina Do Simao, Itaguaje, Goioxim, Adrianopolis, Ribeirao Claro, Nova Tebas, Tunas Do Parana, Siqueira Campos, Antonio Olinto, Rio Branco Do Ivai, Grandes Rios, Leopolis, Miraselva, Guaraquecaba, Paulo Frontin, Sao Miguel Do Iguacu, Sao Jeronimo Da Serra, Florida, Cruz Machado, Candoi, Foz Do Jordao, Palmital, Toledo, Laranjal, Marquinho','FUNCAO':'Consultor de Vendas','NOME':'Leonan (Televendas)','RAZAO SOCIAL':'-','CONTATO CORPORATIVO':'(48) 9 9156-4517','EMAIL':'leonam@gam.com.br','COORDENADOR':'PAULO ROBERTO'},
-{'DISTRITO':'600','SETOR':'603','REGIAO':'Sudoeste do PR','UF':'PR','PRINCIPAIS CIDADES':'Renascenca, Santo Antonio Do Sudoeste, Barracao, Francisco Beltrao, Marmeleiro, Nova Esperanca Do Sudoeste, Capanema, Nova Prata Do Iguacu, Eneas Marques, Bela Vista Da Caroba, Perola D Oeste, Santa Izabel Do Oeste, Dois Vizinhos, Perola D\'Oeste, Bom Jesus Do Sul, Realeza, Ampere, Planalto, Pranchita, Flor Da Serra Do Sul, Manfrinopolis, Salto Do Lontra, Salgado Filho, Cruzeiro Do Iguacu, Boa Esperanca Do Iguacu','FUNCAO':'Consultor de Vendas','NOME':'Michelle (Televendas)','RAZAO SOCIAL':'-','CONTATO CORPORATIVO':'(48) 9 9174-7864','EMAIL':'michelle@gam.com.br','COORDENADOR':'PAULO ROBERTO'},
-{'DISTRITO':'600','SETOR':'604','REGIAO':'Interior do PR','UF':'PR','PRINCIPAIS CIDADES':'Sao Miguel Do Iguacu, Ramilandia, California, Campo Mourao, Tapejara, Ubirata, Foz Do Iguacu, Santa Helena, Boa Vista Da Aparecida, Manoel Ribas, Serra Dos Dourados (Umuarama), Ipora, Umuarama, Cascavel, Sao Joao Do Ivai, Astorga, Arapongas, Sao Pedro Do Iguacu, Toledo, Corbelia, Jandaia Do Sul, Cianorte, Medianeira, Apucarana, Marumbi, Novo Itacolomi, Santa Terezinha De Itaipu, Nova Aurora, Sao Pedro Do Ivai, Terra Roxa, Sao Clemente (Santa Helena), Capitao Leonidas Marques, Barbosa Ferraz, Santa Tereza Do Oeste, Farol, Kalore, Matelandia, Francisco Alves, Assis Chateaubriand, Perobal, Luiziana, Bragantina (Assis Chateaubriand), Formosa Do Oeste, Jesuitas, Missal, Marechal Candido Rondon, Arapua, Pitangueiras, Diamante D\'Oeste, Guaira, Goioere, Campina Da Lagoa, Lindoeste, Marilandia Do Sul, Ceu Azul, Araruna, Ouro Verde Do Piquiri (Corbelia), Rolandia, Nova Santa Rosa, Santa Lucia, Maripa, Ouro Verde Do Oeste, Braganey, Boa Esperanca, Alto Piquiri, Lunardelli, Cafelandia, Apuracana, Tupassi, Xambre, Borrazopolis, Vera Cruz Do Oeste, Peabiru, Nova Cantu','FUNCAO':'Consultor de Vendas','NOME':'Bianca Cristina (Televendas)','RAZAO SOCIAL':'-','CONTATO CORPORATIVO':'(48) 99105-2533','EMAIL':'bianca.cristovao@gam.com.br','COORDENADOR':'PAULO ROBERTO'},
-{'DISTRITO':'600','SETOR':'605','REGIAO':'Interior do PR','UF':'PR','PRINCIPAIS CIDADES':'Santa Fe, Paranavai, Maringa, Irati, Tibagi, Paranacity, Colorado, Florida, Prudentopolis, Marialva, Mandaguari, Reboucas, Sabaudia, Jandaia Do Sul, Ipiranga, Doutor Camargo, Ponta Grossa, Lobato, Ivai, Laranjeiras Do Sul, Castro, Reserva, Itambe, Sarandi, Jussara, Ortigueira, Arapoti, Telemaco Borba, Ivatuba, Pirai Do Sul, Rio Azul, Boa Ventura De Sao Roque, Santa Cruz De Monte Castelo, Jaguariaiva, Imbituva, Siqueira Campos, Paraiso Do Norte, Inacio Martins, Palmeira, Boa Esperanca, Nova Londrina, Ourizona, Guarapuava, Floresta, Loanda, Cruzeiro Do Oeste, Ventania, Florai, Mandaguacu, Cafezal Do Sul, Pitanga, Engenheiro Beltrao, Teixeira Soares, Altonia, Nova Esperanca, Goioere, Angulo, Munhoz De Melo, Sao Jorge Do Ivai, Tamboara, Sao Carlos Do Ivai, Cantagalo, Santa Isabel Do Ivai, Presidente Castelo Branco','FUNCAO':'Consultor de Vendas','NOME':'Ingridy Cardoso (Televendas)','RAZAO SOCIAL':'-','CONTATO CORPORATIVO':'(48) 99194-9186','EMAIL':'ingridy.cardoso@gam.com.br','COORDENADOR':'GABRIELA FLOR'},
-{'DISTRITO':'700','SETOR':'700','REGIAO':'Interior do PR','UF':'PR','PRINCIPAIS CIDADES':'Interior do PR','FUNCAO':'COORDENADOR EQUIPE','NOME':'Giansan Mulinet','RAZAO SOCIAL':'-','CONTATO CORPORATIVO':'(48) 9 9186-9486','EMAIL':'setor700@gam.com.br','COORDENADOR':'GIANSAN MULINET'},
-{'DISTRITO':'700','SETOR':'702','REGIAO':'Maringa','UF':'PR','PRINCIPAIS CIDADES':'ALTO PARANA,COLORADO,LOANDA,MANDAGUACU,MANDAGUARI,MARIALVA,MARINGA,NOVA ESPERANCA,NOVA LONDRINA,PAICANDU,PARANAVAI,SARANDI,','FUNCAO':'Consultor de Vendas','NOME':'Claudinei Antonio Da Silva','RAZAO SOCIAL':'-','CONTATO CORPORATIVO':'(48) 9 8827-7228','EMAIL':'setor702@gam.com.br','COORDENADOR':'GIANSAN MULINET'},
-{'DISTRITO':'700','SETOR':'703','REGIAO':'Umuarama','UF':'PR','PRINCIPAIS CIDADES':'ALTO PIQUIRI,ALTONIA,ARARUNA,CAMPINA DA LAGOA,CAMPO MOURAO,CIANORTE,GOIOERE,IPORA,RONCADOR,UBIRATA,UMUARAMA,','FUNCAO':'Consultor de Vendas','NOME':'Moises Natalino Cola','RAZAO SOCIAL':'-','CONTATO CORPORATIVO':'(48) 9 9114-6606','EMAIL':'setor703@gam.com.br','COORDENADOR':'GIANSAN MULINET'},
-{'DISTRITO':'700','SETOR':'704','REGIAO':'Apucarana','UF':'PR','PRINCIPAIS CIDADES':'APUCARANA,ARAPONGAS,ASTORGA,BARBOSA FERRAZ,BORRAZOPOLIS,IVAIPORA,JANDAIA DO SUL,JARDIM ALEGRE,ROLANDIA,SAO JOAO DO IVAI,SAO PEDRO DO IVAI','FUNCAO':'Consultor de Vendas','NOME':'Lucas Reis Da Silva Braga','RAZAO SOCIAL':'-','CONTATO CORPORATIVO':'(48) 9 8824-1501','EMAIL':'setor704@gam.com.br','COORDENADOR':'GIANSAN MULINET'},
-{'DISTRITO':'700','SETOR':'705','REGIAO':'Cascavel','UF':'PR','PRINCIPAIS CIDADES':'ASSIS CHATEAUBRIAND,BOA VISTA DA APAREC,CAFELANDIA,CAPITAO LEONIDAS MA,CASCAVEL,GUAIRA,MARECHAL CANDIDO RO,PALOTINA,TERRA ROXA,TOLEDO','FUNCAO':'Consultor de Vendas','NOME':'Eleonor Jose Soligo','RAZAO SOCIAL':'-','CONTATO CORPORATIVO':'(45) 98818-2680','EMAIL':'setor705@gam.com.br','COORDENADOR':'GIANSAN MULINET'},
-{'DISTRITO':'700','SETOR':'710','REGIAO':'Foz do Iguaçu','UF':'PR','PRINCIPAIS CIDADES':'FOZ DO IGUACU,CEU AZUL,MATELANDIA,MEDIANEIRA,MISSAL,SANTA HELENA,SANTA TEREZINHA DE,SAO MIGUEL DO IGUAC,VERA CRUZ DO OESTE','FUNCAO':'Consultor de Vendas','NOME':'Marcelo Camilo De Souza','RAZAO SOCIAL':'-','CONTATO CORPORATIVO':'(48) 9 9124-8636','EMAIL':'setor710@gam.com.br','COORDENADOR':'GIANSAN MULINET'},
-{'DISTRITO':'700','SETOR':'717','REGIAO':'Pato Branco/PR','UF':'PR','PRINCIPAIS CIDADES':'Pato Branco, Mariópolis ,Vitorino, Clevelândi,a Palmas,Coronel Domingos Soares, Mangueirinha, Honório Serpa ,Chopinzinho, Coronel vivida, São João, Saudades do Iguaçu, Sulina ,São Jorge do oeste ,Dois vizinhos ,Verê ,Itapejara do oeste, Bom sucesso do Sul','FUNCAO':'Consultor de Vendas','NOME':'Diogo Stedile Do Nascimento','RAZAO SOCIAL':'-','CONTATO CORPORATIVO':'(48) 98842-7755','EMAIL':'setor717@gam.com.br','COORDENADOR':'GABRIELA FLOR'},
-{'DISTRITO':'1300/1400','SETOR':'1300/1400','REGIAO':'MS- SP- GO-DF','UF':'EXPANSÃO','PRINCIPAIS CIDADES':'EXPANSÃO','FUNCAO':'COORDENADOR EQUIPE','NOME':'Marcos  De Bem','RAZAO SOCIAL':'-','CONTATO CORPORATIVO':'(48) 9 8843-1375','EMAIL':'marcos@gam.com.br','COORDENADOR':'MARCOS'},
-{'DISTRITO':'1300','SETOR':'1301','REGIAO':'Campo Grande/MS','UF':'MS','PRINCIPAIS CIDADES':'Campo Grande; Corumbá; Três Lagoas','FUNCAO':'Consultor de Vendas','NOME':'Richard Alan Pereira','RAZAO SOCIAL':'-','CONTATO CORPORATIVO':'(48) 99114-6825','EMAIL':'setor1301@gam.com.br','COORDENADOR':'MARCOS'},
-{'DISTRITO':'1300','SETOR':'1302','REGIAO':'Mato Grosso do Sul','UF':'MS','PRINCIPAIS CIDADES':'Paranaíba; Chapadão do Sul; Cassilândia','FUNCAO':'Consultor de Vendas','NOME':'Marcos (Expansão) (Vago)','RAZAO SOCIAL':'-','CONTATO CORPORATIVO':'(48) 9 8843-1375','EMAIL':'marcos@gam.com.br','COORDENADOR':'MARCOS'},
-{'DISTRITO':'1300','SETOR':'1303','REGIAO':'Dourados/MS','UF':'MS','PRINCIPAIS CIDADES':'Dourados; Ponta Porã; Nova Andradina','FUNCAO':'Consultor de Vendas','NOME':'Edson De Oliveira','RAZAO SOCIAL':'-','CONTATO CORPORATIVO':'','EMAIL':'setor1303@gam.com.br','COORDENADOR':'MARCOS'},
-{'DISTRITO':'1400','SETOR':'1401','REGIAO':'Interior SP','UF':'SP','PRINCIPAIS CIDADES':'Litoral','FUNCAO':'Consultor de Vendas','NOME':'Marcos (Expansão) (Vago)','RAZAO SOCIAL':'-','CONTATO CORPORATIVO':'(48) 9 9140-0821','EMAIL':'marcos@gam.com.br','COORDENADOR':'MARCOS'},
-{'DISTRITO':'1400','SETOR':'1402','REGIAO':'Marília/SP','UF':'SP','PRINCIPAIS CIDADES':'Baurú, Marília; Presidente Prudente; Ourinhos','FUNCAO':'Consultor de Vendas','NOME':'Cristiano Brigolin Grosso','RAZAO SOCIAL':'-','CONTATO CORPORATIVO':'(48) 9 9112-8909','EMAIL':'setor1402@gam.com.br','COORDENADOR':'MARCOS'},
-{'DISTRITO':'1400','SETOR':'1403','REGIAO':'Sorocaba','UF':'SP','PRINCIPAIS CIDADES':'Sorocaba; Abc; Vale do Paraíba','FUNCAO':'Consultor de Vendas','NOME':'Marcos (Expansão) (Vago)','RAZAO SOCIAL':'-','CONTATO CORPORATIVO':'(48) 9 8843-1375','EMAIL':'setor1403@gam.com.br','COORDENADOR':'MARCOS'},
-{'DISTRITO':'1400','SETOR':'1404','REGIAO':'Campinas','UF':'SP','PRINCIPAIS CIDADES':'Campinas; Jundiaí; Mogi Mirim','FUNCAO':'Consultor de Vendas','NOME':'Lilian dos Santos Banach','RAZAO SOCIAL':'-','CONTATO CORPORATIVO':'(48) 9 9129-1860','EMAIL':'setor1404@gam.com.br','COORDENADOR':'MARCOS'},
-{'DISTRITO':'1400','SETOR':'1405','REGIAO':'Ribeirão Preto','UF':'SP','PRINCIPAIS CIDADES':'Araraquara; Ribeirão Preto','FUNCAO':'Consultor de Vendas','NOME':'Marcos (Expansão) (Vago)','RAZAO SOCIAL':'-','CONTATO CORPORATIVO':'(48) 9 8843-1375','EMAIL':'setor1405@gam.com.br','COORDENADOR':'MARCOS'},
-{'DISTRITO':'1400','SETOR':'1406','REGIAO':'São José do Rio Preto','UF':'SP','PRINCIPAIS CIDADES':'São José do Rio Preto; Ribeirão Preto; Franca; Araçatuba','FUNCAO':'Consultor de Vendas','NOME':'Ana Maria Branco','RAZAO SOCIAL':'-','CONTATO CORPORATIVO':'(48) 9 9129-1860','EMAIL':'setor1406@gam.com.br','COORDENADOR':'MARCOS'},
-{'DISTRITO':'1400','SETOR':'1407','REGIAO':'São Paulo - Capital','UF':'SP','PRINCIPAIS CIDADES':'São Paulo - Capital','FUNCAO':'Consultor de Vendas','NOME':'Douglas Zampieri','RAZAO SOCIAL':'-','CONTATO CORPORATIVO':'','EMAIL':'setor1407@gam.com.br','COORDENADOR':'GABRIELA FLOR'},
-{'DISTRITO':'1500/1600','SETOR':'1500/1600','REGIAO':'Goiânia','UF':'GO','PRINCIPAIS CIDADES':'GO','FUNCAO':'COORDENADOR EQUIPE','NOME':'Lucas Acyole Rodrigues','RAZAO SOCIAL':'-','CONTATO CORPORATIVO':'(48) 9 9166-8440','EMAIL':'setor1500@gam.com.br','COORDENADOR':'MARCOS'},
-{'DISTRITO':'1500','SETOR':'1501','REGIAO':'Goiânia','UF':'GO','PRINCIPAIS CIDADES':'Goiânia; Itaberaí; Goiás; Jussara','FUNCAO':'Consultor de Vendas','NOME':'Lindenbergue De Lima Neves','RAZAO SOCIAL':'-','CONTATO CORPORATIVO':'(48) 9 9141-3068','EMAIL':'setor1501@gam.com.br','COORDENADOR':'MARCOS'},
-{'DISTRITO':'1500','SETOR':'1502','REGIAO':'Aparecida de Goiânia','UF':'GO','PRINCIPAIS CIDADES':'Aparecida de Goiânia; Senador Canedo','FUNCAO':'Consultor de Vendas','NOME':'Renato Cesar Borges De Barros Junior','RAZAO SOCIAL':'-','CONTATO CORPORATIVO':'(48) 9 9108-3364','EMAIL':'setor1502@gam.com.br','COORDENADOR':'MARCOS'},
-{'DISTRITO':'1500','SETOR':'1503','REGIAO':'Anápolis/GO','UF':'GO','PRINCIPAIS CIDADES':'Anápolis; Jaraguá; Silvania','FUNCAO':'Consultor de Vendas','NOME':'Willer Chagas Junior','RAZAO SOCIAL':'-','CONTATO CORPORATIVO':'(48) 9 9114-4359','EMAIL':'setor1503@gam.com.br','COORDENADOR':'MARCOS'},
-{'DISTRITO':'1500','SETOR':'1504','REGIAO':'Jataí/GO','UF':'GO','PRINCIPAIS CIDADES':'Jataí; Mineiros; Rio Verde; Santa Helena de Goiás','FUNCAO':'Consultor de Vendas','NOME':'Kayro Kleberson Cardoso Silva','RAZAO SOCIAL':'-','CONTATO CORPORATIVO':'(48) 9 9114-0116','EMAIL':'setor1504@gam.com.br','COORDENADOR':'MARCOS'},
-{'DISTRITO':'1500','SETOR':'1505','REGIAO':'Goiânia','UF':'GO','PRINCIPAIS CIDADES':'Goiania; Goianira; Iporã; Trindade','FUNCAO':'Consultor de Vendas','NOME':'Rafael Machado Dos Santos','RAZAO SOCIAL':'-','CONTATO CORPORATIVO':'','EMAIL':'setor1505@gam.com.br','COORDENADOR':'MARCOS'},
-{'DISTRITO':'1500','SETOR':'1506','REGIAO':'Ceres','UF':'GO','PRINCIPAIS CIDADES':'Ceres; Goianésia; Porangatu; Uruaçu','FUNCAO':'Consultor de Vendas','NOME':'Thiago De Oliveira Silva','RAZAO SOCIAL':'-','CONTATO CORPORATIVO':'(48) 9 8834-3768','EMAIL':'setor1506@gam.com.br','COORDENADOR':'MARCOS'},
-{'DISTRITO':'1500','SETOR':'1507','REGIAO':'Morrinhos/Caldas Novas','UF':'GO','PRINCIPAIS CIDADES':'Morrinhos; Caldas Novas; Catalão; Itumbiara','FUNCAO':'Consultor de Vendas','NOME':'Marcos Antonio Rodrigues De Lima','RAZAO SOCIAL':'-','CONTATO CORPORATIVO':'(48) 9 9134-8806','EMAIL':'setor1507@gam.com.br','COORDENADOR':'MARCOS'},
-{'DISTRITO':'1500','SETOR':'1508','REGIAO':'Goiânia','UF':'GO','PRINCIPAIS CIDADES':'Goiania; Goianira; Itaberai; Inhumas; Goias; Jussara','FUNCAO':'Consultor de Vendas','NOME':'Carlos Linhares','RAZAO SOCIAL':'-','CONTATO CORPORATIVO':'(48) 9 9106-9307','EMAIL':'setor1508@gam.com.br','COORDENADOR':'MARCOS'},
-{'DISTRITO':'1600','SETOR':'1601','REGIAO':'Brasília','UF':'DF','PRINCIPAIS CIDADES':'Brasília; Planaltina de Go','FUNCAO':'Consultor de Vendas','NOME':'Ernâni Ferreira Boa Ventura','RAZAO SOCIAL':'-','CONTATO CORPORATIVO':'(48) 9 9129-8206','EMAIL':'setor1601@gam.com.br','COORDENADOR':'MARCOS'},
-{'DISTRITO':'1600','SETOR':'1602','REGIAO':'Brasília','UF':'DF','PRINCIPAIS CIDADES':'Brasília; Entorno do DF','FUNCAO':'Consultor de Vendas','NOME':'Lucinda Pereira Gonçalves','RAZAO SOCIAL':'-','CONTATO CORPORATIVO':'(48) 9 9191-0235','EMAIL':'setor1602@gam.com.br','COORDENADOR':'MARCOS'},
-{'DISTRITO':'1700','SETOR':'1701','REGIAO':'Cuiaba','UF':'MT','PRINCIPAIS CIDADES':'Mato Grosso geral','FUNCAO':'Consultor de Vendas','NOME':'Glaucia Cardoso Belo','RAZAO SOCIAL':'-','CONTATO CORPORATIVO':'','EMAIL':'setor1701@gam.com.br','COORDENADOR':'MARCOS'},
-{'DISTRITO':'1201','SETOR':'1201','REGIAO':'Rio Grande do Sul','UF':'RS','PRINCIPAIS CIDADES':'Tchê, Sanar,Vida, Agafarma, Associadas, Maxxi Economica, PMP','FUNCAO':'Gerente de Contas','NOME':'Jair Clarindo','RAZAO SOCIAL':'-','CONTATO CORPORATIVO':'(53) 98115-3595','EMAIL':'gerentecontas.rs@gam.com.br','COORDENADOR':'GABRIELA FLOR'},
-{'DISTRITO':'1202','SETOR':'1202','REGIAO':'Santa Catarina','UF':'SC','PRINCIPAIS CIDADES':'Sesi, Clamed, Angeloni, Masterfarma, Sempre Fort, SacFarma','FUNCAO':'Gerente de Contas','NOME':'Tiago De Souza de Souza','RAZAO SOCIAL':'-','CONTATO CORPORATIVO':'(48) 9 8844-3720','EMAIL':'gerentecontas.sc@gam.com.br','COORDENADOR':'GABRIELA FLOR'},
-{'DISTRITO':'4001','SETOR':'4001','REGIAO':'Paraná','UF':'PR','PRINCIPAIS CIDADES':'Médias Contas','FUNCAO':'Coordenador de Contas - Médias Redes','NOME':'Peterson de Alcantara','RAZAO SOCIAL':'-','CONTATO CORPORATIVO':'(48) 9 9115-8220','EMAIL':'peterson.alcantara@gam.com.br','COORDENADOR':'GABRIELA FLOR'},
-{'DISTRITO':'4002','SETOR':'4002','REGIAO':'Paraná','UF':'PR','PRINCIPAIS CIDADES':'Médias Contas','FUNCAO':'Coordenador de Contas - Médias Redes','NOME':'Fernando De Camargo','RAZAO SOCIAL':'-','CONTATO CORPORATIVO':'(48) 99189-0056','EMAIL':'fernando.camargo@gam.com.br','COORDENADOR':'GABRIELA FLOR'},
-{'DISTRITO':'4003','SETOR':'4003','REGIAO':'Paraná','UF':'PR','PRINCIPAIS CIDADES':'Glapinski, Unipreço, Descontão, Aspp, Callfarma, NIssei, Pavesi','FUNCAO':'Coordenador de Contas - Médias Redes','NOME':'Larissa Cristiani Domingues','RAZAO SOCIAL':'-','CONTATO CORPORATIVO':'(48) 99172-4258','EMAIL':'larissa.domingues@gam.com.br','COORDENADOR':'GABRIELA FLOR'},
-{'DISTRITO':'4004','SETOR':'4004','REGIAO':'Santa Catarina','UF':'SC','PRINCIPAIS CIDADES':'Asfar, Confarma,Farma E Farma, Stylo Farma, Usifarma,MSV, Cooper (SC)','FUNCAO':'Coordenador de Contas - Médias Redes','NOME':'Carla Roberta Paduan Castillo Lapenta','RAZAO SOCIAL':'-','CONTATO CORPORATIVO':'48 99144-5011','EMAIL':'gerentecontas.sp@gam.com.br','COORDENADOR':'GABRIELA FLOR'},
-{'DISTRITO':'8001','SETOR':'8001','REGIAO':'São Paulo/Febrafar','UF':'SP','PRINCIPAIS CIDADES':'Febrafar, RM Farma , Farmarcas , Ultrafarma','FUNCAO':'Gerente de Contas','NOME':'Eduardo dos Santos Prior','RAZAO SOCIAL':'-','CONTATO CORPORATIVO':'48 99144-5011','EMAIL':'gerentecontas.sp@gam.com.br','COORDENADOR':'#N/A'},
-{'DISTRITO':'-','SETOR':'PROJETOS ESPECIAIS','REGIAO':'SUL','UF':'PR/RS/SC','PRINCIPAIS CIDADES':'SUL','FUNCAO':'GERENTE DE PROJETOS ESPECIAIS','NOME':'Adriano Roldão','RAZAO SOCIAL':'-','CONTATO CORPORATIVO':'(48) 9 8826-3940','EMAIL':'adriano.roldao@gam.com.br','COORDENADOR':'ADRIANO ROLDÃO'},
-{'DISTRITO':'-','SETOR':'COLGATE/ EMBELLEZE','REGIAO':'Grande Curitiba','UF':'PR','PRINCIPAIS CIDADES':'Grande Curitiba','FUNCAO':'Dedicados','NOME':'Luiz Carlos Brandani Vicenti','RAZAO SOCIAL':'-','CONTATO CORPORATIVO':'(48) 9 9140-0821','EMAIL':'luiz.vicenti@gam.com.br','COORDENADOR':'ADRIANO ROLDÃO'},
-{'DISTRITO':'-','SETOR':'COLGATE/ EMBELLEZE','REGIAO':'São José dos Pinhais','UF':'PR','PRINCIPAIS CIDADES':'São José dos Pinhais','FUNCAO':'Dedicados','NOME':'Heloisa Maria Coelho Krupeizak','RAZAO SOCIAL':'-','CONTATO CORPORATIVO':'(48) 99114-2192','EMAIL':'heloisa.krupeizaki@gam.com.br','COORDENADOR':'ADRIANO ROLDÃO'},
-{'DISTRITO':'-','SETOR':'COLGATE/ EMBELLEZE','REGIAO':'Colombo','UF':'PR','PRINCIPAIS CIDADES':'Colombo','FUNCAO':'Dedicados','NOME':'Tamires Dos Santos Brito Da Luz','RAZAO SOCIAL':'-','CONTATO CORPORATIVO':'(48) 99114-8033','EMAIL':'tamires.luz@gam.com.br','COORDENADOR':'ADRIANO ROLDÃO'},
-{'DISTRITO':'-','SETOR':'COLGATE/ EMBELLEZE','REGIAO':'Araucaria','UF':'PR','PRINCIPAIS CIDADES':'Araucaria','FUNCAO':'Dedicados','NOME':'Lisiane Cadena','RAZAO SOCIAL':'-','CONTATO CORPORATIVO':'(48) 99114-6825','EMAIL':'lisiane.cadena@gam.com.br','COORDENADOR':'ADRIANO ROLDÃO'},
-{'DISTRITO':'-','SETOR':'COLGATE/ KC/ COTY','REGIAO':'Grande Porto Alegre','UF':'RS','PRINCIPAIS CIDADES':'Grande Porto Alegre','FUNCAO':'Dedicados','NOME':'Rogério Da Rosa Trindade','RAZAO SOCIAL':'-','CONTATO CORPORATIVO':'(48) 98844-3011','EMAIL':'rogerio.trindade@gam.com.br','COORDENADOR':'ADRIANO ROLDÃO'},
-{'DISTRITO':'-','SETOR':'COTY','REGIAO':'Interior RS','UF':'RS','PRINCIPAIS CIDADES':'Interior RS','FUNCAO':'Dedicados','NOME':'Gabriel Quevedo E Silva','RAZAO SOCIAL':'-','CONTATO CORPORATIVO':'(48) 99185-0978','EMAIL':'gabriel.silva@gam.com.br','COORDENADOR':'ADRIANO ROLDÃO'},
-{'DISTRITO':'-','SETOR':'COTY','REGIAO':'Grande Curitiba','UF':'PR','PRINCIPAIS CIDADES':'Curitiba','FUNCAO':'Dedicados','NOME':'Andressa Paz De Oliveira','RAZAO SOCIAL':'-','CONTATO CORPORATIVO':'(48) 99194-1794','EMAIL':'andressa.oliveira@gam.com.br','COORDENADOR':'ADRIANO ROLDÃO'},
-{'DISTRITO':'-','SETOR':'COTY','REGIAO':'Llitoral SC','UF':'SC','PRINCIPAIS CIDADES':'Litoral SC','FUNCAO':'Dedicados','NOME':'Cristina Pires Dos Santos','RAZAO SOCIAL':'-','CONTATO CORPORATIVO':'(48) 99139-3029','EMAIL':'cristina.santos@gam.com.br','COORDENADOR':'ADRIANO ROLDÃO'},
-{'DISTRITO':'-','SETOR':'COTY','REGIAO':'Oeste do PR','UF':'PR','PRINCIPAIS CIDADES':'Oeste do PR','FUNCAO':'Dedicados','NOME':'Salatiel De Souza Magro','RAZAO SOCIAL':'-','CONTATO CORPORATIVO':'','EMAIL':'','COORDENADOR':''}
-];
-const EMBEDDED_DATE = '16/04/2026';
 const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQJRPejEYUGjqFiruPTGJuS2Itk6qjvyk6moB4_ChCe5_z4_CW0jYcYXJFimYYw4kGcbP2fpdRccLkq/pub?output=csv';
-const REFRESH_INTERVAL = 5 * 60 * 1000; // 5 minutes
+const REFRESH_INTERVAL = 5 * 60 * 1000; // 5 minutos
 
 const STATE_COLORS = {
   SC:'#1565c0', RS:'#c62828', PR:'#2e7d32', MS:'#e65100',
   SP:'#6a1b9a', GO:'#00838f', DF:'#4527a0', MT:'#827717',
   MG:'#4e342e', RJ:'#00695c', BA:'#f57f17', DEFAULT:'#607d8b'
-};
-const DIVISION_COLORS = {
-  'Televendas':'#1565c0', 'EXPANSÃO':'#00838f', 'PROJ. ESPECIAIS':'#2e7d32'
 };
 const STATE_NAMES = {
   AC:'Acre', AL:'Alagoas', AP:'Amapá', AM:'Amazonas', BA:'Bahia',
@@ -708,7 +553,7 @@ const STATE_NAMES = {
 // ============================================================
 // APP STATE
 // ============================================================
-let appData = { rows:[], groups:[], stateMap:{}, divisionMap:{}, updateDate:'' };
+let appData = { rows:[], groups:[], stateMap:{}, updateDate:'' };
 let currentView = 'states';
 let currentState = null;
 let currentGroup = null;
@@ -773,22 +618,15 @@ function normalizeHeader(h) {
 // ============================================================
 // FIELD HELPERS
 // ============================================================
-function getFunc(row) {
-  return row['FUNCAO'] || row['FUNÇÃO'] || row['FUNCAO'] || '';
-}
-function getRegion(row) {
-  return row['REGIAO'] || row['REGIÃO'] || '';
-}
-function getPhone(row) {
-  return row['CONTATO CORPORATIVO'] || row['CONTATO COORPORATIVO'] || '';
-}
+function getFunc(row) { return row['FUNCAO'] || row['FUNÇÃO'] || ''; }
+function getRegion(row) { return row['REGIAO'] || row['REGIÃO'] || ''; }
+function getPhone(row) { return row['CONTATO CORPORATIVO'] || row['CONTATO COORPORATIVO'] || ''; }
 function getEmail(row) { return row['EMAIL'] || ''; }
 function getCities(row) { return row['PRINCIPAIS CIDADES'] || ''; }
 function getRazaoSocial(row) { return row['RAZAO SOCIAL'] || ''; }
 function getName(row) { return row['NOME'] || ''; }
 function getUF(row) { return (row['UF'] || '').trim(); }
 function getDistrito(row) { return (row['DISTRITO'] || '').trim(); }
-function getSetor(row) { return (row['SETOR'] || '').trim(); }
 
 function isCoordEquipe(row) {
   return getFunc(row).toUpperCase().includes('COORDENADOR EQUIPE') || getFunc(row).toUpperCase().includes('COORDENADOR DE EQUIPE');
@@ -796,26 +634,14 @@ function isCoordEquipe(row) {
 function isGerenteProjetosEspeciais(row) {
   return getFunc(row).toUpperCase().includes('GERENTE DE PROJETOS ESPECIAIS');
 }
-function isDedicado(row) {
-  return getFunc(row).toUpperCase().includes('DEDICADO');
-}
-function isGerenteContas(row) {
-  const f = getFunc(row).toLowerCase();
-  return f.includes('gerente de contas');
-}
+function isDedicado(row) { return getFunc(row).toUpperCase().includes('DEDICADO'); }
+function isGerenteContas(row) { return getFunc(row).toLowerCase().includes('gerente de contas'); }
 function isCoordContas(row) {
   const f = getFunc(row).toLowerCase();
   return f.includes('coordenador de contas') || f.includes('medias redes') || f.includes('médias redes');
 }
-function isClientRole(row) {
-  return isGerenteContas(row) || isCoordContas(row);
-}
-function isRepComercial(row) {
-  return getFunc(row).toLowerCase().includes('representante comercial');
-}
-function isConsultorVendas(row) {
-  return getFunc(row).toLowerCase().includes('consultor de vendas');
-}
+function isClientRole(row) { return isGerenteContas(row) || isCoordContas(row); }
+function isRepComercial(row) { return getFunc(row).toLowerCase().includes('representante comercial'); }
 
 function getUFs(ufStr) {
   if (!ufStr || ufStr === '-' || ufStr.toUpperCase().includes('EXPANS')) return [];
@@ -828,17 +654,8 @@ function getUFs(ufStr) {
 function processData(rows) {
   const groups = [];
   const stateMap = {};
-  const divisionMap = {};
 
-    // CORRECAO ESPECIAL: Glaucia Cardoso Belo -> Lucas Acyole Rodrigues
-  rows.forEach(r => {
-    const n = getName(r).trim().toUpperCase();
-    if (n.includes('GLAUCIA') && n.includes('CARDOSO')) {
-      r['COORDENADOR'] = 'LUCAS ACYOLE RODRIGUES';
-    }
-  });
-
-  // --- 1) IDENTIFY COORDENADORES DE EQUIPE by DISTRITO ---
+  // Identify coordinators by DISTRITO
   const coordsByDist = {};
   rows.forEach(r => {
     if (isCoordEquipe(r)) {
@@ -847,14 +664,14 @@ function processData(rows) {
     }
   });
 
-  // --- 2) BUILD GROUPS: Pass 1 - Match by district base ---
   const assignedRows = new Set();
   const groupMembers = {};
+
+  // Match members to coordinator by district base
   Object.keys(coordsByDist).forEach(dist => {
     const leader = coordsByDist[dist];
     assignedRows.add(leader);
     groupMembers[dist] = [];
-
     const distParts = dist.split('/').map(p => p.trim());
     const distBases = distParts.map(p => { const n = parseInt(p); return isNaN(n) ? null : Math.floor(n/100)*100; }).filter(b => b !== null);
     rows.forEach(r => {
@@ -865,13 +682,11 @@ function processData(rows) {
       const rDistNum = parseInt(rDist);
       if (isNaN(rDistNum)) return;
       const rBase = Math.floor(rDistNum/100)*100;
-      if (distBases.includes(rBase)) {
-        groupMembers[dist].push(r); assignedRows.add(r);
-      }
+      if (distBases.includes(rBase)) { groupMembers[dist].push(r); assignedRows.add(r); }
     });
   });
 
-  // --- Pass 2: Fallback - assign remaining by COORDENADOR column ---
+  // Fallback: assign by COORDENADOR column
   Object.keys(coordsByDist).forEach(dist => {
     const leader = coordsByDist[dist];
     const leaderNameUp = getName(leader).toUpperCase().trim();
@@ -880,132 +695,122 @@ function processData(rows) {
       if (assignedRows.has(r)) return;
       if (isCoordEquipe(r) || isGerenteProjetosEspeciais(r) || isDedicado(r) || isGerenteContas(r) || isCoordContas(r)) return;
       const coordCol = (r['COORDENADOR'] || '').toUpperCase().trim();
-      if (coordCol && (coordCol === leaderNameUp || coordCol === leaderFirst)) {
+      if (coordCol && (coordCol === leaderNameUp || coordCol.includes(leaderFirst))) {
         groupMembers[dist].push(r); assignedRows.add(r);
       }
     });
   });
 
-  // --- Build final group objects ---
+  // Build group objects
   Object.keys(coordsByDist).forEach(dist => {
     const leader = coordsByDist[dist];
     const members = groupMembers[dist];
-
     const leaderUF = getUF(leader);
     const leaderRegion = getRegion(leader);
 
-    // Determine which states this group covers
-    const allUFs = new Set();
-    getUFs(leaderUF).forEach(u => allUFs.add(u));
-    members.forEach(m => getUFs(getUF(m)).forEach(u => allUFs.add(u)));
-
-    // Determine display category
+    // Determine division type
     let division = null;
+    let displayRegion = leaderRegion;
+    let groupStates = [];
+
     if (leaderUF === '-' || leaderRegion.toUpperCase().includes('TLV')) {
+      // TELEVENDAS: states derived from members only
       division = 'Televendas';
+      const memberUFs = new Set();
+      members.forEach(m => getUFs(getUF(m)).forEach(u => memberUFs.add(u)));
+      groupStates = Array.from(memberUFs);
+      displayRegion = 'Televendas';
     } else if (leaderUF.toUpperCase().includes('EXPANS') || leaderRegion.toUpperCase().includes('EXPANS')) {
+      // EXPANSÃO: states derived from members only
       division = 'EXPANSÃO';
-      // Garantir que estados de atuação incluem MS, SP, GO, DF, MT
-      ['MS','SP','GO','DF','MT'].forEach(u => allUFs.add(u));
+      const memberUFs = new Set();
+      members.forEach(m => getUFs(getUF(m)).forEach(u => memberUFs.add(u)));
+      groupStates = Array.from(memberUFs);
+      displayRegion = 'Centro Oeste e Sudeste';
+    } else {
+      // Normal state coordinator
+      const allUFs = new Set();
+      getUFs(leaderUF).forEach(u => allUFs.add(u));
+      members.forEach(m => getUFs(getUF(m)).forEach(u => allUFs.add(u)));
+      groupStates = Array.from(allUFs);
     }
 
     const group = {
       leader: leader,
       members: members,
       distKey: dist,
-      states: Array.from(allUFs),
+      states: groupStates,
       division: division,
+      displayRegion: displayRegion,
       type: 'coordEquipe'
     };
     groups.push(group);
   });
 
-  // --- 3) GERENTE DE PROJETOS ESPECIAIS + DEDICADOS ---
+  // GERENTE DE PROJETOS ESPECIAIS + DEDICADOS
   const gpeRow = rows.find(r => isGerenteProjetosEspeciais(r));
   if (gpeRow) {
     assignedRows.add(gpeRow);
     const dedicados = rows.filter(r => isDedicado(r));
     dedicados.forEach(d => assignedRows.add(d));
     const allUFs = new Set();
-    getUFs(getUF(gpeRow)).forEach(u => allUFs.add(u));
     dedicados.forEach(m => getUFs(getUF(m)).forEach(u => allUFs.add(u)));
-    const group = {
+    groups.push({
       leader: gpeRow,
       members: dedicados,
       distKey: 'PROJ_ESP',
       states: Array.from(allUFs),
       division: 'PROJ. ESPECIAIS',
+      displayRegion: 'SUL — PR / RS / SC',
       type: 'projetosEspeciais'
-    };
-    groups.push(group);
+    });
   }
 
-  // --- 4) GERENTES DE CONTAS (individual, no team) ---
+  // GERENTES DE CONTAS (individual)
   rows.filter(r => isGerenteContas(r)).forEach(r => {
     assignedRows.add(r);
     const ufs = getUFs(getUF(r));
-    const group = {
-      leader: r,
-      members: [],
-      distKey: getDistrito(r),
-      states: ufs,
-      division: null,
-      type: 'gerenteContas'
-    };
-    groups.push(group);
+    groups.push({
+      leader: r, members: [], distKey: getDistrito(r),
+      states: ufs, division: null, displayRegion: getRegion(r), type: 'gerenteContas'
+    });
   });
 
-  // --- 5) COORDENADORES DE CONTAS MÉDIAS REDES (individual, no team) ---
+  // COORDENADORES DE CONTAS (individual)
   rows.filter(r => isCoordContas(r)).forEach(r => {
     assignedRows.add(r);
     const ufs = getUFs(getUF(r));
-    const group = {
-      leader: r,
-      members: [],
-      distKey: getDistrito(r),
-      states: ufs,
-      division: null,
-      type: 'coordContas'
-    };
-    groups.push(group);
+    groups.push({
+      leader: r, members: [], distKey: getDistrito(r),
+      states: ufs, division: null, displayRegion: getRegion(r), type: 'coordContas'
+    });
   });
 
-  // --- 6) BUILD STATE MAP & DIVISION MAP ---
+  // BUILD STATE MAP
+  // Division groups only appear in states where they have members
+  // Regular groups appear in their own states
   groups.forEach(group => {
-    if (group.division) {
-      if (!divisionMap[group.division]) divisionMap[group.division] = [];
-      divisionMap[group.division].push(group);
-      // ALSO add division groups to their respective state tiles
-      group.states.forEach(uf => {
-        if (uf && uf !== '-' && uf !== 'EXPANSÃO') {
-          if (!stateMap[uf]) stateMap[uf] = [];
-          stateMap[uf].push(group);
-        }
-      });
-    } else {
-      group.states.forEach(uf => {
-        // For multi-state groups with members, only show in UFs that have team members
-        if (group.states.length > 1 && group.members.length > 0) {
-          const hasMembers = group.members.some(m => getUF(m) === uf);
-          if (!hasMembers) return; // Skip UFs with no members
-        }
-        if (!stateMap[uf]) stateMap[uf] = [];
-        stateMap[uf].push(group);
-      });
-    }
+    group.states.forEach(uf => {
+      if (!uf || uf === '-') return;
+      // For multi-state groups: only show in UFs with actual members
+      if (group.states.length > 1 && group.members.length > 0) {
+        const hasMembers = group.members.some(m => getUF(m) === uf);
+        if (!hasMembers && !group.division) return;
+        // Division groups: only show if members in that UF
+        if (group.division && !hasMembers) return;
+      }
+      if (!stateMap[uf]) stateMap[uf] = [];
+      stateMap[uf].push(group);
+    });
   });
 
-  return { groups, stateMap, divisionMap };
+  return { groups, stateMap };
 }
 
 // ============================================================
 // FETCH DATA
 // ============================================================
-async function fetchData(force=false) {
-  if (!force && typeof EMBEDDED_ROWS !== 'undefined' && EMBEDDED_ROWS.length > 0) {
-    initWithRows(EMBEDDED_ROWS, EMBEDDED_DATE);
-    return;
-  }
+async function fetchData() {
   showLoading();
   try {
     const url = `${CSV_URL}&cb=${Date.now()}_${Math.random().toString(36).slice(2)}`;
@@ -1014,8 +819,8 @@ async function fetchData(force=false) {
     const text = await resp.text();
     const { rows, updateDate } = parseCSV(text);
     if (rows.length === 0) throw new Error('Nenhum dado encontrado na planilha.');
-    const { groups, stateMap, divisionMap } = processData(rows);
-    appData = { rows, groups, stateMap, divisionMap, updateDate };
+    const { groups, stateMap } = processData(rows);
+    appData = { rows, groups, stateMap, updateDate };
     populateFilters();
     const now = new Date();
     document.getElementById('timestamp').textContent =
@@ -1027,19 +832,6 @@ async function fetchData(force=false) {
   } catch(e) {
     showError(e.message || 'Erro ao carregar dados');
   }
-}
-
-function initWithRows(rows, updateDate) {
-  const { groups, stateMap, divisionMap } = processData(rows);
-  appData = { rows, groups, stateMap, divisionMap, updateDate };
-  populateFilters();
-  const now = new Date();
-  document.getElementById('timestamp').textContent =
-    `Atualizado: ${now.getHours().toString().padStart(2,'0')}:${now.getMinutes().toString().padStart(2,'0')}`;
-  hideLoading();
-  renderCurrentView();
-  startProgressBar();
-  scheduleRefresh();
 }
 
 function populateFilters() {
@@ -1090,7 +882,6 @@ function renderCurrentView() {
   const filterFunc = document.getElementById('filter-func').value.toLowerCase();
   const filterRegion = document.getElementById('filter-region').value.toLowerCase();
   const hasFilter = query || filterFunc || filterRegion;
-
   if (hasFilter || (query && filterUF)) { renderSearchResults(query, filterUF, filterFunc, filterRegion); return; }
   if (filterUF && !hasFilter) { navigateToState(filterUF); return; }
   if (currentView === 'states') renderStates();
@@ -1099,7 +890,7 @@ function renderCurrentView() {
 }
 
 // ============================================================
-// VIEW 1 — HOME (States + Divisions)
+// VIEW 1 — HOME (States only — no division tiles)
 // ============================================================
 function renderStates() {
   currentView = 'states';
@@ -1108,24 +899,21 @@ function renderStates() {
   const container = document.getElementById('view-states');
   container.style.display = 'block';
   const ufs = Object.keys(appData.stateMap).filter(uf => appData.stateMap[uf].length > 0).sort();
-  const totalTiles = ufs.length;
 
   let html = `
-    <div class="section-title">&#128506;&#65039; Cobertura Comercial <span class="count-badge">${totalTiles}</span></div>
+    <div class="section-title">&#128506;&#65039; Cobertura Comercial <span class="count-badge">${ufs.length}</span></div>
     <p class="section-sub">Selecione um estado para ver coordenadores e equipes.</p>
     <div id="states-grid">`;
 
-  // State tiles (includes division groups that operate in each state)
   ufs.forEach(uf => {
-    const groups = appData.stateMap[uf];
-    const total = groups.length;
+    const grpCount = appData.stateMap[uf].length;
     const color = STATE_COLORS[uf] || STATE_COLORS.DEFAULT;
     const name = STATE_NAMES[uf] || uf;
     html += `
       <div class="state-card" style="--state-color:${color}" onclick="navigateToState('${uf}')" title="${name}">
         <div class="state-sigla">${uf}</div>
         <div class="state-name">${name}</div>
-        <div class="state-count">${total} grupo${total!==1?'s':''}</div>
+        <div class="state-count">${grpCount} grupo${grpCount!==1?'s':''}</div>
       </div>`;
   });
 
@@ -1134,19 +922,13 @@ function renderStates() {
 }
 
 // ============================================================
-// VIEW 2 — COORDINATORS (State or Division)
+// VIEW 2 — COORDINATORS (State)
 // ============================================================
 function navigateToState(uf) {
   currentView = 'coordinators';
   currentState = uf;
   document.getElementById('filter-uf').value = uf;
   renderCoordinators(uf);
-}
-
-function navigateToDivision(div) {
-  currentView = 'coordinators';
-  currentState = div;
-  renderDivisionCoordinators(div);
 }
 
 function renderCoordinators(uf) {
@@ -1172,38 +954,8 @@ function renderCoordinators(uf) {
   if (groups.length === 0) {
     html += `<div class="empty-state"><div class="empty-icon">&#128269;</div><div class="empty-text">Nenhum grupo encontrado para este estado.</div></div>`;
   } else {
-    groups.forEach(group => {
-      html += renderCoordCard(group, uf);
-    });
+    groups.forEach(group => { html += renderCoordCard(group, uf); });
   }
-
-  html += '</div>';
-  container.innerHTML = html;
-}
-
-function renderDivisionCoordinators(div) {
-  hideAllViews();
-  updateBreadcrumb([
-    { label:'Início', action:'goHome' },
-    { label:div }
-  ]);
-  const container = document.getElementById('view-coordinators');
-  container.style.display = 'block';
-  const groups = appData.divisionMap[div] || [];
-  const color = DIVISION_COLORS[div] || '#8B5CF6';
-
-  let html = `
-    <button class="btn-back" onclick="goHome()">&#8592; Voltar</button>
-    <div class="section-title" style="color:${color}">
-      ${div === 'PROJ. ESPECIAIS' ? 'Projetos Especiais — SUL' : div === 'EXPANSÃO' ? 'Expansão — Centro Oeste e Sudeste' : div}
-      <span class="count-badge" style="background:${color}">${groups.length}</span>
-    </div>
-    <p class="section-sub">Equipes e representantes desta divisão.</p>
-    <div id="coordinators-grid">`;
-
-  groups.forEach(group => {
-    html += renderCoordCard(group, null);
-  });
 
   html += '</div>';
   container.innerHTML = html;
@@ -1215,27 +967,32 @@ function renderCoordCard(group, uf) {
   const func = getFunc(leader);
   const phone = getPhone(leader);
   const email = getEmail(leader);
-  let region = getRegion(leader);
-  // Override region display for EXPANSÃO
-  if (group.division === 'EXPANSÃO') region = 'Centro Oeste e Sudeste';
-  const headerColor = group.division ? (DIVISION_COLORS[group.division] || '#8B5CF6') : getHeaderColor(func, uf);
+  const region = group.displayRegion || getRegion(leader);
+  const headerColor = group.division ? getDivisionColor(group.division) : getHeaderColor(func, uf);
+
+  // Count members for this state
+  let memberCount = 0;
+  if (uf && group.states.length > 1 && group.members.length > 0) {
+    memberCount = group.members.filter(m => getUF(m) === uf).length;
+  } else {
+    memberCount = group.members.length;
+  }
+
   const isClient = isClientRole(leader);
-  // When viewing from a state, count only members matching that UF
-  const memberCount = (uf && group.states && group.states.length > 1) 
-    ? group.members.filter(m => getUF(m) === uf).length 
-    : group.members.length;
-  const cities = getCities(leader);
+  const isGPE = isGerenteProjetosEspeciais(leader);
 
   let html = `<div class="coord-card">
     <div class="coord-header" style="background:${headerColor}">`;
 
-  // Region HIGHLIGHTED above name
+  // Region HIGHLIGHTED above function/name
   if (region && region !== '-') {
     html += `<div class="coord-region-highlight">&#128205; ${region}</div>`;
   }
-  // Division badge for special groups
+  // Division badge
   if (group.division) {
-    const divLabel = group.division === 'PROJ. ESPECIAIS' ? 'Projetos Especiais' : group.division === 'EXPANSÃO' ? 'Expansão' : group.division;
+    const divLabel = group.division === 'PROJ. ESPECIAIS' ? 'Projetos Especiais' :
+                     group.division === 'EXPANSÃO' ? 'Expansão' :
+                     group.division === 'Televendas' ? 'Televendas' : group.division;
     html += `<div style="display:inline-block;background:rgba(255,255,255,0.25);color:#fff;font-size:11px;padding:2px 10px;border-radius:20px;margin-bottom:4px;font-weight:600;">${divLabel}</div>`;
   }
   html += `<div class="coord-func">${func}</div>
@@ -1252,19 +1009,26 @@ function renderCoordCard(group, uf) {
     </div>
     <div class="coord-footer">`;
 
+  // CLIENT ROLES: no clients button, just "atua individualmente" removed - show simple info
   if (isClient) {
-    // Gerente de Contas / Coordenador de Médias Redes: sem botão
-    html += `<span class="members-count">&#128205; ${region || '—'}</span><span style="font-size:11px;color:var(--text-muted)">Atua individualmente</span>`;
-  } else if (memberCount > 0) {
+    html += `<span class="members-count">&#127978; Atua individualmente</span>`;
+  } else if (memberCount > 0 || isGPE || group.type === 'coordEquipe') {
     html += `<span class="members-count">&#128101; ${memberCount} membro${memberCount!==1?'s':''}</span>
-      <button class="btn-team" onclick="navigateToTeam('${escapeAttr(group.distKey)}','${escapeAttr(uf||currentState||'')}')">Ver equipe &#8594;</button>`;
+      <button class="btn-team" onclick="navigateToTeam('${escapeAttr(group.distKey)}','${escapeAttr(uf||currentState||'')}'">Ver equipe &#8594;</button>`;
   } else {
     html += `<span class="members-count">&#128101; Equipe</span>
-      <button class="btn-team" onclick="navigateToTeam('${escapeAttr(group.distKey)}','${escapeAttr(uf||currentState||'')}')">Ver equipe &#8594;</button>`;
+      <button class="btn-team" onclick="navigateToTeam('${escapeAttr(group.distKey)}','${escapeAttr(uf||currentState||'')}'">Ver equipe &#8594;</button>`;
   }
 
-  html += `</div></div>`;
+  html += '</div></div>';
   return html;
+}
+
+function getDivisionColor(div) {
+  if (div === 'Televendas') return '#1565c0';
+  if (div === 'EXPANSÃO') return '#00838f';
+  if (div === 'PROJ. ESPECIAIS') return '#2e7d32';
+  return '#607d8b';
 }
 
 function getHeaderColor(func, uf) {
@@ -1272,7 +1036,7 @@ function getHeaderColor(func, uf) {
   if (f.includes('projetos especiais')) return '#2e7d32';
   if (f.includes('gerente de contas')) return '#ad1457';
   if (f.includes('medias redes') || f.includes('médias redes')) return '#e65100';
-  if (uf && (STATE_COLORS[uf])) return STATE_COLORS[uf];
+  if (uf && STATE_COLORS[uf]) return STATE_COLORS[uf];
   return STATE_COLORS.DEFAULT;
 }
 
@@ -1292,26 +1056,20 @@ function renderTeam(group, fromState) {
   if (!group) return;
   hideAllViews();
   const leaderName = group.leader ? getName(group.leader) : 'Equipe';
-  const isDivision = !!group.division;
-
-  // When a division group is accessed from a state view, show state breadcrumb
-  const showStateBreadcrumb = fromState && STATE_NAMES[fromState];
   updateBreadcrumb([
     { label:'Início', action:'goHome' },
-    showStateBreadcrumb
-      ? { label:`${fromState} — ${STATE_NAMES[fromState]}`, action:`navigateToState_bc_${fromState}` }
-      : (isDivision
-        ? { label:group.division, action:`navigateToDivision_bc_${group.division}` }
-        : { label:`${fromState} — ${STATE_NAMES[fromState]||fromState||''}`, action:`navigateToState_bc_${fromState}` }),
+    { label:`${fromState} — ${STATE_NAMES[fromState]||fromState||''}`, action:`navigateToState_bc_${fromState}` },
     { label:leaderName }
   ]);
   const container = document.getElementById('view-team');
   container.style.display = 'block';
-  const color = isDivision ? (DIVISION_COLORS[group.division] || '#8B5CF6') : (STATE_COLORS[fromState] || STATE_COLORS.DEFAULT);
+  const color = fromState && STATE_COLORS[fromState] ? STATE_COLORS[fromState] :
+    (group.division ? getDivisionColor(group.division) : STATE_COLORS.DEFAULT);
 
-  const backAction = (fromState && STATE_NAMES[fromState]) 
+  const backAction = fromState && STATE_NAMES[fromState]
     ? `navigateToState('${escapeAttr(fromState)}')`
-    : (isDivision ? `navigateToDivision('${escapeAttr(group.division)}')` : `navigateToState('${escapeAttr(fromState||currentState||'')}')`);
+    : `goHome()`;
+
   let html = `<button class="btn-back" onclick="${backAction}">&#8592; Voltar</button>`;
 
   // LEADER HEADER CARD
@@ -1320,8 +1078,7 @@ function renderTeam(group, fromState) {
     const lFunc = getFunc(ldr);
     const lPhone = getPhone(ldr);
     const lEmail = getEmail(ldr);
-    let lRegion = getRegion(ldr);
-    if (group.division === 'EXPANSÃO') lRegion = 'Centro Oeste e Sudeste';
+    const lRegion = group.displayRegion || getRegion(ldr);
     const initials = getName(ldr).split(' ').filter(w=>w.length>0).slice(0,2).map(w=>w[0]).join('').toUpperCase();
     html += `
       <div class="team-leader-header" style="background:linear-gradient(135deg,${color} 0%,${color}cc 100%)">
@@ -1338,18 +1095,17 @@ function renderTeam(group, fromState) {
       </div>`;
   }
 
-  // When viewing from a state, filter members by that state's UF (all group types)
-  let members = (fromState && STATE_NAMES[fromState] && group.states && group.states.length > 1) 
+  // Filter members by state when viewing from state context
+  let members = (fromState && STATE_NAMES[fromState] && group.states.length > 1)
     ? group.members.filter(m => getUF(m) === fromState)
     : group.members;
-  const showingFiltered = members.length !== group.members.length;
 
   html += `
     <div class="section-title" style="color:${color}">
       &#128101; Equipe${group.leader ? ' de ' + getName(group.leader) : ''}
       <span class="count-badge" style="background:${color}">${members.length} membro${members.length!==1?'s':''}</span>
     </div>
-    <p class="section-sub">${group.distKey !== 'PROJ_ESP' ? 'Distrito ' + group.distKey : 'Projetos Especiais — SUL'}${showingFiltered ? ' · Exibindo membros de ' + fromState : (group.states.length > 0 ? ' · ' + group.states.join(', ') : '')}</p>`;
+    <p class="section-sub">${group.distKey !== 'PROJ_ESP' ? 'Distrito ' + group.distKey : 'Projetos Especiais — SUL'}</p>`;
 
   if (members.length === 0) {
     html += `<div class="empty-state"><div class="empty-icon">&#128100;</div><div class="empty-text">Nenhum membro na equipe.</div></div>`;
@@ -1365,7 +1121,7 @@ function renderTeam(group, fromState) {
               <th>E-mail</th>
               <th>UF</th>
               <th>Região</th>
-              <th>Cidades / Clientes</th>
+              
             </tr>
           </thead>
           <tbody>`;
@@ -1381,11 +1137,11 @@ function renderTeam(group, fromState) {
       const uf = getUF(m);
       const razao = getRazaoSocial(m);
       const isRC = isRepComercial(m);
-      const isClient = isClientRole(m);
 
       let citiesBtn = '<span class="no-data">—</span>';
-      if (cities && !isClient) {
-        citiesBtn = `<button class="btn-cities" onclick="openCitiesModal('${escapeAttr(nome)}','${escapeAttr(region)}','${escapeAttr(cities)}')">&#128205; Cidades</button>`;
+      const isClientRole = func.toLowerCase().includes('gerente de contas') || func.toLowerCase().includes('coordenador de contas') || func.toLowerCase().includes('medias redes');
+      if (!isClientRole && cities && cities !== '-') {
+        citiesBtn = `<button class="btn-cities" onclick="openCitiesModal('${escapeAttr(nome)}','${escapeAttr(region)}','${escapeAttr(cities)}')">&#128205; Principais cidades</button>`;
       }
 
       html += `
@@ -1399,7 +1155,7 @@ function renderTeam(group, fromState) {
               <td>${email ? `<a class="contact-link" href="mailto:${email}">${email}</a>` : '<span class="no-data">—</span>'}</td>
               <td>${uf || '—'}</td>
               <td>${region || '<span class="no-data">—</span>'}</td>
-              <td>${citiesBtn}</td>
+              
             </tr>`;
     });
     html += '</tbody></table></div>';
@@ -1449,7 +1205,7 @@ function renderSearchResults(query, filterUF, filterFunc, filterRegion) {
 
   let html = `
     <div class="section-title">&#128269; Resultados <span class="count-badge">${results.length}</span></div>
-    <p class="section-sub">${results.length} resultado${results.length!==1?'s':''} encontrado${results.length!==1?'s':''}.</p>`;
+    <p class="section-sub">${results.length} resultado${results.length!==1?'s':''} encontrado${results.length!==1?'s':''}.`;
 
   if (results.length === 0) {
     html += `<div class="empty-state"><div class="empty-icon">&#128269;</div><div class="empty-text">Nenhum resultado encontrado.</div></div>`;
@@ -1457,7 +1213,7 @@ function renderSearchResults(query, filterUF, filterFunc, filterRegion) {
     html += `
       <div class="table-wrapper">
         <table>
-          <thead><tr><th>Nome</th><th>Função</th><th>UF</th><th>Região</th><th>Contato</th><th>E-mail</th><th>Cidades / Clientes</th></tr></thead>
+          <thead><tr><th>Nome</th><th>Função</th><th>UF</th><th>Região</th><th>Contato</th><th>E-mail</th></tr></thead>
           <tbody>`;
     results.forEach(r => {
       const func = getFunc(r);
@@ -1472,7 +1228,8 @@ function renderSearchResults(query, filterUF, filterFunc, filterRegion) {
       const isRC = isRepComercial(r);
       const isClient = isClientRole(r);
       let citiesBtn = '<span class="no-data">—</span>';
-      if (cities && !isClient) {
+      const isClientRole2 = func.toLowerCase().includes('gerente de contas') || func.toLowerCase().includes('coordenador de contas') || func.toLowerCase().includes('medias redes');
+      if (!isClientRole2 && cities && cities !== '-') {
         citiesBtn = `<button class="btn-cities" onclick="openCitiesModal('${escapeAttr(nome)}','${escapeAttr(region)}','${escapeAttr(cities)}')">&#128205; Cidades</button>`;
       }
       html += `
@@ -1486,7 +1243,7 @@ function renderSearchResults(query, filterUF, filterFunc, filterRegion) {
               <td>${region||'<span class="no-data">—</span>'}</td>
               <td>${phone?`<a class="contact-link" href="tel:${phone.replace(/\D/g,'')}">${phone}</a>`:'<span class="no-data">—</span>'}</td>
               <td>${email?`<a class="contact-link" href="mailto:${email}">${email}</a>`:'<span class="no-data">—</span>'}</td>
-              <td>${citiesBtn}</td>
+              
             </tr>`;
     });
     html += '</tbody></table></div>';
@@ -1525,9 +1282,6 @@ function updateBreadcrumb(items) {
     } else if (item.action && item.action.startsWith('navigateToState_bc_')) {
       const st = item.action.replace('navigateToState_bc_','');
       html += `<span class="bc-item" onclick="navigateToState('${escapeAttr(st)}')">${item.label}</span>`;
-    } else if (item.action && item.action.startsWith('navigateToDivision_bc_')) {
-      const dv = item.action.replace('navigateToDivision_bc_','');
-      html += `<span class="bc-item" onclick="navigateToDivision('${escapeAttr(dv)}')">${item.label}</span>`;
     } else {
       html += `<span class="bc-item" onclick="goHome()">${item.label}</span>`;
     }
@@ -1536,7 +1290,7 @@ function updateBreadcrumb(items) {
 }
 
 // ============================================================
-// MODALS
+// MODAL
 // ============================================================
 function openCitiesModal(nome, region, citiesStr) {
   document.getElementById('modal-title').textContent = nome;
@@ -1549,20 +1303,7 @@ function openCitiesModal(nome, region, citiesStr) {
   document.getElementById('modal-overlay').classList.add('open');
 }
 
-function openClientsModal(nome, region, clientsStr) {
-  document.getElementById('modal-title').textContent = nome;
-  document.getElementById('modal-subtitle').textContent = `Clientes atendidos${region?' — '+region:''}`;
-  const clients = (clientsStr||'').split(/[,;]+/).map(c=>c.trim()).filter(c=>c&&c!=='-');
-  document.getElementById('modal-cities').innerHTML =
-    clients.length > 0
-      ? clients.map(c=>`<span class="client-tag">${c}</span>`).join('')
-      : '<span class="no-data">Nenhum cliente cadastrado.</span>';
-  document.getElementById('modal-overlay').classList.add('open');
-}
-
-function closeModal() {
-  document.getElementById('modal-overlay').classList.remove('open');
-}
+function closeModal() { document.getElementById('modal-overlay').classList.remove('open'); }
 document.getElementById('modal-close').addEventListener('click', closeModal);
 document.getElementById('modal-overlay').addEventListener('click', e => {
   if (e.target === document.getElementById('modal-overlay')) closeModal();
@@ -1574,7 +1315,7 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal()
 // ============================================================
 function scheduleRefresh() {
   if (refreshTimer) clearTimeout(refreshTimer);
-  refreshTimer = setTimeout(() => { fetchData(false); }, REFRESH_INTERVAL);
+  refreshTimer = setTimeout(() => { fetchData(); }, REFRESH_INTERVAL);
 }
 
 function startProgressBar() {
@@ -1606,7 +1347,7 @@ document.getElementById('btn-refresh').addEventListener('click', () => {
   });
 });
 
-document.getElementById('btn-retry').addEventListener('click', () => fetchData(true));
+document.getElementById('btn-retry').addEventListener('click', fetchData);
 
 // ============================================================
 // FILTERS & SEARCH
@@ -1631,13 +1372,13 @@ document.getElementById('btn-clear').addEventListener('click', () => {
 // UTILS
 // ============================================================
 function escapeAttr(str) {
-  return (str||'').replace(/\\/g,'\\\\').replace(/'/g,"\\'").replace(/"/g,'&quot;').replace(/\n/g,' ');
+  return (str||''). replace(/\\/g,'\\\\'). replace(/'/g,"\\'"). replace(/"/g,'&quot;'). replace(/\n/g,' ');
 }
 
 // ============================================================
 // INIT
 // ============================================================
-fetchData(false);
+fetchData();
 </script>
 </body>
 </html>
