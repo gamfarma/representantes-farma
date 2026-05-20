@@ -1,13 +1,13 @@
 {
-  "generated_at": "2026-05-20T13:37:48.623310",
+  "generated_at": "2026-05-20T14:58:37.571552",
   "total_rows": 109,
   "total_groups": 18,
   "states": [
     "SC",
     "RS",
     "PR",
-    "SP",
     "MT",
+    "SP",
     "MS",
     "DF",
     "GO"
@@ -1154,8 +1154,8 @@
       "division": "EXPANSÃO",
       "displayRegion": "Centro Oeste e Sudeste",
       "states": [
-        "SP",
         "MT",
+        "SP",
         "MS"
       ]
     },
@@ -1450,9 +1450,9 @@
       "division": "PROJ. ESPECIAIS",
       "displayRegion": "SUL — PR / RS / SC",
       "states": [
+        "PR",
         "RS",
-        "SC",
-        "PR"
+        "SC"
       ]
     },
     "CLIENT_1201": {
