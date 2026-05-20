@@ -1,56 +1,83 @@
-name: Atualizar Diretório GAM Farma
+name: Deploy GAM Farma — Rede de Representantes
 
 on:
+  # Disparo manual pelo GitHub
+  workflow_dispatch:
+
+  # Push na branch principal
   push:
     branches:
       - main
+
+  # Atualização automática a cada 5 minutos
   schedule:
-    # Atualiza automaticamente a cada 30 minutos
-    - cron: "*/30 * * * *"
-  workflow_dispatch:
-    # Permite atualização manual via interface do GitHub
+    - cron: "*/5 * * * *"
 
 permissions:
   contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
 
 jobs:
-  atualizar-e-publicar:
+  build-and-deploy:
     runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
 
     steps:
-      # 1. Faz checkout do repositório
-      - name: Checkout do repositório
+      # 1. Checkout do repositório
+      - name: Checkout repositório
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
-      # 2. Configura o Python
+      # 2. Configurar Python
       - name: Configurar Python 3.11
         uses: actions/setup-python@v5
         with:
           python-version: "3.11"
 
-      # 3. Instala dependências do script.py
-      - name: Instalar dependências
-        run: pip install requests
-
-      # 4. Executa script.py para buscar planilha e atualizar index.html
-      - name: Atualizar index.html com dados do Google Sheets
+      # 3. Executar script.py — baixa planilha e injeta dados no index.html
+      - name: Processar planilha Google Sheets
         run: python script.py
 
-      # 5. Commita o index.html atualizado (com dados embutidos)
-      - name: Salvar index.html atualizado no repositório
+      # 4. Verificar se o index.html foi gerado corretamente
+      - name: Verificar index.html
         run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add index.html
-          git diff --staged --quiet || git commit -m "Auto-update: index.html atualizado [$(date -u '+%d/%m/%Y %H:%M UTC')]"
-          git push
+          if [ ! -f index.html ]; then
+            echo "ERRO: index.html não encontrado!"
+            exit 1
+          fi
+          echo "index.html OK — $(wc -c < index.html) bytes"
 
-      # 6. Publica no GitHub Pages (branch gh-pages)
-      - name: Publicar no GitHub Pages
-        uses: peaceiris/actions-gh-pages@v4
+      # 5. Fazer commit das alterações (se houver)
+      - name: Commit e push do index.html atualizado
+        run: |
+          git config --local user.email "actions@github.com"
+          git config --local user.name "GitHub Actions"
+          git add index.html
+          if git diff --cached --quiet; then
+            echo "Sem alterações para commitar."
+          else
+            git commit -m "chore: atualização automática da planilha [$(date -u '+%Y-%m-%d %H:%M UTC')]"
+            git push
+          fi
+
+      # 6. Preparar artefato para GitHub Pages
+      - name: Preparar artefato para Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload artefato do site
+        uses: actions/upload-pages-artifact@v3
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: .
-          publish_branch: gh-pages
-          include_files: index.html
-          force_orphan: false
+          path: "."
+
+      # 7. Deploy no GitHub Pages
+      - name: Deploy no GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
