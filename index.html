@@ -1016,7 +1016,7 @@ function renderCoordCard(group, uf) {
   }
   html += `<div class="coord-func">${func}</div>
       <div class="coord-name">${getName(leader)}</div>
-      ${getRazaoSocial(leader) && getRazaoSocial(leader) !== '-' && getRazaoSocial(leader) !== '' ? `<div class="razao-social">🏢 ${getRazaoSocial(leader)}</div>` : ''}
+    ${getRazaoSocial(leader) && getRazaoSocial(leader) !== '-' && getRazaoSocial(leader) !== '' ? `<div class="razao-social razao-social-coord">🏢 ${getRazaoSocial(leader)}</div>` : ''}
       <span class="district-label">Distrito ${group.distKey}</span>
     </div>
     <div class="coord-body">
