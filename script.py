@@ -40,6 +40,7 @@ def normalize_header(h: str) -> str:
     # Mapeamentos conhecidos
     aliases = {
         "NOME REPRESENTANTE": "NOME",
+        "NOME COLABORADOR": "NOME",
         "FUNCAO": "FUNCAO",
         "FUNÇÃO": "FUNCAO",
         "REGIAO": "REGIAO",
