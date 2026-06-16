@@ -824,15 +824,7 @@ async function fetchData(force=false) {
   showLoading();
   try {
     const url = `${CSV_URL}&cb=${Date.now()}_${Math.random().toString(36).slice(2)}`;
-const controller = new AbortController();
-const timeoutId = setTimeout(() => controller.abort(), 15000); // 15 segundos de timeout
-try {
-    const resp = await fetch(url, { 
-        cache:'no-store', 
-        headers:{'Cache-Control':'no-store','Pragma':'no-cache'},
-        signal: controller.signal 
-    });
-    clearTimeout(timeoutId);
+    const resp = await fetch(url, { cache:'no-store', headers:{'Cache-Control':'no-store','Pragma':'no-cache'} });
     if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
     const text = await resp.text();
     const { rows, updateDate } = parseCSV(text);
@@ -847,19 +839,11 @@ try {
     renderCurrentView();
     startProgressBar();
     scheduleRefresh();
- } catch(e) {
-    // Fallback: tentar usar dados embarcados se o fetch remoto falhar
-    if (typeof EMBEDDED_ROWS !== 'undefined' && EMBEDDED_ROWS.length > 0) {
-        console.warn('Fetch remoto falhou, usando dados embarcados:', e.message);
-        initWithRows(EMBEDDED_ROWS, EMBEDDED_DATE);
-    } else {
-        showError(e.message || 'Erro ao carregar dados');
-    }
+  } catch(e) {
+    showError(e.message || 'Erro ao carregar dados');
+  }
 }
 
-// ============================================================
-// INITIALIZE WITH ROWS
-// ============================================================
 function initWithRows(rows, updateDate) {
   const { groups, stateMap } = processData(rows);
   appData = { rows, groups, stateMap, updateDate };
