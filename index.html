@@ -840,8 +840,13 @@ async function fetchData(force=false) {
     startProgressBar();
     scheduleRefresh();
   } catch(e) {
-    showError(e.message || 'Erro ao carregar dados');
-  }
+    // Fallback: tentar usar dados embarcados se o fetch remoto falhar
+    if (typeof EMBEDDED_ROWS !== 'undefined' && EMBEDDED_ROWS.length > 0) {
+        console.warn('Fetch remoto falhou, usando dados embarcados:', e.message);
+        initWithRows(EMBEDDED_ROWS, EMBEDDED_DATE);
+    } else {
+        showError(e.message || 'Erro ao carregar dados');
+    }
 }
 
 function initWithRows(rows, updateDate) {
