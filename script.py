@@ -21,9 +21,7 @@ from datetime import datetime, timezone
 # CONFIGURAÇÃO
 # ─────────────────────────────────────────────────────────────
 CSV_URL = (
-    "https://docs.google.com/spreadsheets/d/e/"
-    "2PACX-1vQJRPejEYUGjqFiruPTGJuS2Itk6qjvyk6moB4_"
-    "ChCe5_z4_CW0jYcYXJFimYYw4kGcbP2fpdRccLkq/pub?output=csv"
+    "https://docs.google.com/spreadsheets/d/e/2PACX-1vQJRPejEYUGjqFiruPTGJuS2Itk6qjvyk6moB4_ChCe5_z4_CW0jYcYXJFimYYw4kGcbP2fpdRccLkq/pubhtml?output=csv"
 )
 INDEX_FILE = "index.html"
 
