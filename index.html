@@ -856,7 +856,10 @@ try {
         showError(e.message || 'Erro ao carregar dados');
     }
 }
-
+}
+// ============================================================
+// INITIALIZE WITH ROWS
+// ============================================================
 function initWithRows(rows, updateDate) {
   const { groups, stateMap } = processData(rows);
   appData = { rows, groups, stateMap, updateDate };
