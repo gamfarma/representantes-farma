@@ -824,7 +824,15 @@ async function fetchData(force=false) {
   showLoading();
   try {
     const url = `${CSV_URL}&cb=${Date.now()}_${Math.random().toString(36).slice(2)}`;
-    const resp = await fetch(url, { cache:'no-store', headers:{'Cache-Control':'no-store','Pragma':'no-cache'} });
+const controller = new AbortController();
+const timeoutId = setTimeout(() => controller.abort(), 15000); // 15 segundos de timeout
+try {
+    const resp = await fetch(url, { 
+        cache:'no-store', 
+        headers:{'Cache-Control':'no-store','Pragma':'no-cache'},
+        signal: controller.signal 
+    });
+    clearTimeout(timeoutId);
     if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
     const text = await resp.text();
     const { rows, updateDate } = parseCSV(text);
