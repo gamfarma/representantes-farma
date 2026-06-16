@@ -1357,14 +1357,10 @@ function startProgressBar() {
 // REFRESH BUTTON
 // ============================================================
 document.getElementById('btn-refresh').addEventListener('click', () => {
-  const icon = document.getElementById('refresh-icon');
-  icon.outerHTML = '<span class="spinner" id="refresh-icon"></span>';
-  if (refreshTimer) clearTimeout(refreshTimer);
-  if (progressTimer) clearInterval(progressTimer);
-  fetchData(true).finally(() => {
-    const spinner = document.getElementById('refresh-icon');
-    if (spinner) spinner.outerHTML = '<span id="refresh-icon">&#128260;</span>';
-  });
+	const icon = document.getElementById('refresh-icon');
+	icon.outerHTML = '<span class="spinner" id="refresh-icon"></span>';
+	// Recarregar a página após 500ms para mostrar o spinner
+	setTimeout(() => { location.reload(); }, 500);
 });
 document.getElementById('btn-retry').addEventListener('click', () => fetchData(true));
 
