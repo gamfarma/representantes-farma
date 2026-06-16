@@ -847,7 +847,7 @@ try {
     renderCurrentView();
     startProgressBar();
     scheduleRefresh();
-  } catch(e) {
+ } catch(e) {
     // Fallback: tentar usar dados embarcados se o fetch remoto falhar
     if (typeof EMBEDDED_ROWS !== 'undefined' && EMBEDDED_ROWS.length > 0) {
         console.warn('Fetch remoto falhou, usando dados embarcados:', e.message);
@@ -857,6 +857,7 @@ try {
     }
 }
 }
+
 // ============================================================
 // INITIALIZE WITH ROWS
 // ============================================================
